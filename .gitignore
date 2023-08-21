@@ -154,8 +154,8 @@ gradle-app.setting
 # Avoid ignore Gradle wrappper properties
 !gradle-wrapper.properties
 
-# ignore ProjApplication
-/src/main/java/release/release_proj/ReleaseProjApplication.java
+# ignore application.properties
+/src/main/resources/application.properties
 
 # Cache of project
 .gradletasknamecache
