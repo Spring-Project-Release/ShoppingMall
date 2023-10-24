@@ -32,20 +32,20 @@ public class JpaItemRepository implements ItemRepository {
         em.remove(item);
     };*/
 
-    public void deleteById(Long id) {
-        Item item = em.find(Item.class, id);
+    public void deleteByItemId(Long itemId) {
+        Item item = em.find(Item.class, itemId);
         if (item != null) {
             em.remove(item);
         }
     };
 
-    public Optional<Item> findById(Long id) {
-        Item item = em.find(Item.class, id);
+    public Optional<Item> findByItemId(Long itemId) {
+        Item item = em.find(Item.class, itemId);
         //조회할 type, 식별자인 pk
         return Optional.ofNullable(item);
     };
 
-    public Optional<Item> findByName(String name) {
+    public Optional<Item> findByItemName(String name) {
         List<Item> result = em.createQuery("select i from Item i where i.name = :name", Item.class)
                 .setParameter("name", name)
                 .getResultList();

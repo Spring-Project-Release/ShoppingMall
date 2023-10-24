@@ -27,7 +27,7 @@ public class ItemTest {
         //When
         Long saveId = itemService.saveItem(item);
         //Then
-        Item findItem = itemRepository.findById(saveId).get();
+        Item findItem = itemRepository.findByItemId(saveId).get();
         assertEquals(item.getName(), findItem.getName());
     }
 
@@ -57,7 +57,7 @@ public class ItemTest {
         item.setName("item2");
         itemService.updateItem(item);
         //Then
-        Item findItem = itemRepository.findById(saveId).get();
+        Item findItem = itemRepository.findByItemId(saveId).get();
         assertEquals(item.getName(), findItem.getName()); //item2로 이름이 일치하는지 확인
     }
 }

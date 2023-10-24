@@ -2,10 +2,8 @@ package release.release_proj.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import release.release_proj.domain.Item;
-import release.release_proj.repository.ItemRepository;
 import release.release_proj.service.ItemService;
 
 import java.util.List;
@@ -15,7 +13,7 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/items")
-public class itemController {
+public class ItemController {
 
     private final ItemService itemService;
 
@@ -26,9 +24,9 @@ public class itemController {
         return ResponseEntity.ok(items);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Item> getItem(@PathVariable(name = "id") Long id) {
-        Optional<Item> item = itemService.findOne(id);
+    @GetMapping("/{itemId}")
+    public ResponseEntity<Item> getItem(@PathVariable(name = "itemId") Long itemId) {
+        Optional<Item> item = itemService.findOne(itemId);
 
         /*
         return item.map(ResponseEntity::ok)
@@ -58,7 +56,7 @@ public class itemController {
         } else {
             return ResponseEntity.badRequest().body("Invalid request. The provided ID does not match the item's ID.");
         }*/
-        item.setId(id); //item에 id를 넣지 않고 update해도 url의 id를 가진 item을 update하도록 함
+        item.setItemId(id); //item에 id를 넣지 않고 update해도 url의 id를 가진 item을 update하도록 함
         itemService.updateItem(item);
         return ResponseEntity.ok("Item updated successfully.");
     }

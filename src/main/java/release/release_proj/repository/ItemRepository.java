@@ -11,9 +11,9 @@ public interface ItemRepository {
 
     //Item update(Item item);
     //void delete(Item item);
-    public void deleteById(Long id);
+    public void deleteByItemId(Long itemId);
     Item save(Item item);
-    Optional<Item> findById(Long id);
-    Optional<Item> findByName(String name);
+    Optional<Item> findByItemId(Long itemId);
+    Optional<Item> findByItemName(String name);
     List<Item> findAll();
 }
