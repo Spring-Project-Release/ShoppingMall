@@ -21,6 +21,8 @@ public class Cart {
 
     private int count; //장바구니에 담긴 총 상품 개수
 
+    //장바구니의 상품 종류 개수도 count해야 할까..? 아니면 repository에서 추가?
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="userId")
     private User user;
@@ -34,5 +36,13 @@ public class Cart {
     @PrePersist // DB에 INSERT 되기 직전에 실행. 즉 DB에 값을 넣으면 자동으로 실행됨
     public void createDate() {
         this.createDate = LocalDate.now();
+    }
+
+    public static Cart createCart(User user) { //팩토리 메서드
+        Cart cart = new Cart();
+        cart.user = user;
+        cart.count = 0;
+
+        return cart;
     }
 }

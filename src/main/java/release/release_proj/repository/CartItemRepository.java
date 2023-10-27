@@ -11,6 +11,7 @@ public interface CartItemRepository {
 
     public void deleteByCartItemId(Long cartItemId);
     Optional<CartItem> findByCartItemId(Long cartItemId);
+    Optional<CartItem> findByCartIdAndItemId(Long cartId, Long itemId);
     List<CartItem> findAll();
     CartItem save(CartItem cartItem);
 

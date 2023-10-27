@@ -26,4 +26,13 @@ public class CartItem {
     private Item item;
 
     private int count; //장바구니에 담긴 해당 item의 개수
+
+    public static CartItem createCartItem(Cart cart, Item item, int count){ //팩토리 메서드
+        CartItem cartItem = new CartItem();
+        cartItem.cart = cart;
+        cartItem.item = item;
+        cartItem.count = count;
+
+        return cartItem;
+    }
 }

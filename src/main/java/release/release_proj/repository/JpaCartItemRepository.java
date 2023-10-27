@@ -32,6 +32,15 @@ public class JpaCartItemRepository {
         return Optional.ofNullable(cartItem);
     }
 
+    Optional<CartItem> findByCartIdAndItemId(Long cartId, Long itemId){
+        List<CartItem> result = em.createQuery("SELECT ci FROM CartItem ci WHERE ci.cart.cartId = :cartId AND ci.item.itemId = :itemId", CartItem.class)
+             .setParameter("cartId", cartId)
+                .setParameter("itemId", itemId)
+                .getResultList();
+
+        return result.stream().findAny();
+    }
+
     List<CartItem> findAll() {
         return em.createQuery("select i from CartItem i", CartItem.class)
                 .getResultList();
