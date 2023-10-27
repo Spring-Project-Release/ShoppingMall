@@ -1,11 +1,13 @@
 package release.release_proj.repository;
 
+import org.springframework.stereotype.Repository;
 import release.release_proj.domain.Item;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class JpaItemRepository implements ItemRepository {
 
     private final EntityManager em;

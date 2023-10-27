@@ -6,7 +6,6 @@ import release.release_proj.domain.Item;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 public interface ItemRepository {
 
     //Item update(Item item);
