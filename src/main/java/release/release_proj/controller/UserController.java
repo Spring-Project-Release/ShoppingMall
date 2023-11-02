@@ -10,7 +10,7 @@ import release.release_proj.service.MemberService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
-
+@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:8080" }, allowCredentials = "true")
 @RestController
 public class UserController {
     @Autowired
