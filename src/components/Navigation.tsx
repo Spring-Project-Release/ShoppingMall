@@ -5,7 +5,7 @@ const Container = styled.div`
   width: 100%;
   height: 10vh;
 
-  background-color: black;
+  background-color: white;
 
   display: flex;
   flex-direction: row;
@@ -15,13 +15,14 @@ const Container = styled.div`
 
 const Logo = styled.div`
   height: 100%;
+  margin-left: 12px;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
-  color: white;
+  color: ${(props) => props.theme.green};
   cursor: pointer;
 `;
 
@@ -43,14 +44,14 @@ const Button = styled.div`
   height: calc(100% - 16px);
   width: 25%;
 
-  color: white;
+  color: #76bd42;
   cursor: pointer;
 
   margin-top: 8px;
   transition: border-bottom 0.3s ease;
 
   &:hover {
-    border-bottom: 8px solid red;
+    border-bottom: 3px solid #76bd42;
   }
 `;
 
@@ -66,7 +67,7 @@ export default function Navigation() {
   return (
     <Container>
       <Logo onClick={onMove} id="home">
-        <h1>SHOPPING</h1>
+        <h1>푸르넷</h1>
       </Logo>
 
       <Buttons>

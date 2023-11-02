@@ -2,7 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
-import { createGlobalStyle } from "styled-components";
+import { ThemeProvider, createGlobalStyle } from "styled-components";
+import { theme } from "../src/utils/colors";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -21,7 +22,9 @@ const Grobals = createGlobalStyle`
 
 root.render(
   <BrowserRouter>
-    <Grobals />
-    <App />
+    <ThemeProvider theme={theme}>
+      <Grobals />
+      <App />
+    </ThemeProvider>
   </BrowserRouter>
 );

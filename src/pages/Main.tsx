@@ -2,20 +2,19 @@ import styled from "styled-components";
 import Navigation from "../components/Navigation";
 import DetailBar from "../components/DetailBar";
 import SideBar from "../components/SideBar";
-import Ranking from "../components/Ranking";
+import Footer from "../components/Footer";
+import { images } from "../jsons/imgList";
 
 const Container = styled.div`
-  height: 300vh;
   width: 100%;
 `;
 
 const Body = styled.div`
-  width: 100%;
-  height: 100%;
-  background-color: red;
+  padding: 24px;
+  /* background-color: red; */
 
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 `;
 
 const Article = styled.div`
@@ -26,17 +25,97 @@ const Article = styled.div`
   border-left: 1px solid gray;
 `;
 
+const Recommand = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 24px;
+`;
+
+const Product = styled.div`
+  /* background-color: ${(props) => props.theme.green}; */
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  img {
+    width: 100%;
+    display: flexbox;
+    background-color: red;
+    height: 70%;
+
+    cursor: pointer;
+    transition: transform ease-in-out 0.3s;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+`;
+
+const Info = styled.div`
+  width: 100%;
+  height: 20%;
+
+  p {
+    cursor: pointer;
+  }
+`;
+
+const InfoLine = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  svg {
+    width: 10%;
+    transition: color ease-in-out 0.3s;
+
+    &:hover {
+      color: ${(props) => props.theme.green};
+      cursor: pointer;
+    }
+  }
+`;
+
 export default function Main() {
   return (
     <Container>
       <Navigation />
       <DetailBar />
       <Body>
-        <SideBar />
-        <Article>
-          <Ranking />
-        </Article>
+        <h2>이 물품은 어떠세요?</h2>
+        <Recommand>
+          {images.items.map((item) => (
+            <Product key={item.itemNumber}>
+              <img src={item.url} />
+              <Info>
+                <p>{item.name}</p>
+                <InfoLine>
+                  <h2>{item.price}</h2>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                    />
+                  </svg>
+                </InfoLine>
+              </Info>
+            </Product>
+          ))}
+        </Recommand>
       </Body>
+      <Footer />
     </Container>
   );
 }

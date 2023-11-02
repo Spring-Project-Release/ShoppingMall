@@ -13,7 +13,7 @@ const Container = styled.div`
 
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: start;
   align-items: center;
 
   background-color: white;
@@ -39,12 +39,12 @@ const Login = styled.div`
 `;
 
 const List = styled.div`
-  width: 80%;
+  width: 90%;
   height: 70%;
 
   display: flex;
   flex-direction: row;
-  justify-content: end;
+  justify-content: start;
   align-items: center;
 `;
 
@@ -77,13 +77,10 @@ export default function DetailBar() {
 
   return (
     <Container>
-      <Login>
-        <p onClick={onMove} id={"login"}>
-          로 그 인
-        </p>
-      </Login>
-
       <List>
+        <Item onClick={onMove} id={"login"}>
+          <p>로 그 인</p>
+        </Item>
         <Item onClick={onMove} id={"mypage"}>
           마이 페이지
         </Item>

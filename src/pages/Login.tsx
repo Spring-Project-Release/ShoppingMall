@@ -5,15 +5,17 @@ import { useForm } from "react-hook-form";
 import { ILoginFormData } from "../apis/interface";
 import { getLoginData } from "../apis/api";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 
 const Container = styled.div`
   height: auto;
 `;
 
 const Main = styled.div`
-  background-color: red;
+  /* background-color: red; */
   width: 100%;
-  height: 100vh;
+  height: auto;
+  padding: 8vh 0;
 
   display: flex;
   flex-direction: column;
@@ -21,16 +23,59 @@ const Main = styled.div`
   align-items: center;
 
   form {
+    /* background-color: blue; */
+    width: 30%;
+    height: 60vh;
     display: flex;
     flex-direction: column;
+    justify-content: start;
+    align-items: center;
+
+    button {
+      border: 1px solid lightgray;
+      height: 56px;
+      width: 100%;
+      padding: 4px 8px;
+
+      margin-top: 48px;
+
+      &:focus {
+        border: 1px solid greenyellow;
+      }
+    }
+
+    span {
+      margin-top: 12px;
+    }
   }
 `;
 
 const Line = styled.span`
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
+  align-items: start;
+  /* background-color: gray; */
+
+  gap: 8px;
+
+  input {
+    border: 1px solid lightgray;
+    height: 48px;
+    width: calc(100% - 18px);
+    padding: 4px 8px;
+
+    &:focus {
+      border-color: greenyellow;
+    }
+  }
+
+  label {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+  }
 `;
 
 export default function Login() {
@@ -56,8 +101,9 @@ export default function Login() {
       <Navigation />
       <DetailBar />
       <Main>
-        <h2>로그인 하기</h2>
         <form onSubmit={handleSubmit(onValid)}>
+          <h1>로그인</h1>
+
           <Line>
             <label htmlFor="loginId">아이디</label>
             <input
@@ -70,6 +116,7 @@ export default function Login() {
               })}
               id="loginId"
               name="loginId"
+              placeholder="아이디"
             />
           </Line>
           <Line>
@@ -84,12 +131,20 @@ export default function Login() {
               })}
               id="loginPassword"
               name="loginPassword"
+              type="password"
+              placeholder="비밀번호"
             />
           </Line>
 
-          <button>로그인</button>
+          <button>로 그 인</button>
         </form>
-        <span>
+        <span
+          style={{
+            color: "tomato",
+            fontSize: "18px",
+            fontWeight: "bold",
+          }}
+        >
           {errors?.loginId?.message
             ? errors?.loginId?.message
             : errors?.loginPassword?.message
@@ -97,6 +152,7 @@ export default function Login() {
             : " "}
         </span>
       </Main>
+      <Footer />
     </Container>
   );
 }
