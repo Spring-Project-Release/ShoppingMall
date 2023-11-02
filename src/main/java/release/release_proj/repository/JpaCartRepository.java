@@ -1,4 +1,4 @@
-package release.release_proj.repository;
+/*package release.release_proj.repository;
 
 import org.springframework.stereotype.Repository;
 import release.release_proj.domain.Cart;
@@ -43,3 +43,4 @@ public class JpaCartRepository {
         return result.stream().findAny();
     }
 }
+*/

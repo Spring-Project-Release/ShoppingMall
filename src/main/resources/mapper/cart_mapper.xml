@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sql.cart.mapper">
+
+    <delete id="deleteByMemberId" parameterType="Long">
+        DELETE FROM your_cart_table WHERE memberId = #{memberId}
+    </delete>
+
+    <delete id="deleteByMemberIdAndItemId">
+        DELETE FROM your_cart_table WHERE memberId = #{memberId} AND itemId = #{itemId}
+    </delete>
+
+    <insert id="save" parameterType="release.release_proj.domain.Cart">
+        INSERT INTO your_cart_table (memberId, itemId, amount)
+        VALUES (#{memberId}, #{itemId}, #{amount})
+    </insert>
+
+    <select id="findByMemberId" parameterType="Long" resultType="release.release_proj.domain.Cart">
+        SELECT * FROM your_cart_table WHERE memberId = #{memberId}
+    </select>
+
+    <select id="findByMemberIdAndItemId" resultType="release.release_proj.domain.Cart">
+        SELECT * FROM your_cart_table WHERE memberId = #{memberId} AND itemId = #{itemId}
+    </select>
+</mapper>

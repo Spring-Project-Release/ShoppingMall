@@ -86,3 +86,7 @@ public class CartService {
     }
 }
 */
+
+public interface CartService {
+
+}

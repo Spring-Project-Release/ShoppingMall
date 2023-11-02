@@ -1,4 +1,4 @@
-package release.release_proj.repository;
+/*package release.release_proj.repository;
 
 import org.springframework.stereotype.Repository;
 import release.release_proj.domain.CartItem;
@@ -17,3 +17,4 @@ public interface CartItemRepository {
 
     //나중에 로그인 정보 확인해야 함
 }
+*/

@@ -1,4 +1,4 @@
-package release.release_proj.repository;
+/*package release.release_proj.repository;
 
 import release.release_proj.domain.CartItem;
 
@@ -48,3 +48,4 @@ public class JpaCartItemRepository {
         // 여기서는 객체 entity인 i 자체를 select 함
     }
 }
+*/
