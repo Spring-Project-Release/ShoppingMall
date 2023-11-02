@@ -155,7 +155,6 @@ gradle-app.setting
 !gradle-wrapper.properties
 
 # ignore application.properties
-/src/main/resources/application.properties
 
 # Cache of project
 .gradletasknamecache
@@ -169,5 +168,8 @@ gradle-app.setting
 ### Gradle Patch ###
 # Java heap dump
 *.hprof
+
+### .DS_Store ###
+.DS_Store
 
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,intellij
