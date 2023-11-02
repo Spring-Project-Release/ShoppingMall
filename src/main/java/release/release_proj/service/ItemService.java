@@ -1,14 +1,6 @@
 package release.release_proj.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import release.release_proj.domain.Item;
-import release.release_proj.repository.ItemRepository;
-
-import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.Optional;
-
+/*
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -52,4 +44,22 @@ public class ItemService {
         return itemRepository.findAll();
     }
 
+}
+*/
+
+import release.release_proj.domain.Item;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface ItemService {
+
+    public Long saveItem(Item item);
+    public void isItemNameDuplicate(Item item);
+    public int updateItem(Item item);
+    public Long deleteItem(Long itemId);
+    public Optional<Item> findOne(Long itemId);
+    public List<Item> readItems();
+    public int updateIsSoldout(Long itemId); //item에서 isSoldout만 반대값으로 update
+    //public void updateStock(Item item, int newStock); //item에서 stock 값만 update
 }

@@ -1,12 +1,6 @@
 package release.release_proj.repository;
 
-import org.springframework.stereotype.Repository;
-import release.release_proj.domain.Item;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-import java.util.Optional;
-
+/*
 @Repository
 public class JpaItemRepository implements ItemRepository {
 
@@ -23,14 +17,6 @@ public class JpaItemRepository implements ItemRepository {
         em.persist(item);
         return item;
     };
-
-    /*public Item update(Item item) { //save와 합침
-        return em.merge(item);
-    };*/
-
-    /*public void delete(Item item) {
-        em.remove(item);
-    };*/
 
     public void deleteByItemId(Long itemId) {
         Item item = em.find(Item.class, itemId);
@@ -59,3 +45,4 @@ public class JpaItemRepository implements ItemRepository {
         // 여기서는 객체 entity인 i 자체를 select 함
     };
 }
+*/

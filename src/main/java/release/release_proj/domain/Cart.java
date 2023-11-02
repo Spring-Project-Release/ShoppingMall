@@ -1,12 +1,10 @@
 package release.release_proj.domain;
 
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Builder
 @NoArgsConstructor
@@ -15,6 +13,7 @@ import java.util.List;
 @Setter
 public class Cart {
 
+    /*
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto increment
     private Long cartId;
@@ -45,4 +44,11 @@ public class Cart {
 
         return cart;
     }
+    */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto increment
+    private Long cartId;
+    private int memberId;
+    private int itemId;
+    private int amount; //cart에 담긴 해당 item의 개수
 }

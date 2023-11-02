@@ -22,9 +22,13 @@ public class Item {
     private int price;
     private int count; //판매 개수
     private int stock; //재고 수
-    private String item_type; //상품 종류
+    private String category; //상품 종류
     private String text; //상품에 대한 상세설명
     private boolean isSoldout; //상품 상태: 품절 / 판매중
-    private String picture; //상품 사진
-
+    private String picture; //상품 사진 url
+    private float discount; //할인률
+    private String origin; //원산지
+    private int delivery_type; //배송타입
+    private String seller; //판매자(판매회사) 이름
+    private String unit; //판매단위
 }

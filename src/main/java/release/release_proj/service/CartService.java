@@ -1,20 +1,6 @@
 package release.release_proj.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import release.release_proj.domain.Cart;
-import release.release_proj.domain.CartItem;
-import release.release_proj.domain.Item;
-import release.release_proj.domain.User;
-import release.release_proj.repository.CartItemRepository;
-import release.release_proj.repository.CartRepository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-@Service
+/*@Service
 @RequiredArgsConstructor
 @Transactional
 public class CartService {
@@ -38,33 +24,6 @@ public class CartService {
     }
 
     public void addCart(User user, Item item, int count){
-        /*cartRepository.findByUserId(user.getUserId())
-            .ifPresentOrElse(
-                cartExist -> {
-                    //Cart cart = cartExist;
-                },
-                () -> {
-                    Cart cart = Cart.createCart(user); //cart가 비어있다면 생성
-                    cartRepository.save(cart);
-                }
-        );
-
-        //cartItemRepository.findByCartItemId(item.getItemId())
-        cartItemRepository.findByCartIdAndItemId(cart.getCartId(),item.getItemId())
-                .ifPresentOrElse(
-                    cartItemExist -> {  //cartItem이 비어있지 않다면 carItem과 cart의 count만 증가
-                        cartItemExist.setCount(cartItemExist.getCount()+1);
-                        cartItemExist.getCart().setCount(cartItemExist.getCart().getCount()+1);
-                    },
-                    ()->{ //cartItem이 비어있다면 생성
-                        //cartRepository.findByUserId(user.getUserId())
-                        //        .ifPresent(cart->{
-                        //            CartItem cartItem = CartItem.createCartItem(cart,item);
-                        //        });
-
-                    }
-                );
-         */
         cartRepository.findByUserId(user.getUserId())
                 .ifPresentOrElse(
                         cartExist -> {
@@ -126,3 +85,4 @@ public class CartService {
 
     }
 }
+*/

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--<mapper namespace="release.release_proj.repository.ItemRepository">-->
+<mapper namespace="sql.item.mapper">
+
+    <delete id="deleteByItemId" parameterType="Long">
+        DELETE FROM your_item_table WHERE itemId = #{itemId}
+    </delete>
+
+    <insert id="save" parameterType="release.release_proj.domain.Item">
+        INSERT INTO your_item_table (name, price, count, stock, category, text, isSoldout, picture, discount, origin, delivery_type, seller, unit)
+        VALUES (#{name}, #{price}, #{count}, #{stock}, #{category}, #{text}, #{isSoldout}, #{picture}, #{discount}, #{origin}, #{delivery_type}, #{seller}, #{unit})
+    </insert>
+
+    <select id="findByItemId" parameterType="Long" resultType="release.release_proj.domain.Item">
+        SELECT * FROM your_item_table WHERE itemId = #{itemId}
+    </select>
+
+    <select id="findByItemName" parameterType="String" resultType="release.release_proj.domain.Item">
+        SELECT * FROM your_item_table WHERE name = #{name}
+    </select>
+
+    <select id="findAll" resultType="release.release_proj.domain.Item">
+        SELECT * FROM your_item_table
+    </select>
+
+    <select id="findByIsSoldout" parameterType="boolean" resultType="release.release_proj.domain.Item">
+        SELECT * FROM your_item_table WHERE isSoldout = #{isSoldout}
+    </select>
+
+    <select id="findByCategory" parameterType="String" resultType="release.release_proj.domain.Item">
+        SELECT * FROM your_item_table WHERE category = #{category}
+    </select>
+
+    <update id="updateItem" parameterType="release.release_proj.domain.Item">
+        UPDATE your_item_table
+        SET name = #{name}, price = #{price}, text = #{text}, stock = #{stock}, item_type = #{item_type}
+        WHERE item_id = #{itemId}
+    </update>
+
+    <update id="updateIsSoldout" parameterType="Long">
+        UPDATE your_item_table
+        SET isSoldout = 1 - isSoldout
+        WHERE itemId = #{value}
+    </update>
+
+</mapper>
