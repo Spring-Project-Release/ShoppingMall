@@ -59,7 +59,7 @@ public interface ItemService {
     public int updateItem(Item item);
     public Long deleteItem(Long itemId);
     public Optional<Item> findOne(Long itemId);
-    public List<Item> readItems();
+    public Optional<List<Item>> readItems();
     public int updateIsSoldout(Long itemId); //item에서 isSoldout만 반대값으로 update
     //public void updateStock(Item item, int newStock); //item에서 stock 값만 update
 }

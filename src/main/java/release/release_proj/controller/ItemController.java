@@ -1,4 +1,4 @@
-package release.release_proj.controller;
+/*package release.release_proj.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +28,9 @@ public class ItemController {
     public ResponseEntity<Item> getItem(@PathVariable(name = "itemId") Long itemId) {
         Optional<Item> item = itemService.findOne(itemId);
 
-        /*
-        return item.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-         */
+
+        //return item.map(ResponseEntity::ok)
+        //        .orElse(ResponseEntity.notFound().build());
 
         if (item.isPresent()) {
             return ResponseEntity.ok(item.get());
@@ -50,12 +49,12 @@ public class ItemController {
     @PutMapping("/{id}")
     public ResponseEntity<String> update(@PathVariable(name = "id") Long id, @RequestBody Item item) {
         //Item existingItem = itemService.findOne(id).get();
-        /*if (item.getId().equals(id)) {
-            itemService.updateItem(item);
-            return ResponseEntity.ok("Item updated successfully.");
-        } else {
-            return ResponseEntity.badRequest().body("Invalid request. The provided ID does not match the item's ID.");
-        }*/
+        //if (item.getId().equals(id)) {
+        //    itemService.updateItem(item);
+        //    return ResponseEntity.ok("Item updated successfully.");
+        //} else {
+        //    return ResponseEntity.badRequest().body("Invalid request. The provided ID does not match the item's ID.");
+        //}
         item.setItemId(id); //item에 id를 넣지 않고 update해도 url의 id를 가진 item을 update하도록 함
         itemService.updateItem(item);
         return ResponseEntity.ok("Item updated successfully.");
@@ -68,3 +67,4 @@ public class ItemController {
         return ResponseEntity.ok("Item deleted successfully.");
     }
 }
+*/

@@ -39,18 +39,18 @@ public class ItemImpl implements ItemRepository {
     }
 
     @Override
-    public List<Item> findAll() {
-        return sqlSession.selectList(NS + "findAll");
+    public Optional<List<Item>> findAll() {
+        return Optional.ofNullable(sqlSession.selectList(NS + "findAll"));
     }
 
     @Override
-    public List<Item> findByIsSoldout(boolean isSoldout) {
-        return sqlSession.selectList(NS + "findByIsSoldout", isSoldout);
+    public Optional<List<Item>> findByIsSoldout(boolean isSoldout) {
+        return Optional.ofNullable(sqlSession.selectList(NS + "findByIsSoldout", isSoldout));
     }
 
     @Override
-    public List<Item> findByCategory(String category) {
-        return sqlSession.selectList(NS + "findByCategory", category);
+    public Optional<List<Item>> findByCategory(String category) {
+        return Optional.ofNullable(sqlSession.selectList(NS + "findByCategory", category));
     }
 
     @Override

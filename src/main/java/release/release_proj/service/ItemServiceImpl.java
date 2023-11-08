@@ -53,7 +53,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> readItems(){
+    public Optional<List<Item>> readItems(){
         return itemRepository.findAll();
     }
 
