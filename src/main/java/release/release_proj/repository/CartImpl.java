@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import release.release_proj.domain.Cart;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -17,16 +18,16 @@ public class CartImpl implements CartRepository {
     public static final String NS = "sql.cart.mapper.";
 
     @Override
-    public void deleteByMemberId(Long memberId) {
-        sqlSession.delete(NS + "deleteByMemberId", memberId);
+    public int deleteByMemberId(String memberId) {
+        return sqlSession.delete(NS + "deleteByMemberId", memberId);
     }
 
     @Override
-    public void deleteByMemberIdAndItemId(@Param("memberId") Long memberId, @Param("itemId") Long itemId) {
-        Map<String, Long> params = new HashMap<>();
+    public int deleteByMemberIdAndItemId(@Param("memberId") String memberId, @Param("itemId") Long itemId) {
+        Map<String, Object> params = new HashMap<>();
         params.put("memberId", memberId);
         params.put("itemId", itemId);
-        sqlSession.delete(NS + "deleteByMemberIdAndItemId", params);
+        return sqlSession.delete(NS + "deleteByMemberIdAndItemId", params);
     }
 
     @Override
@@ -35,16 +36,28 @@ public class CartImpl implements CartRepository {
         return cart;
     }
 
-    @Override
+    /*@Override
     public Optional<Cart> findByMemberId(Long memberId) {
         return Optional.ofNullable(sqlSession.selectOne(NS + "findByMemberId", memberId));
     }
+    */
+    public Optional<List<Cart>> findByMemberId(String memberId) {
+        return Optional.ofNullable(sqlSession.selectList(NS + "findByMemberId", memberId));
+    }
 
-    @Override
-    public Optional<Cart> findByMemberIdAndItemId(@Param("memberId") Long memberId, @Param("itemId") Long itemId) {
-        Map<String, Long> params = new HashMap<>();
+    /*@Override
+    public Optional<Cart> findByMemberIdAndItemId(@Param("memberId") String memberId, @Param("itemId") Long itemId) {
+        Map<String, Object> params = new HashMap<>();
         params.put("memberId", memberId);
         params.put("itemId", itemId);
         return Optional.ofNullable(sqlSession.selectOne(NS + "findByMemberIdAndItemId", params));
+    }*/
+
+
+    public Optional<List<Cart>> findByMemberIdAndItemId(@Param("memberId") String memberId, @Param("itemId") Long itemId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("memberId", memberId);
+        params.put("itemId", itemId);
+        return Optional.ofNullable(sqlSession.selectList(NS + "findByMemberIdAndItemId", params));
     }
 }
