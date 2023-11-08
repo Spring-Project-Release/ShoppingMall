@@ -45,10 +45,11 @@ public class Cart {
         return cart;
     }
     */
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto increment
     private Long cartId;
     private int memberId;
     private int itemId;
-    private int amount; //cart에 담긴 해당 item의 개수
+    private int amount; //cart에 담긴 해당 item의 개수: 0이 아님
 }

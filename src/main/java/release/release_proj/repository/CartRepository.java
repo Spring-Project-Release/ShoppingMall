@@ -12,10 +12,10 @@ public interface CartRepository {
     public int deleteByMemberId(String memberId); //user의 장바구니 전체 삭제
     public int deleteByMemberIdAndItemId(@Param("memberId") String memberId, @Param("itemId") Long itemId); //user의 장바구니 중 특정 item만 삭제
     public Cart save(Cart cart);
-    //Optional<Cart> findByMemberId(Long memberId);
     Optional<List<Cart>> findByMemberId(String memberId);
-    //Optional<Cart> findByMemberIdAndItemId(@Param("memberId") String memberId, @Param("itemId") Long itemId);
+    //Optional<Cart> findOneByMemberIdAndItemId(@Param("memberId") String memberId, @Param("itemId") Long itemId);
     Optional<List<Cart>> findByMemberIdAndItemId(@Param("memberId") String memberId, @Param("itemId") Long itemId);
+    public int updateCartAmount(@Param("memberId") String memberId, @Param("itemId") Long itemId, @Param("amount") int amount);
 
     /*public void deleteByCartId(Long cartId);
     Cart save(Cart cart);

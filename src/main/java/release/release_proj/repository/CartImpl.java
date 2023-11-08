@@ -36,17 +36,12 @@ public class CartImpl implements CartRepository {
         return cart;
     }
 
-    /*@Override
-    public Optional<Cart> findByMemberId(Long memberId) {
-        return Optional.ofNullable(sqlSession.selectOne(NS + "findByMemberId", memberId));
-    }
-    */
     public Optional<List<Cart>> findByMemberId(String memberId) {
         return Optional.ofNullable(sqlSession.selectList(NS + "findByMemberId", memberId));
     }
 
     /*@Override
-    public Optional<Cart> findByMemberIdAndItemId(@Param("memberId") String memberId, @Param("itemId") Long itemId) {
+    public Optional<Cart> findOneByMemberIdAndItemId(@Param("memberId") String memberId, @Param("itemId") Long itemId) {
         Map<String, Object> params = new HashMap<>();
         params.put("memberId", memberId);
         params.put("itemId", itemId);
@@ -59,5 +54,13 @@ public class CartImpl implements CartRepository {
         params.put("memberId", memberId);
         params.put("itemId", itemId);
         return Optional.ofNullable(sqlSession.selectList(NS + "findByMemberIdAndItemId", params));
+    }
+
+    public int updateCartAmount(@Param("memberId") String memberId, @Param("itemId") Long itemId, @Param("amount") int amount) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("memberId", memberId);
+        params.put("itemId", itemId);
+        params.put("amount", amount);
+        return sqlSession.update(NS+"updateCartAmount", params);
     }
 }

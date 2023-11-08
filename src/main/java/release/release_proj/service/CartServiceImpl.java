@@ -65,12 +65,19 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public void decreaseCartItem(MemberVO member, Item item) {
-
+    public int decreaseCartItem(MemberVO member, Item item) {
+        String memberId = member.getMemberId();
+        Long itemId = item.getItemId();
+        int amount = -1;
+        return cartRepository.updateCartAmount(memberId, itemId, amount);
     }
+    //이때 decrease를 해서 amount값이 0이 되면 해당 데이터를 삭제하도록 해야 함
 
     @Override
-    public void increaseCartItem(MemberVO member, Item item) {
-
+    public int increaseCartItem(MemberVO member, Item item) {
+        String memberId = member.getMemberId();
+        Long itemId = item.getItemId();
+        int amount = 1;
+        return cartRepository.updateCartAmount(memberId, itemId, amount);
     }
 }

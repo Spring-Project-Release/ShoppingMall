@@ -24,4 +24,12 @@
     <select id="findByMemberIdAndItemId" resultType="release.release_proj.domain.Cart">
         SELECT * FROM your_cart_table WHERE memberId = #{memberId} AND itemId = #{itemId}
     </select>
+
+    <update id="updateCartAmount" parameterType="map">
+        UPDATE cart
+        SET amount = amount + #{amount}
+        WHERE member_id = #{memberId} AND item_id = #{itemId}
+        LIMIT 1
+    </update>
+
 </mapper>
