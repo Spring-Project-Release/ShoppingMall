@@ -11,15 +11,15 @@ import java.util.Optional;
 @Service
 public class CartServiceImpl implements CartService{
 
-    //@Autowired
-    //private CartRepository cartRepository;
+    @Autowired
+    private CartRepository cartRepository;
 
-    private final CartRepository cartRepository;
+    /*private final CartRepository cartRepository;
 
     @Autowired
     public CartServiceImpl(CartRepository cartRepository) {
         this.cartRepository = cartRepository;
-    }
+    }*/
 
     @Override
     public Optional<List<Cart>> readMemberCarts(String memberId) {
