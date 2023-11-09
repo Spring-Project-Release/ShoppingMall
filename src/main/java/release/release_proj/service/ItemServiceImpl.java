@@ -57,6 +57,14 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findAll();
     }
 
+    public Optional<List<Item>> findByIsSoldout(boolean isSoldout) {
+        return itemRepository.findByIsSoldout(isSoldout);
+    }
+
+    public Optional<List<Item>> findByCategory(String category){
+        return itemRepository.findByCategory(category);
+    }
+
     @Override
     public int updateIsSoldout(Long itemId) {
         return itemRepository.isSoldout(itemId);
