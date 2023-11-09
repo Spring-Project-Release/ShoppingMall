@@ -37,13 +37,13 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Long deleteItem(Long itemId){
+    public Long deleteItem(Long itemId){ //나중에 itemName을 인자로 사용할수도?
         Long deletedItemId = itemRepository.deleteByItemId(itemId);
         return deletedItemId;
     }
 
     @Override
-    public Optional<Item> findOne(Long itemId){
+    public Optional<Item> findOne(Long itemId){ //나중에 itemName을 인자로 사용할수도?
         Optional<Item> item = itemRepository.findByItemId(itemId);
         if (item.isPresent()) {
             return item;
@@ -58,7 +58,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public int updateIsSoldout(Long itemId) {
+    public int updateIsSoldout(Long itemId) { //나중에 itemName을 인자로 사용할수도?
         return itemRepository.isSoldout(itemId);
     }
 

@@ -25,11 +25,18 @@
         SELECT * FROM your_cart_table WHERE memberId = #{memberId} AND itemId = #{itemId}
     </select>
 
-    <update id="updateCartAmount" parameterType="map">
+    <update id="updateCartAmount">
         UPDATE cart
         SET amount = amount + #{amount}
         WHERE member_id = #{memberId} AND item_id = #{itemId}
         LIMIT 1
     </update>
+
+    <delete id="deleteCartIfAmountIsZero">
+        <![CDATA[
+        DELETE FROM cart
+        WHERE member_id = #{memberId} AND item_id = #{itemId} AND amount <= 0
+        ]]>
+    </delete>
 
 </mapper>

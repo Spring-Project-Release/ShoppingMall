@@ -63,4 +63,11 @@ public class CartImpl implements CartRepository {
         params.put("amount", amount);
         return sqlSession.update(NS+"updateCartAmount", params);
     }
+
+    public int deleteCartIfAmountIsZero(@Param("memberId") String memberId, @Param("itemId") Long itemId){
+        Map<String, Object> params = new HashMap<>();
+        params.put("memberId", memberId);
+        params.put("itemId", itemId);
+        return sqlSession.delete(NS+"deleteCartIfAmountIsZero", params);
+    }
 }

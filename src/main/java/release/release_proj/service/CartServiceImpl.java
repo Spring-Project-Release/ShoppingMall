@@ -69,15 +69,20 @@ public class CartServiceImpl implements CartService{
         String memberId = member.getMemberId();
         Long itemId = item.getItemId();
         int amount = -1;
-        return cartRepository.updateCartAmount(memberId, itemId, amount);
+        cartRepository.updateCartAmount(memberId, itemId, amount);
+
+        return cartRepository.deleteCartIfAmountIsZero(memberId, itemId);
     }
-    //이때 decrease를 해서 amount값이 0이 되면 해당 데이터를 삭제하도록 해야 함
+    //decrease를 해서 amount값이 0이 되면 해당 데이터를 삭제하도록 구현하였음
+    //아니면 값이 amount가 2 이상일 때만 decreaseCartItem 함수를 실행할 수 있도록 바꿀까..?
 
     @Override
     public int increaseCartItem(MemberVO member, Item item) {
         String memberId = member.getMemberId();
         Long itemId = item.getItemId();
         int amount = 1;
+
         return cartRepository.updateCartAmount(memberId, itemId, amount);
     }
 }
+//mybatis에서 get...를 사둉하는 게 좋을지 생각해볼것

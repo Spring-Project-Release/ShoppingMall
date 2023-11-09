@@ -16,6 +16,7 @@ public interface CartRepository {
     //Optional<Cart> findOneByMemberIdAndItemId(@Param("memberId") String memberId, @Param("itemId") Long itemId);
     Optional<List<Cart>> findByMemberIdAndItemId(@Param("memberId") String memberId, @Param("itemId") Long itemId);
     public int updateCartAmount(@Param("memberId") String memberId, @Param("itemId") Long itemId, @Param("amount") int amount);
+    public int deleteCartIfAmountIsZero(@Param("memberId") String memberId, @Param("itemId") Long itemId);
 
     /*public void deleteByCartId(Long cartId);
     Cart save(Cart cart);
