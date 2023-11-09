@@ -4,6 +4,7 @@ import DetailBar from "../components/DetailBar";
 import SideBar from "../components/SideBar";
 import Footer from "../components/Footer";
 import { images } from "../jsons/imgList";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   width: 100%;
@@ -81,6 +82,11 @@ const InfoLine = styled.div`
 `;
 
 export default function Main() {
+  const nav = useNavigate();
+  const onMove = (itemNumber: string) => {
+    nav(`/detail/${itemNumber}`);
+  };
+
   return (
     <Container>
       <Navigation />
@@ -90,9 +96,9 @@ export default function Main() {
         <Recommand>
           {images.items.map((item) => (
             <Product key={item.itemNumber}>
-              <img src={item.url} />
+              <img src={item.url} onClick={() => onMove(item.itemNumber)} />
               <Info>
-                <p>{item.name}</p>
+                <p onClick={() => onMove(item.itemNumber)}>{item.name}</p>
                 <InfoLine>
                   <h2>{item.price}</h2>
                   <svg
