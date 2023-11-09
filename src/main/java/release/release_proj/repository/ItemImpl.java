@@ -17,15 +17,13 @@ public class ItemImpl implements ItemRepository {
     public static final String NS = "sql.item.mapper.";
 
     @Override
-    public Long deleteByItemId(Long itemId) {
-        sqlSession.delete(NS + "deleteByItemId", itemId);
-        return itemId;
+    public int deleteByItemId(Long itemId) {
+        return sqlSession.delete(NS + "deleteByItemId", itemId);
     }
 
     @Override
-    public Item save(Item item) {
-        sqlSession.insert(NS + "save", item);
-        return item;
+    public int save(Item item) {
+        return sqlSession.insert(NS + "save", item);
     }
 
     @Override
@@ -39,18 +37,18 @@ public class ItemImpl implements ItemRepository {
     }
 
     @Override
-    public List<Item> findAll() {
-        return sqlSession.selectList(NS + "findAll");
+    public Optional<List<Item>> findAll() {
+        return Optional.ofNullable(sqlSession.selectList(NS + "findAll"));
     }
 
     @Override
-    public List<Item> findByIsSoldout(boolean isSoldout) {
-        return sqlSession.selectList(NS + "findByIsSoldout", isSoldout);
+    public Optional<List<Item>> findByIsSoldout(boolean isSoldout) {
+        return Optional.ofNullable(sqlSession.selectList(NS + "findByIsSoldout", isSoldout));
     }
 
     @Override
-    public List<Item> findByCategory(String category) {
-        return sqlSession.selectList(NS + "findByCategory", category);
+    public Optional<List<Item>> findByCategory(String category) {
+        return Optional.ofNullable(sqlSession.selectList(NS + "findByCategory", category));
     }
 
     @Override

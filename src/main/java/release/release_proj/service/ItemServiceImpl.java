@@ -17,10 +17,9 @@ public class ItemServiceImpl implements ItemService {
     private ItemRepository itemRepository;
 
     @Override
-    public Long saveItem(Item item){
+    public int saveItem(Item item){
         isItemNameDuplicate(item);
-        Item savedItem = itemRepository.save(item);
-        return savedItem.getItemId();
+        return itemRepository.save(item);
     }
 
     @Override
@@ -37,9 +36,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Long deleteItem(Long itemId){ //나중에 itemName을 인자로 사용할수도?
-        Long deletedItemId = itemRepository.deleteByItemId(itemId);
-        return deletedItemId;
+    public int deleteItem(Long itemId){
+        return itemRepository.deleteByItemId(itemId);
     }
 
     @Override
@@ -53,8 +51,16 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> readItems(){
+    public Optional<List<Item>> readItems(){
         return itemRepository.findAll();
+    }
+
+    public Optional<List<Item>> findByIsSoldout(boolean isSoldout) {
+        return itemRepository.findByIsSoldout(isSoldout);
+    }
+
+    public Optional<List<Item>> findByCategory(String category){
+        return itemRepository.findByCategory(category);
     }
 
     @Override
