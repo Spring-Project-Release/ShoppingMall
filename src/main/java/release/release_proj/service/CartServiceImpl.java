@@ -3,8 +3,6 @@ package release.release_proj.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import release.release_proj.domain.Cart;
-import release.release_proj.domain.Item;
-import release.release_proj.domain.MemberVO;
 import release.release_proj.repository.CartRepository;
 
 import java.util.List;
@@ -24,13 +22,15 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public Optional<List<Cart>> readMemberCarts(MemberVO member) {
-        return cartRepository.findByMemberId(member.getMemberId());
+    public Optional<List<Cart>> readMemberCarts(String memberId) {
+        //return cartRepository.findByMemberId(member.getMemberId());
+        return cartRepository.findByMemberId(memberId);
     }
 
     @Override
-    public Optional<List<Cart>> readMemberCartItems(MemberVO member, Item item) {
-        return cartRepository.findByMemberIdAndItemId(member.getMemberId(), item.getItemId());
+    public Optional<List<Cart>> readMemberCartItems(String memberId, Long itemId) {
+        //return cartRepository.findByMemberIdAndItemId(member.getMemberId(), item.getItemId());
+        return cartRepository.findByMemberIdAndItemId(memberId, itemId);
     }
 
     @Override
@@ -40,9 +40,9 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public int deleteCartItem(MemberVO member, Item item) {
-        String memberId = member.getMemberId();
-        Long itemId = item.getItemId();
+    public int deleteCartItem(String memberId, Long itemId) {
+        //String memberId = member.getMemberId();
+        //Long itemId = item.getItemId();
         Optional<List<Cart>> isCartItemExist = cartRepository.findByMemberIdAndItemId(memberId, itemId);
 
         if (isCartItemExist.isPresent()) {
@@ -53,8 +53,8 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public int deleteCart(MemberVO member) {
-        String memberId = member.getMemberId();
+    public int deleteCart(String memberId) {
+        //String memberId = member.getMemberId();
         Optional<List<Cart>> memberCarts = cartRepository.findByMemberId(memberId);
 
         if (memberCarts.isPresent()) {
@@ -65,9 +65,9 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public int decreaseCartItem(MemberVO member, Item item) {
-        String memberId = member.getMemberId();
-        Long itemId = item.getItemId();
+    public int decreaseCartItem(String memberId, Long itemId) {
+        //String memberId = member.getMemberId();
+        //Long itemId = item.getItemId();
         int amount = -1;
         cartRepository.updateCartAmount(memberId, itemId, amount);
 
@@ -77,9 +77,9 @@ public class CartServiceImpl implements CartService{
     //아니면 값이 amount가 2 이상일 때만 decreaseCartItem 함수를 실행할 수 있도록 바꿀까..?
 
     @Override
-    public int increaseCartItem(MemberVO member, Item item) {
-        String memberId = member.getMemberId();
-        Long itemId = item.getItemId();
+    public int increaseCartItem(String memberId, Long itemId) {
+        //String memberId = member.getMemberId();
+        //Long itemId = item.getItemId();
         int amount = 1;
 
         return cartRepository.updateCartAmount(memberId, itemId, amount);
