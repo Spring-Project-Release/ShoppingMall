@@ -8,8 +8,8 @@ import java.util.Optional;
 //@Repository
 public interface ItemRepository {
 
-    public Long deleteByItemId(Long itemId);
-    public Item save(Item item);
+    public int deleteByItemId(Long itemId);
+    public int save(Item item);
     public Optional<Item> findByItemId(Long itemId);
     public Optional<Item> findByItemName(String name);
     public Optional<List<Item>> findAll();

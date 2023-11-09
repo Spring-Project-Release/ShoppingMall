@@ -17,10 +17,9 @@ public class ItemServiceImpl implements ItemService {
     private ItemRepository itemRepository;
 
     @Override
-    public Long saveItem(Item item){
+    public int saveItem(Item item){
         isItemNameDuplicate(item);
-        Item savedItem = itemRepository.save(item);
-        return savedItem.getItemId();
+        return itemRepository.save(item);
     }
 
     @Override
@@ -37,9 +36,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Long deleteItem(Long itemId){
-        Long deletedItemId = itemRepository.deleteByItemId(itemId);
-        return deletedItemId;
+    public int deleteItem(Long itemId){
+        return itemRepository.deleteByItemId(itemId);
     }
 
     @Override

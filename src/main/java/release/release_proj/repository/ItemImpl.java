@@ -17,15 +17,13 @@ public class ItemImpl implements ItemRepository {
     public static final String NS = "sql.item.mapper.";
 
     @Override
-    public Long deleteByItemId(Long itemId) {
-        sqlSession.delete(NS + "deleteByItemId", itemId);
-        return itemId;
+    public int deleteByItemId(Long itemId) {
+        return sqlSession.delete(NS + "deleteByItemId", itemId);
     }
 
     @Override
-    public Item save(Item item) {
-        sqlSession.insert(NS + "save", item);
-        return item;
+    public int save(Item item) {
+        return sqlSession.insert(NS + "save", item);
     }
 
     @Override

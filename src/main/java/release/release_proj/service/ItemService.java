@@ -54,10 +54,10 @@ import java.util.Optional;
 
 public interface ItemService {
 
-    public Long saveItem(Item item);
+    public int saveItem(Item item);
     public void isItemNameDuplicate(Item item);
     public int updateItem(Item item);
-    public Long deleteItem(Long itemId);
+    public int deleteItem(Long itemId);
     public Optional<Item> findOne(Long itemId);
     public Optional<List<Item>> readItems();
     public int updateIsSoldout(Long itemId); //item에서 isSoldout만 반대값으로 update
