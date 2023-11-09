@@ -6,44 +6,44 @@
 <mapper namespace="sql.item.mapper">
 
     <delete id="deleteByItemId" parameterType="Long">
-        DELETE FROM your_item_table WHERE itemId = #{itemId}
+        DELETE FROM item WHERE item_id = #{itemId}
     </delete>
 
     <insert id="save" parameterType="release.release_proj.domain.Item">
-        INSERT INTO your_item_table (name, price, count, stock, category, text, isSoldout, picture, discount, origin, delivery_type, seller, unit)
+        INSERT INTO item (name, price, count, stock, category, text, isSoldout, picture, discount, origin, delivery_type, seller, unit)
         VALUES (#{name}, #{price}, #{count}, #{stock}, #{category}, #{text}, #{isSoldout}, #{picture}, #{discount}, #{origin}, #{delivery_type}, #{seller}, #{unit})
     </insert>
 
     <select id="findByItemId" parameterType="Long" resultType="release.release_proj.domain.Item">
-        SELECT * FROM your_item_table WHERE itemId = #{itemId}
+        SELECT * FROM item WHERE item_id = #{itemId}
     </select>
 
     <select id="findByItemName" parameterType="String" resultType="release.release_proj.domain.Item">
-        SELECT * FROM your_item_table WHERE name = #{name}
+        SELECT * FROM item WHERE name = #{name}
     </select>
 
     <select id="findAll" resultType="release.release_proj.domain.Item">
-        SELECT * FROM your_item_table
+        SELECT * FROM item
     </select>
 
     <select id="findByIsSoldout" parameterType="boolean" resultType="release.release_proj.domain.Item">
-        SELECT * FROM your_item_table WHERE isSoldout = #{isSoldout}
+        SELECT * FROM item WHERE isSoldout = #{isSoldout}
     </select>
 
     <select id="findByCategory" parameterType="String" resultType="release.release_proj.domain.Item">
-        SELECT * FROM your_item_table WHERE category = #{category}
+        SELECT * FROM item WHERE category = #{category}
     </select>
 
     <update id="updateItem" parameterType="release.release_proj.domain.Item">
-        UPDATE your_item_table
+        UPDATE item
         SET name = #{name}, price = #{price}, text = #{text}, stock = #{stock}, item_type = #{item_type}
         WHERE item_id = #{itemId}
     </update>
 
     <update id="updateIsSoldout" parameterType="Long">
-        UPDATE your_item_table
+        UPDATE item
         SET isSoldout = 1 - isSoldout
-        WHERE itemId = #{value}
+        WHERE item_id = #{value}
     </update>
 
 </mapper>
