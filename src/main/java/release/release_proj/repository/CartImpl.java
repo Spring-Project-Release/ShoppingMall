@@ -3,6 +3,7 @@ package release.release_proj.repository;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import release.release_proj.domain.Cart;
 
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Repository
 public class CartImpl implements CartRepository {
 
     @Autowired

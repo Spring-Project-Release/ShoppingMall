@@ -69,7 +69,7 @@ public class CartController {
         }
     }
 
-    @PutMapping("user/{memerId}/item/{itemId}")
+    /*@PutMapping("user/{memerId}/item/{itemId}")
     public ResponseEntity<String> decreaseCartItemAmount(@PathVariable(name = "memberId") String memberId, @PathVariable(name="itemId") Long itemId) {
         int result = cartService.decreaseCartItem(memberId, itemId);
         if (result != 0){
@@ -86,6 +86,30 @@ public class CartController {
             return ResponseEntity.ok("User's cartItem amount increased successfully.");
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("해당하는 cart가 존재하지 않거나 오류가 발생했습니다.");
+        }
+    }*/
+
+    @PutMapping("user/{memerId}/item/{itemId}")
+    public ResponseEntity<String> increaseCartItemAmount(@PathVariable(name = "memberId") String memberId, @PathVariable(name="itemId") Long itemId, @RequestBody Integer amount) {
+        int result;
+        String successMessage;
+        HttpStatus status;
+
+        if (amount != null && amount > 0) {
+            result = cartService.increaseCartItem(memberId, itemId, amount);
+            successMessage = "User's cartItem amount increased successfully.";
+        } else if (amount == null) {
+            result = cartService.decreaseCartItem(memberId, itemId);
+            successMessage = "User's cartItem amount decreased successfully.";
+        } else {
+            return ResponseEntity.badRequest().body("Invalid request. Please provide a valid amount for cartItem.");
+        }
+
+        if (result != 0) {
+            return ResponseEntity.ok(successMessage);
+        } else {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            return ResponseEntity.status(status).body("The corresponding cart does not exist or an error occurred.");
         }
     }
 }
