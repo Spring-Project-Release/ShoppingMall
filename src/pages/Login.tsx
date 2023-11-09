@@ -6,6 +6,7 @@ import { ILoginFormData } from "../apis/interface";
 import { getLoginData } from "../apis/api";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import axios from "axios";
 
 const Container = styled.div`
   height: auto;
@@ -78,6 +79,8 @@ const Line = styled.span`
   }
 `;
 
+const BASE_URL = "http://localhost:8080"; // 서버 주소 설정
+
 export default function Login() {
   const {
     register,
@@ -88,12 +91,19 @@ export default function Login() {
   const nav = useNavigate();
 
   const onValid = async (data: ILoginFormData) => {
-    console.log(data);
-    // console.log("profit!!");
+    // 서버로 요청을 보내는 부분
+    const url = "http://localhost:8080/user/login";
 
-    const response = await getLoginData(data);
-    console.log(response);
-    nav("/");
+    axios
+      .post(url, data)
+      .then((response) => {
+        if (response.data) {
+          sessionStorage.setItem("memberInfo", response.data);
+          console.log(response.data);
+          // test
+        }
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
