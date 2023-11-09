@@ -115,32 +115,32 @@ export default function Login() {
           <h1>로그인</h1>
 
           <Line>
-            <label htmlFor="loginId">아이디</label>
+            <label htmlFor="memberId">아이디</label>
             <input
-              {...register("loginId", {
+              {...register("memberId", {
                 required: "아이디를 입력해주세요.",
                 minLength: {
                   value: 5,
                   message: "아이디는 5글자 이상입니다.",
                 },
               })}
-              id="loginId"
-              name="loginId"
+              id="memberId"
+              name="memberId"
               placeholder="아이디"
             />
           </Line>
           <Line>
-            <label htmlFor="loginPassword">비밀번호</label>
+            <label htmlFor="memberPassword">비밀번호</label>
             <input
-              {...register("loginPassword", {
+              {...register("memberPassword", {
                 required: "비밀번호를 입력해주세요.",
                 minLength: {
                   value: 8,
                   message: "비밀번호는 8글자 이상입니다.",
                 },
               })}
-              id="loginPassword"
-              name="loginPassword"
+              id="memberPassword"
+              name="memberPassword"
               type="password"
               placeholder="비밀번호"
             />
@@ -155,10 +155,10 @@ export default function Login() {
             fontWeight: "bold",
           }}
         >
-          {errors?.loginId?.message
-            ? errors?.loginId?.message
-            : errors?.loginPassword?.message
-            ? errors?.loginPassword?.message
+          {errors?.memberId?.message
+            ? errors?.memberId?.message
+            : errors?.memberPassword?.message
+            ? errors?.memberPassword?.message
             : " "}
         </span>
       </Main>
