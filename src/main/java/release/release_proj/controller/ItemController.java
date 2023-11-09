@@ -97,7 +97,6 @@ public class ItemController {
         } else {
             return ResponseEntity.notFound().build();
         }
-
     }
 
     @GetMapping("/{category}")
@@ -109,7 +108,6 @@ public class ItemController {
         } else {
             return ResponseEntity.notFound().build();
         }
-
     }
 
     @GetMapping("/{isSoldout}")
@@ -121,7 +119,6 @@ public class ItemController {
         } else {
             return ResponseEntity.notFound().build();
         }
-
     }
 
     @GetMapping("/{itemId}")
@@ -136,7 +133,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<String> join(@RequestBody Item item) {
+    public ResponseEntity<String> newItem(@RequestBody Item item) {
         int result =  itemService.saveItem(item);
         if (result != 0) {
             return ResponseEntity.ok("Item created successfully.");

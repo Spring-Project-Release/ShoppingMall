@@ -34,9 +34,8 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public Long addCartItem(Cart cart) {
-        Cart addedCartItem = cartRepository.save(cart);
-        return addedCartItem.getCartId();
+    public int addCartItem(Cart cart) {
+        return cartRepository.save(cart);
     }
 
     @Override
@@ -77,10 +76,9 @@ public class CartServiceImpl implements CartService{
     //아니면 값이 amount가 2 이상일 때만 decreaseCartItem 함수를 실행할 수 있도록 바꿀까..?
 
     @Override
-    public int increaseCartItem(String memberId, Long itemId) {
+    public int increaseCartItem(String memberId, Long itemId, int amount) { //증가의 경우 상품페이지에서 바로 담을 수 있으므로 한번에 여러개의 상품이 증가할 수 있음
         //String memberId = member.getMemberId();
         //Long itemId = item.getItemId();
-        int amount = 1;
 
         return cartRepository.updateCartAmount(memberId, itemId, amount);
     }

@@ -31,9 +31,8 @@ public class CartImpl implements CartRepository {
     }
 
     @Override
-    public Cart save(Cart cart) {
-        sqlSession.insert(NS + "save", cart);
-        return cart;
+    public int save(Cart cart) {
+        return sqlSession.insert(NS + "save", cart);
     }
 
     public Optional<List<Cart>> findByMemberId(String memberId) {

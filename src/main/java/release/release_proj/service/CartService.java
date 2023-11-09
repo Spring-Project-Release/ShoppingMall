@@ -109,11 +109,11 @@ public interface CartService {
     public Optional<List<Cart>> readMemberCarts(String memberId); //특정 member의 장바구니 전체 조회
     public Optional<List<Cart>> readMemberCartItems(String memberId, Long itemId); //특정 member의 특정 item 조회
     //public void addCartItem(MemberVO member, Item item, int amount); //특정 member에 장바구니 상품 추가
-    public Long addCartItem(Cart cart); //특정 member에 장바구니 상품 추가
+    public int addCartItem(Cart cart); //특정 member에 장바구니 상품 추가
     public int deleteCartItem(String memberId, Long itemId); //특정 member의 장바구니에서 특정 item 삭제
     public int deleteCart(String memberId); //특정 member의 장바구니 전체 삭제
     public int decreaseCartItem(String memberId, Long itemId); //특정 member의 장바구니에서 특정 item의 개수 감소
-    public int increaseCartItem(String memberId, Long itemId); //특정 member의 장바구니에서 특정 item의 개수 증가
+    public int increaseCartItem(String memberId, Long itemId, int amount); //특정 member의 장바구니에서 특정 item의 개수 증가
 
     //이후 장바구니 결제 함수 추가
 }
