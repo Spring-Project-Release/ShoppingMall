@@ -2,22 +2,16 @@ package release.release_proj.domain;
 
 public class MemberVO {
     private String memberId; //사용자 아이디
-    private String email; //이메일
-    private String password; //비밀번호
-    private String name; //이름
-    private String phone; //핸드폰 번호
-    private String address; //주소
+    private String memberName;
+    private String memberPassword;
+    private String memberEmail;
+    private String memberPhone;
+    private String memberAddress;
+    private String memberType;
+    private String memberGrade;
+
 
     public MemberVO() {}
-
-    public MemberVO(String memberId, String email, String password, String name, String phone, String address) {
-        this.memberId = memberId;
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.phone = phone;
-        this.address = address;
-    }
 
     public String getMemberId() {
         return memberId;
@@ -27,55 +21,74 @@ public class MemberVO {
         this.memberId = memberId;
     }
 
-    public String getEmail() {
-        return email;
+    public String getMemberName() {
+        return memberName;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setMemberName(String memberName) {
+        this.memberName = memberName;
     }
 
-    public String getPassword() {
-        return password;
+    public String getMemberPassword() {
+        return memberPassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setMemberPassword(String memberPassword) {
+        this.memberPassword = memberPassword;
     }
 
-    public String getName() {
-        return name;
+    public String getMemberEmail() {
+        return memberEmail;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setMemberEmail(String memberEmail) {
+        this.memberEmail = memberEmail;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getMemberPhone() {
+        return memberPhone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setMemberPhone(String memberPhone) {
+        this.memberPhone = memberPhone;
     }
 
-    public String getAddress() {
-        return address;
+    public String getMemberAddress() {
+        return memberAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setMemberAddress(String memberAddress) {
+        this.memberAddress = memberAddress;
+    }
+
+    public String getMemberType() {
+        return memberType;
+    }
+
+    public void setMemberType(String memberType) {
+        this.memberType = memberType;
+    }
+
+    public String getMemberGrade() {
+        return memberGrade;
+    }
+
+    public void setMemberGrade(String memberGrade) {
+        this.memberGrade = memberGrade;
     }
 
     @Override
     public String toString() {
         return "MemberVO{" +
                 "memberId='" + memberId + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
+                ", memberName='" + memberName + '\'' +
+                ", memberPassword='" + memberPassword + '\'' +
+                ", memberEmail='" + memberEmail + '\'' +
+                ", memberPhone='" + memberPhone + '\'' +
+                ", memberAddress='" + memberAddress + '\'' +
+                ", memberType='" + memberType + '\'' +
+                ", memberGrade='" + memberGrade + '\'' +
                 '}';
     }
 }
+

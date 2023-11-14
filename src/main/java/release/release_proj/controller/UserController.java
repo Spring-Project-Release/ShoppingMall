@@ -19,13 +19,14 @@ public class UserController {
     //로그인
     @PostMapping("/user/login")
     public ResponseEntity login(@RequestBody HashMap<String, Object> requestJsonHashMap, HttpServletRequest request) throws Exception{
+        System.out.println(requestJsonHashMap);
         String memberId = (String) requestJsonHashMap.get("memberId");
-        String password = (String) requestJsonHashMap.get("password");
-        System.out.println("id : "+ memberId + " pw : "+ password);
+        String memberPassword = (String) requestJsonHashMap.get("memberPassword");
+        System.out.println("id : "+ memberId + " pw : "+ memberPassword);
 
         MemberVO memberVO = new MemberVO();
         memberVO.setMemberId(memberId);
-        memberVO.setPassword(password);
+        memberVO.setMemberPassword(memberPassword);
         MemberVO rvo = memberService.login(memberVO);
 
         if (rvo != null) { //로그인 성공
@@ -42,8 +43,8 @@ public class UserController {
     public ResponseEntity findUserId(@RequestParam String name, @RequestParam String phone) throws Exception {
         System.out.println("아이디 찾기 요청 들어옴");
         MemberVO member = new MemberVO();
-        member.setName(name);
-        member.setPhone(phone);
+        member.setMemberName(name);
+        member.setMemberPhone(phone);
         String memberId = memberService.findMemberId(member);
 
         if (memberId != null) {
@@ -58,11 +59,11 @@ public class UserController {
     public ResponseEntity registerUser(@RequestBody HashMap<String, Object> requestJsonHashMap, HttpSession session) throws Exception{
         MemberVO vo = new MemberVO();
         vo.setMemberId((String) requestJsonHashMap.get("memberId"));
-        vo.setEmail((String) requestJsonHashMap.get("email"));
-        vo.setPassword((String) requestJsonHashMap.get("password"));
-        vo.setName((String) requestJsonHashMap.get("username"));
-        vo.setPhone((String) requestJsonHashMap.get("phone"));
-        vo.setAddress((String) requestJsonHashMap.get("address"));
+        vo.setMemberEmail((String) requestJsonHashMap.get("email"));
+        vo.setMemberPassword((String) requestJsonHashMap.get("password"));
+        vo.setMemberName((String) requestJsonHashMap.get("username"));
+        vo.setMemberPhone((String) requestJsonHashMap.get("phone"));
+        vo.setMemberAddress((String) requestJsonHashMap.get("address"));
 
 
         System.out.println(vo);
