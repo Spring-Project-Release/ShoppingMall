@@ -11,15 +11,15 @@ import java.util.Optional;
 @Service
 public class CartServiceImpl implements CartService{
 
-    //@Autowired
-    //private CartRepository cartRepository;
+    @Autowired
+    private CartRepository cartRepository;
 
-    private final CartRepository cartRepository;
+    /*private final CartRepository cartRepository;
 
     @Autowired
     public CartServiceImpl(CartRepository cartRepository) {
         this.cartRepository = cartRepository;
-    }
+    }*/
 
     @Override
     public Optional<List<Cart>> readMemberCarts(String memberId) {
@@ -63,7 +63,7 @@ public class CartServiceImpl implements CartService{
         }
     }
 
-    @Override
+    /*@Override
     public int decreaseCartItem(String memberId, Long itemId) {
         //String memberId = member.getMemberId();
         //Long itemId = item.getItemId();
@@ -81,6 +81,22 @@ public class CartServiceImpl implements CartService{
         //Long itemId = item.getItemId();
 
         return cartRepository.updateCartAmount(memberId, itemId, amount);
+    }*/
+
+    @Override
+    public int decreaseCartItem(Long cartId) {
+        int amount = -1;
+        int result = cartRepository.updateCartAmount(cartId, amount);
+        cartRepository.deleteCartIfAmountIsZero(cartId); //이게 제대로 작동하지 않았을 때의 예외처리를 해주어야 할까?
+
+        return result;
     }
+
+    @Override
+    public int increaseCartItem(Long cartId, int amount) { //증가의 경우 상품페이지에서 바로 담을 수 있으므로 한번에 여러개의 상품이 증가할 수 있음
+
+        return cartRepository.updateCartAmount(cartId, amount);
+    }
+
 }
 //mybatis에서 get...를 사둉하는 게 좋을지 생각해볼것

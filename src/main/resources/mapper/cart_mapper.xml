@@ -4,27 +4,32 @@
 
 <mapper namespace="sql.cart.mapper">
 
-    <delete id="deleteByMemberId" parameterType="Long">
-        DELETE FROM your_cart_table WHERE memberId = #{memberId}
+    <delete id="deleteByMemberId" parameterType="String">
+        DELETE FROM cart WHERE member_id = #{memberId}
+    </delete>
+
+    <!---->
+    <delete id="deleteByItemId" parameterType="Long">
+        DELETE FROM cart WHERE item_id = #{itemId}
     </delete>
 
     <delete id="deleteByMemberIdAndItemId">
-        DELETE FROM your_cart_table WHERE memberId = #{memberId} AND itemId = #{itemId}
+        DELETE FROM cart WHERE member_id = #{memberId} AND item_id = #{itemId}
     </delete>
 
     <insert id="save" parameterType="release.release_proj.domain.Cart">
-        INSERT INTO your_cart_table (memberId, itemId, amount)
+        INSERT INTO cart (member_id, item_id, amount)
         VALUES (#{memberId}, #{itemId}, #{amount})
     </insert>
 
-    <select id="findByMemberId" parameterType="Long" resultType="release.release_proj.domain.Cart">
-        SELECT * FROM your_cart_table WHERE memberId = #{memberId}
+    <select id="findByMemberId" parameterType="String" resultType="release.release_proj.domain.Cart">
+        SELECT * FROM cart WHERE member_id = #{memberId}
     </select>
 
     <select id="findByMemberIdAndItemId" resultType="release.release_proj.domain.Cart">
-        SELECT * FROM your_cart_table WHERE memberId = #{memberId} AND itemId = #{itemId}
+        SELECT * FROM cart WHERE member_id = #{memberId} AND item_id = #{itemId}
     </select>
-
+    <!--
     <update id="updateCartAmount">
         UPDATE cart
         SET amount = amount + #{amount}
@@ -38,5 +43,18 @@
         WHERE member_id = #{memberId} AND item_id = #{itemId} AND amount <= 0
         ]]>
     </delete>
+    -->
+    <update id="updateCartAmount">
+        UPDATE cart
+        SET amount = amount + #{amount}
+        WHERE cart_id = #{cartId}
+        LIMIT 1
+    </update>
 
+    <delete id="deleteCartIfAmountIsZero">
+        <![CDATA[
+        DELETE FROM cart
+        WHERE cart_id = #{cartId} AND amount <= 0
+        ]]>
+    </delete>
 </mapper>

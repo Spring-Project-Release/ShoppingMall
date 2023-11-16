@@ -10,7 +10,7 @@
     </delete>
 
     <insert id="save" parameterType="release.release_proj.domain.Item">
-        INSERT INTO item (name, price, count, stock, category, text, isSoldout, picture, discount, origin, delivery_type, seller, unit)
+        INSERT INTO item (name, price, count, stock, category, text, is_soldout, picture, discount, origin, delivery_type, seller, unit)
         VALUES (#{name}, #{price}, #{count}, #{stock}, #{category}, #{text}, #{isSoldout}, #{picture}, #{discount}, #{origin}, #{delivery_type}, #{seller}, #{unit})
     </insert>
 
@@ -27,7 +27,7 @@
     </select>
 
     <select id="findByIsSoldout" parameterType="boolean" resultType="release.release_proj.domain.Item">
-        SELECT * FROM item WHERE isSoldout = #{isSoldout}
+        SELECT * FROM item WHERE is_soldout = #{isSoldout}
     </select>
 
     <select id="findByCategory" parameterType="String" resultType="release.release_proj.domain.Item">
@@ -42,8 +42,8 @@
 
     <update id="updateIsSoldout" parameterType="Long">
         UPDATE item
-        SET isSoldout = 1 - isSoldout
-        WHERE item_id = #{value}
+        SET is_soldout = 1 - is_soldout
+        WHERE item_id = #{itemId}
     </update>
 
 </mapper>

@@ -12,8 +12,9 @@
         <package name="release.release_proj.domain"/>
     </typeAliases>
 
-
     <mappers>
         <mapper resource="mapper/member_mapper.xml"/>
+        <mapper resource="mapper/item_mapper.xml"/>
+        <mapper resource="mapper/cart_mapper.xml"/>
     </mappers>
 </configuration>

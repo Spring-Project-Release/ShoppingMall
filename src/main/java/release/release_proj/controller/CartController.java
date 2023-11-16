@@ -1,6 +1,7 @@
 package release.release_proj.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,11 +42,17 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<String> newCart(@RequestBody Cart cart) {
-        int result = cartService.addCartItem(cart);
-        if (result != 0){
-            return ResponseEntity.ok("Cart created successfully.");
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create cart.");
+        try {
+            int result = cartService.addCartItem(cart);
+
+            if (result != 0) {
+                return ResponseEntity.ok("Cart created successfully.");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create cart.");
+            }
+        } catch (DataIntegrityViolationException e) {
+            // 외래 키 제약 조건 위배로 인한 예외 처리
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create cart. 해당하는 itemId나 memberId가 존재하지 않습니다");
         }
     }
 
@@ -69,7 +76,7 @@ public class CartController {
         }
     }
 
-    @PutMapping("user/{memerId}/item/{itemId}")
+    /*@PutMapping("user/{memerId}/item/{itemId}")
     public ResponseEntity<String> decreaseCartItemAmount(@PathVariable(name = "memberId") String memberId, @PathVariable(name="itemId") Long itemId) {
         int result = cartService.decreaseCartItem(memberId, itemId);
         if (result != 0){
@@ -79,13 +86,41 @@ public class CartController {
         }
     }
 
-    @PutMapping("user/{memerId}/item/{itemId}")
+    @PutMapping("user/{memberId}/item/{itemId}")
     public ResponseEntity<String> increaseCartItemAmount(@PathVariable(name = "memberId") String memberId, @PathVariable(name="itemId") Long itemId, @RequestBody int amount) {
         int result = cartService.increaseCartItem(memberId, itemId, amount);
         if (result != 0){
             return ResponseEntity.ok("User's cartItem amount increased successfully.");
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("해당하는 cart가 존재하지 않거나 오류가 발생했습니다.");
+        }
+    }*/
+
+    //@PutMapping("user/{memberId}/item/{itemId}")
+    //public ResponseEntity<String> increaseCartItemAmount(@PathVariable(name = "memberId") String memberId, @PathVariable(name="itemId") Long itemId, @RequestBody Integer amount) {
+    @PutMapping("/{cartId}")
+    public ResponseEntity<String> increaseCartItemAmount(@PathVariable(name="cartId") Long cartId, @RequestBody(required = false) Integer amount) {
+        int result;
+        String successMessage;
+        HttpStatus status;
+
+        if (amount != null && amount > 0) {
+            //result = cartService.increaseCartItem(memberId, itemId, amount);
+            result = cartService.increaseCartItem(cartId, amount);
+            successMessage = "User's cartItem amount increased successfully.";
+        } else if (amount == null) {
+            //result = cartService.decreaseCartItem(memberId, itemId);
+            result = cartService.decreaseCartItem(cartId);
+            successMessage = "User's cartItem amount decreased successfully.";
+        } else {
+            return ResponseEntity.badRequest().body("Invalid request. Please provide a valid amount for cartItem.");
+        }
+
+        if (result != 0) {
+            return ResponseEntity.ok(successMessage);
+        } else {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            return ResponseEntity.status(status).body("The corresponding cart does not exist or an error occurred.");
         }
     }
 }
