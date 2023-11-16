@@ -142,9 +142,9 @@ public class ItemController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> update(@PathVariable(name = "id") Long id, @RequestBody Item item) {
-        item.setItemId(id); //item에 id를 넣지 않고 update해도 url의 id를 가진 item을 update하도록 함
+    @PutMapping("/{itemId}")
+    public ResponseEntity<String> update(@PathVariable(name = "itemId") Long itemId, @RequestBody Item item) {
+        item.setItemId(itemId); //item에 id를 넣지 않고 update해도 url의 id를 가진 item을 update하도록 함
         int result = itemService.updateItem(item);
         if (result != 0){
             return ResponseEntity.ok("Item updated successfully.");
@@ -153,9 +153,9 @@ public class ItemController {
         }
     }
 
-    @PutMapping("/{id}/isSoldout")
-    public ResponseEntity<String> updateIsSoldout(@PathVariable(name = "id") Long id) {
-        int result = itemService.updateIsSoldout(id);
+    @PutMapping("/{itemId}/isSoldout")
+    public ResponseEntity<String> updateIsSoldout(@PathVariable(name = "itemId") Long itemId) {
+        int result = itemService.updateIsSoldout(itemId);
         if (result != 0){
             return ResponseEntity.ok("Item isSoldout updated successfully.");
         } else {
@@ -164,13 +164,13 @@ public class ItemController {
     }
 
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable(name = "id") Long id) {
-        int result = itemService.deleteItem(id);
+    @DeleteMapping("/{itemId}")
+    public ResponseEntity<String> delete(@PathVariable(name = "itemId") Long itemId) {
+        int result = itemService.deleteItem(itemId);
         if (result != 0){
             return ResponseEntity.ok("Item deleted successfully.");
         }
-        else { //해당 id가 존재하지 않아 삭제 동작이 필요하지 않았던 경우
+        else { //해당 itemId가 존재하지 않아 삭제 동작이 필요하지 않았던 경우
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("존재하지 않는 itemId입니다.");
         }
     }

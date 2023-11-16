@@ -58,8 +58,8 @@ public class ItemImpl implements ItemRepository {
     }
 
     @Override
-    public int isSoldout(Long itemId){
-        return sqlSession.update(NS + "isSoldout", itemId);
+    public int updateIsSoldout(Long itemId){
+        return sqlSession.update(NS + "updateIsSoldout", itemId);
     }
 }
     //@Autowired

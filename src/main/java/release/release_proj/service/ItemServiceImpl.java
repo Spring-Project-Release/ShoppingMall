@@ -65,7 +65,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public int updateIsSoldout(Long itemId) { //나중에 itemName을 인자로 사용할수도?
-        return itemRepository.isSoldout(itemId);
+        return itemRepository.updateIsSoldout(itemId);
     }
 
     /*@Override //추후 필요하면 update

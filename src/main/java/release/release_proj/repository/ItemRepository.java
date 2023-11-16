@@ -17,5 +17,5 @@ public interface ItemRepository {
     public Optional<List<Item>> findByCategory(String category);
     public int updateItem(Item item);
 
-    public int isSoldout(Long itemId);
+    public int updateIsSoldout(Long itemId);
 }
