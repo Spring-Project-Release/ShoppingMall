@@ -29,7 +29,7 @@
     <select id="findByMemberIdAndItemId" resultType="release.release_proj.domain.Cart">
         SELECT * FROM cart WHERE member_id = #{memberId} AND item_id = #{itemId}
     </select>
-
+    <!--
     <update id="updateCartAmount">
         UPDATE cart
         SET amount = amount + #{amount}
@@ -43,5 +43,18 @@
         WHERE member_id = #{memberId} AND item_id = #{itemId} AND amount <= 0
         ]]>
     </delete>
+    -->
+    <update id="updateCartAmount">
+        UPDATE cart
+        SET amount = amount + #{amount}
+        WHERE cart_id = #{cartId}
+        LIMIT 1
+    </update>
 
+    <delete id="deleteCartIfAmountIsZero">
+        <![CDATA[
+        DELETE FROM cart
+        WHERE cart_id = #{cartId} AND amount <= 0
+        ]]>
+    </delete>
 </mapper>

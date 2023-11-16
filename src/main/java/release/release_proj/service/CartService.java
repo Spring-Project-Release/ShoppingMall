@@ -112,8 +112,10 @@ public interface CartService {
     public int addCartItem(Cart cart); //특정 member에 장바구니 상품 추가
     public int deleteCartItem(String memberId, Long itemId); //특정 member의 장바구니에서 특정 item 삭제
     public int deleteCart(String memberId); //특정 member의 장바구니 전체 삭제
-    public int decreaseCartItem(String memberId, Long itemId); //특정 member의 장바구니에서 특정 item의 개수 감소
-    public int increaseCartItem(String memberId, Long itemId, int amount); //특정 member의 장바구니에서 특정 item의 개수 증가
+    //public int decreaseCartItem(String memberId, Long itemId); //특정 member의 장바구니에서 특정 item의 개수 감소
+    //public int increaseCartItem(String memberId, Long itemId, int amount); //특정 member의 장바구니에서 특정 item의 개수 증가
+    public int decreaseCartItem(Long cartId);
+    public int increaseCartItem(Long cartId, int amount);
 
     //이후 장바구니 결제 함수 추가
 }

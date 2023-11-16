@@ -37,6 +37,7 @@ public class CartImpl implements CartRepository {
         return sqlSession.insert(NS + "save", cart);
     }
 
+    @Override
     public Optional<List<Cart>> findByMemberId(String memberId) {
         return Optional.ofNullable(sqlSession.selectList(NS + "findByMemberId", memberId));
     }
@@ -49,7 +50,7 @@ public class CartImpl implements CartRepository {
         return Optional.ofNullable(sqlSession.selectOne(NS + "findByMemberIdAndItemId", params));
     }*/
 
-
+    @Override
     public Optional<List<Cart>> findByMemberIdAndItemId(@Param("memberId") String memberId, @Param("itemId") Long itemId) {
         Map<String, Object> params = new HashMap<>();
         params.put("memberId", memberId);
@@ -57,18 +58,32 @@ public class CartImpl implements CartRepository {
         return Optional.ofNullable(sqlSession.selectList(NS + "findByMemberIdAndItemId", params));
     }
 
-    public int updateCartAmount(@Param("memberId") String memberId, @Param("itemId") Long itemId, @Param("amount") int amount) {
+    /*public int updateCartAmount(@Param("memberId") String memberId, @Param("itemId") Long itemId, @Param("amount") int amount) {
         Map<String, Object> params = new HashMap<>();
         params.put("memberId", memberId);
         params.put("itemId", itemId);
         params.put("amount", amount);
         return sqlSession.update(NS+"updateCartAmount", params);
+    }*/
+
+    @Override
+    public int updateCartAmount(@Param("cartId") Long cartId, @Param("amount") int amount) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("cartId",cartId);
+        params.put("amount", amount);
+        return sqlSession.update(NS+"updateCartAmount", params);
     }
 
+    /*@Override
     public int deleteCartIfAmountIsZero(@Param("memberId") String memberId, @Param("itemId") Long itemId){
         Map<String, Object> params = new HashMap<>();
         params.put("memberId", memberId);
         params.put("itemId", itemId);
         return sqlSession.delete(NS+"deleteCartIfAmountIsZero", params);
+    }*/
+
+    @Override
+    public int deleteCartIfAmountIsZero(Long cartId){
+        return sqlSession.delete(NS+"deleteCartIfAmountIsZero", cartId);
     }
 }
