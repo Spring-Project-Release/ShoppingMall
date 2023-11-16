@@ -52,4 +52,14 @@ public class Cart {
     private String memberId;
     private Long itemId;
     private int amount; //cart에 담긴 해당 item의 개수: 0이 아님
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "cartId=" + cartId +
+                ", memberId='" + memberId + '\'' +
+                ", itemId=" + itemId +
+                ", amount=" + amount +
+                '}';
+    }
 }
