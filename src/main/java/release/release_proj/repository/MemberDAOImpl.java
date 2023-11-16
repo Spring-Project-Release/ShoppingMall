@@ -19,6 +19,7 @@ public class MemberDAOImpl implements MemberDAO{
 
     @Override
     public int deleteMember(MemberVO memberVO) {
+        sqlSession.delete("sql.cart.mapper.deleteByItemId", memberVO.getMemberId()); //해당하는 cart부터 먼저 삭제
         return sqlSession.delete(NS+"deleteMember", memberVO);
     }
 

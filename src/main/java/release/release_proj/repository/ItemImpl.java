@@ -18,6 +18,7 @@ public class ItemImpl implements ItemRepository {
 
     @Override
     public int deleteByItemId(Long itemId) {
+        sqlSession.delete("sql.cart.mapper.deleteByItemId", itemId); //해당하는 cart부터 먼저 삭제
         return sqlSession.delete(NS + "deleteByItemId", itemId);
     }
 

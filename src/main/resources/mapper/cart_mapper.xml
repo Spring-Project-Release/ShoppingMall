@@ -8,6 +8,11 @@
         DELETE FROM cart WHERE member_id = #{memberId}
     </delete>
 
+    <!---->
+    <delete id="deleteByItemId" parameterType="Long">
+        DELETE FROM cart WHERE item_id = #{itemId}
+    </delete>
+
     <delete id="deleteByMemberIdAndItemId">
         DELETE FROM cart WHERE member_id = #{memberId} AND item_id = #{itemId}
     </delete>

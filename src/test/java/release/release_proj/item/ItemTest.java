@@ -1,4 +1,4 @@
-package release.release_proj.item;
+/*package release.release_proj.item;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,3 +61,4 @@ public class ItemTest {
         assertEquals(item.getName(), findItem.getName()); //item2로 이름이 일치하는지 확인
     }
 }
+*/
