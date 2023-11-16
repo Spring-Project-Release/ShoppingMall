@@ -111,7 +111,7 @@ public class ItemController {
     }
 
     @GetMapping("/isSoldout/{isSoldout}")
-    public ResponseEntity<List<Item>> itemList(@PathVariable(name="isSoldout") boolean isSoldout) {
+    public ResponseEntity<List<Item>> itemList(@PathVariable(name="isSoldout") Boolean isSoldout) {
         Optional<List<Item>> items = itemService.findByIsSoldout(isSoldout);
 
         if (items.isPresent()){
@@ -154,7 +154,7 @@ public class ItemController {
     }
 
     @PutMapping("/{id}/isSoldout")
-    public ResponseEntity<String> updateIsSoldout(@PathVariable(name = "id") Long id, @RequestBody Item item) {
+    public ResponseEntity<String> updateIsSoldout(@PathVariable(name = "id") Long id) {
         int result = itemService.updateIsSoldout(id);
         if (result != 0){
             return ResponseEntity.ok("Item isSoldout updated successfully.");

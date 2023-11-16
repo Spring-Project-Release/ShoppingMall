@@ -43,7 +43,7 @@ public class ItemImpl implements ItemRepository {
     }
 
     @Override
-    public Optional<List<Item>> findByIsSoldout(boolean isSoldout) {
+    public Optional<List<Item>> findByIsSoldout(Boolean isSoldout) {
         return Optional.ofNullable(sqlSession.selectList(NS + "findByIsSoldout", isSoldout));
     }
 

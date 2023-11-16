@@ -55,7 +55,7 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findAll();
     }
 
-    public Optional<List<Item>> findByIsSoldout(boolean isSoldout) {
+    public Optional<List<Item>> findByIsSoldout(Boolean isSoldout) {
         return itemRepository.findByIsSoldout(isSoldout);
     }
 
