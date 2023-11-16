@@ -99,7 +99,7 @@ public class ItemController {
         }
     }
 
-    @GetMapping("/{category}")
+    @GetMapping("/category/{category}")
     public ResponseEntity<List<Item>> itemList(@PathVariable(name="category") String category) {
         Optional<List<Item>> items = itemService.findByCategory(category);
 
@@ -110,7 +110,7 @@ public class ItemController {
         }
     }
 
-    @GetMapping("/{isSoldout}")
+    @GetMapping("/isSoldout/{isSoldout}")
     public ResponseEntity<List<Item>> itemList(@PathVariable(name="isSoldout") boolean isSoldout) {
         Optional<List<Item>> items = itemService.findByIsSoldout(isSoldout);
 
