@@ -4,7 +4,7 @@
 
 <mapper namespace="sql.cart.mapper">
 
-    <delete id="deleteByMemberId" parameterType="Long">
+    <delete id="deleteByMemberId" parameterType="String">
         DELETE FROM cart WHERE member_id = #{memberId}
     </delete>
 
@@ -22,7 +22,7 @@
         VALUES (#{memberId}, #{itemId}, #{amount})
     </insert>
 
-    <select id="findByMemberId" parameterType="Long" resultType="release.release_proj.domain.Cart">
+    <select id="findByMemberId" parameterType="String" resultType="release.release_proj.domain.Cart">
         SELECT * FROM cart WHERE member_id = #{memberId}
     </select>
 
