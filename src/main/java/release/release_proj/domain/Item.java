@@ -31,4 +31,24 @@ public class Item {
     private int delivery_type; //배송타입
     private String seller; //판매자(판매회사) 이름
     private String unit; //판매단위
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "itemId=" + itemId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", count=" + count +
+                ", stock=" + stock +
+                ", category='" + category + '\'' +
+                ", text='" + text + '\'' +
+                ", isSoldout=" + isSoldout +
+                ", picture='" + picture + '\'' +
+                ", discount=" + discount +
+                ", origin='" + origin + '\'' +
+                ", delivery_type=" + delivery_type +
+                ", seller='" + seller + '\'' +
+                ", unit='" + unit + '\'' +
+                '}';
+    }
 }
