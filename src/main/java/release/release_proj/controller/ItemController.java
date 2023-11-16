@@ -149,7 +149,7 @@ public class ItemController {
         if (result != 0){
             return ResponseEntity.ok("Item updated successfully.");
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("존재하지 않는 itemId이거나 update된 사항이 없습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("존재하지 않는 itemId입니다.");
         }
     }
 

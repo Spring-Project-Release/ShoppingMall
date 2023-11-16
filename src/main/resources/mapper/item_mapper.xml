@@ -36,7 +36,7 @@
 
     <update id="updateItem" parameterType="release.release_proj.domain.Item">
         UPDATE item
-        SET name = #{name}, price = #{price}, text = #{text}, stock = #{stock}, item_type = #{item_type}
+        SET name = #{name}, price = #{price}, count = #{count}, stock = #{stock}, category = #{category}, text = #{text}, is_soldout = #{isSoldout}, picture = #{picture}, discount = #{discount}, origin = #{origin}, delivery_type = #{delivery_type}, seller = #{seller}, unit = #{unit}
         WHERE item_id = #{itemId}
     </update>
 
