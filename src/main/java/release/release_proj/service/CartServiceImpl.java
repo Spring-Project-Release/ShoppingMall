@@ -82,12 +82,14 @@ public class CartServiceImpl implements CartService{
 
         return cartRepository.updateCartAmount(memberId, itemId, amount);
     }*/
+
     @Override
     public int decreaseCartItem(Long cartId) {
         int amount = -1;
-        cartRepository.updateCartAmount(cartId, amount);
+        int result = cartRepository.updateCartAmount(cartId, amount);
+        cartRepository.deleteCartIfAmountIsZero(cartId); //이게 제대로 작동하지 않았을 때의 예외처리를 해주어야 할까?
 
-        return cartRepository.deleteCartIfAmountIsZero(cartId);
+        return result;
     }
 
     @Override

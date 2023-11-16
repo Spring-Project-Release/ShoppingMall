@@ -99,7 +99,7 @@ public class CartController {
     //@PutMapping("user/{memberId}/item/{itemId}")
     //public ResponseEntity<String> increaseCartItemAmount(@PathVariable(name = "memberId") String memberId, @PathVariable(name="itemId") Long itemId, @RequestBody Integer amount) {
     @PutMapping("/{cartId}")
-    public ResponseEntity<String> increaseCartItemAmount(@PathVariable(name="cartId") Long cartId, @RequestBody Integer amount) {
+    public ResponseEntity<String> increaseCartItemAmount(@PathVariable(name="cartId") Long cartId, @RequestBody(required = false) Integer amount) {
         int result;
         String successMessage;
         HttpStatus status;
