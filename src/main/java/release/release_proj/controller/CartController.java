@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequiredArgsConstructor
+@RequiredArgsConstructor //생성자 주입을 자동으로 해줌
 @RequestMapping("/carts")
 public class CartController {
 

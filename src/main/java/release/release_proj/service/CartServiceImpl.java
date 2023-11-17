@@ -1,6 +1,6 @@
 package release.release_proj.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import release.release_proj.domain.Cart;
 import release.release_proj.repository.CartRepository;
@@ -9,14 +9,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor //생성자 주입을 대신 해줌
 public class CartServiceImpl implements CartService{
 
-    @Autowired
-    private CartRepository cartRepository;
+    //@Autowired
+    //private CartRepository cartRepository; //필드주입
 
-    /*private final CartRepository cartRepository;
+    private final CartRepository cartRepository;
 
-    @Autowired
+    /*@Autowired //생성자 주입
     public CartServiceImpl(CartRepository cartRepository) {
         this.cartRepository = cartRepository;
     }*/
