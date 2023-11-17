@@ -3,7 +3,6 @@ package release.release_proj;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 import release.release_proj.domain.Cart;
 import release.release_proj.domain.Item;
@@ -67,7 +66,8 @@ public class CartServiceIntegrationTest {
         cart.setItemId(1L);
         cart.setAmount(2);
 
-        DataIntegrityViolationException e = assertThrows(DataIntegrityViolationException.class,()->cartService.addCartItem(cart));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.addCartItem(cart));
+        assertThat(e.getMessage()).isEqualTo("Failed to create cart. 해당하는 itemId나 memberId가 존재하지 않습니다");
 
     }
 }

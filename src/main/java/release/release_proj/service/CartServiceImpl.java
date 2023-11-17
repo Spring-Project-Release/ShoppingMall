@@ -46,7 +46,7 @@ public class CartServiceImpl implements CartService{
             return cartRepository.save(cart);
         } catch (DataIntegrityViolationException e) {
             // 외래 키 제약 조건 위배로 인한 예외 처리
-            throw new IllegalArgumentException("cart 생성 실패: 해당하는 itemId나 memberId가 존재하지 않습니다", e);
+            throw new IllegalArgumentException("Failed to create cart. 해당하는 itemId나 memberId가 존재하지 않습니다", e);
         }
     }
 
