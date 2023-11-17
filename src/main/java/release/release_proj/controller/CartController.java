@@ -1,7 +1,6 @@
 package release.release_proj.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequiredArgsConstructor
+@RequiredArgsConstructor //생성자 주입을 자동으로 해줌
 @RequestMapping("/carts")
 public class CartController {
 
@@ -50,9 +49,13 @@ public class CartController {
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create cart.");
             }
-        } catch (DataIntegrityViolationException e) {
-            // 외래 키 제약 조건 위배로 인한 예외 처리
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create cart. 해당하는 itemId나 memberId가 존재하지 않습니다");
+            //} catch (DataIntegrityViolationException e) {
+            //    // 외래 키 제약 조건 위배로 인한 예외 처리
+            //    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create cart. 해당하는 itemId나 memberId가 존재하지 않습니다");
+            //}
+        } catch (IllegalArgumentException e) {
+            // DataIntegrityViolationException이 IllegalArgumentException로 변환되었을 경우
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 

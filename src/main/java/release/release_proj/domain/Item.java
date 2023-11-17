@@ -3,8 +3,6 @@ package release.release_proj.domain;
 import lombok.*;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Builder
@@ -16,7 +14,7 @@ import javax.persistence.Id;
 public class Item {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto increment
+    //@GeneratedValue(strategy = GenerationType.IDENTITY) //auto increment
     private Long itemId;
     private String name; //상품 이름
     private int price;

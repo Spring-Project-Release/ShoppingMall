@@ -1,6 +1,7 @@
 package release.release_proj.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import release.release_proj.domain.Cart;
 import release.release_proj.repository.CartRepository;
@@ -9,14 +10,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor //생성자 주입을 대신 해줌
 public class CartServiceImpl implements CartService{
 
-    @Autowired
-    private CartRepository cartRepository;
+    //@Autowired
+    //private CartRepository cartRepository; //필드주입
 
-    /*private final CartRepository cartRepository;
+    private final CartRepository cartRepository;
 
-    @Autowired
+    /*@Autowired //생성자 주입
     public CartServiceImpl(CartRepository cartRepository) {
         this.cartRepository = cartRepository;
     }*/
@@ -33,9 +35,19 @@ public class CartServiceImpl implements CartService{
         return cartRepository.findByMemberIdAndItemId(memberId, itemId);
     }
 
-    @Override
+    /*@Override
     public int addCartItem(Cart cart) {
         return cartRepository.save(cart);
+    }*/
+
+    @Override
+    public int addCartItem(Cart cart) {
+        try {
+            return cartRepository.save(cart);
+        } catch (DataIntegrityViolationException e) {
+            // 외래 키 제약 조건 위배로 인한 예외 처리
+            throw new IllegalArgumentException("Failed to create cart. 해당하는 itemId나 memberId가 존재하지 않습니다", e);
+        }
     }
 
     @Override

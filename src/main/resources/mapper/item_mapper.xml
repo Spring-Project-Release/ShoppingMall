@@ -9,7 +9,7 @@
         DELETE FROM item WHERE item_id = #{itemId}
     </delete>
 
-    <insert id="save" parameterType="release.release_proj.domain.Item">
+    <insert id="save" parameterType="release.release_proj.domain.Item" useGeneratedKeys="true" keyProperty="itemId">
         INSERT INTO item (name, price, count, stock, category, text, is_soldout, picture, discount, origin, delivery_type, seller, unit)
         VALUES (#{name}, #{price}, #{count}, #{stock}, #{category}, #{text}, #{isSoldout}, #{picture}, #{discount}, #{origin}, #{delivery_type}, #{seller}, #{unit})
     </insert>

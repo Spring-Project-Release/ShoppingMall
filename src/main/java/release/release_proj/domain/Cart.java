@@ -2,8 +2,6 @@ package release.release_proj.domain;
 
 import lombok.*;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Builder
@@ -47,7 +45,7 @@ public class Cart {
     */
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto increment
+    //@GeneratedValue(strategy = GenerationType.IDENTITY) //auto increment: JPA서 사용
     private Long cartId;
     private String memberId;
     private Long itemId;
