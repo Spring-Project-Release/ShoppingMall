@@ -1,6 +1,7 @@
 package release.release_proj.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import release.release_proj.domain.Cart;
 import release.release_proj.repository.CartRepository;
@@ -34,9 +35,19 @@ public class CartServiceImpl implements CartService{
         return cartRepository.findByMemberIdAndItemId(memberId, itemId);
     }
 
-    @Override
+    /*@Override
     public int addCartItem(Cart cart) {
         return cartRepository.save(cart);
+    }*/
+
+    @Override
+    public int addCartItem(Cart cart) {
+        try {
+            return cartRepository.save(cart);
+        } catch (DataIntegrityViolationException e) {
+            // 외래 키 제약 조건 위배로 인한 예외 처리
+            throw new IllegalArgumentException("cart 생성 실패: 해당하는 itemId나 memberId가 존재하지 않습니다", e);
+        }
     }
 
     @Override
