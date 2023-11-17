@@ -1,7 +1,6 @@
 package release.release_proj.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import release.release_proj.domain.Item;
 import release.release_proj.repository.ItemRepository;
@@ -13,8 +12,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
-    @Autowired
-    private ItemRepository itemRepository;
+    //@Autowired
+    //private ItemRepository itemRepository;
+
+    private final ItemRepository itemRepository;
 
     @Override
     public int saveItem(Item item){
