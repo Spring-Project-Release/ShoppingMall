@@ -17,7 +17,7 @@
         DELETE FROM cart WHERE member_id = #{memberId} AND item_id = #{itemId}
     </delete>
 
-    <insert id="save" parameterType="release.release_proj.domain.Cart">
+    <insert id="save" parameterType="release.release_proj.domain.Cart" useGeneratedKeys="true" keyProperty="cartId">
         INSERT INTO cart (member_id, item_id, amount)
         VALUES (#{memberId}, #{itemId}, #{amount})
     </insert>
