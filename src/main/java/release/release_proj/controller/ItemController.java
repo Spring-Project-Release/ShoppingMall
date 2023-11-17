@@ -134,11 +134,17 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<String> newItem(@RequestBody Item item) {
-        int result =  itemService.saveItem(item);
-        if (result != 0) {
-            return ResponseEntity.ok("Item created successfully.");
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create Item.");
+        try {
+            int result = itemService.saveItem(item);
+
+            if (result != 0) {
+                return ResponseEntity.ok("Item created successfully.");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create Item.");
+            }
+        } catch (IllegalStateException e) {
+            // item 이름이 중복된 경우
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
