@@ -93,6 +93,7 @@ export default function Login() {
   const onValid = async (data: ILoginFormData) => {
     // 서버로 요청을 보내는 부분
     const url = "http://localhost:8080/user/login";
+    console.log(data);
 
     axios
       .post(url, data)

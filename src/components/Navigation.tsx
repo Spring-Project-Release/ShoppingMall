@@ -16,6 +16,7 @@ const Container = styled.div`
 const Logo = styled.div`
   height: 100%;
   margin-left: 12px;
+  width: 20%;
 
   display: flex;
   flex-direction: column;
@@ -24,6 +25,11 @@ const Logo = styled.div`
 
   color: ${(props) => props.theme.green};
   cursor: pointer;
+
+  img {
+    width: 80%;
+    height: auto;
+  }
 `;
 
 const Buttons = styled.div`
@@ -67,7 +73,7 @@ export default function Navigation() {
   return (
     <Container>
       <Logo onClick={onMove} id="home">
-        <h1>푸르넷</h1>
+        <img src="Frunet-icon.png" />
       </Logo>
 
       <Buttons>
