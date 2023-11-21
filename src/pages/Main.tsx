@@ -13,20 +13,31 @@ const Container = styled.div`
   width: 100%;
 `;
 
-const Body = styled.div`
-  padding: 24px;
-  /* background-color: red; */
+const Body = styled.div<{ color?: string }>`
+  padding: 72px 24px;
+  background-color: ${(props) =>
+    props.color === "mint"
+      ? theme.mint
+      : props.color === "green"
+      ? theme.lightGreen
+      : theme.white};
 
   display: flex;
   flex-direction: column;
-`;
 
-const Article = styled.div`
-  width: 80%;
-  height: calc(100%);
+  span {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
 
-  background-color: rebeccapurple;
-  border-left: 1px solid gray;
+    p {
+      font-size: 32px;
+    }
+
+    h1 {
+      font-size: 32px;
+    }
+  }
 `;
 
 const Recommand = styled.div`
@@ -88,7 +99,7 @@ const SliderBox = styled.div<{ color?: string }>`
   height: 360px;
   background-color: ${(props) =>
     props.color === "green"
-      ? theme.green
+      ? theme.lightGreen
       : props.color === "gray"
       ? theme.gray
       : theme.white};
@@ -141,11 +152,45 @@ export default function Main() {
           </SliderBox>
         </Slider>
       </SliderTab>
-      <Body>
-        <>
-          <h2>이 물품은 어떠세요?</h2>
-          <Recommand>
-            {images.items.map((item) => (
+      <Body color={"white"}>
+        <h1>이 물품은 어떠세요?</h1>
+        <Recommand>
+          {images.items.map((item) => (
+            <Product key={item.itemNumber}>
+              <img src={item.url} onClick={() => onMove(item.itemNumber)} />
+              <Info>
+                <p onClick={() => onMove(item.itemNumber)}>{item.name}</p>
+                <InfoLine>
+                  <h2>{item.price}</h2>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                    />
+                  </svg>
+                </InfoLine>
+              </Info>
+            </Product>
+          ))}
+        </Recommand>
+      </Body>
+
+      <Body color={"mint"}>
+        <span>
+          <p>놓치기 쉬운</p>
+          <h1>알뜰 물품</h1>
+        </span>
+        <Recommand>
+          {images.items
+            .map((item) => (
               <Product key={item.itemNumber}>
                 <img src={item.url} onClick={() => onMove(item.itemNumber)} />
                 <Info>
@@ -169,9 +214,91 @@ export default function Main() {
                   </InfoLine>
                 </Info>
               </Product>
-            ))}
-          </Recommand>
-        </>
+            ))
+            .slice(0, 4)}
+        </Recommand>
+      </Body>
+
+      <Body color={"white"}>
+        <span
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <p>지금 가장 많이 이용하는</p>
+          <h1>인기 물품</h1>
+        </span>
+        <Recommand>
+          {images.items
+            .map((item) => (
+              <Product key={item.itemNumber}>
+                <img src={item.url} onClick={() => onMove(item.itemNumber)} />
+                <Info>
+                  <p onClick={() => onMove(item.itemNumber)}>{item.name}</p>
+                  <InfoLine>
+                    <h2>{item.price}</h2>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                      />
+                    </svg>
+                  </InfoLine>
+                </Info>
+              </Product>
+            ))
+            .slice(0, 4)}
+        </Recommand>
+      </Body>
+
+      <Body color={"green"}>
+        <span
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <p>푸르넷의 가치를 담은</p>
+          <h1>브랜드 관</h1>
+        </span>
+        <Recommand>
+          {images.items
+            .map((item) => (
+              <Product key={item.itemNumber}>
+                <img src={item.url} onClick={() => onMove(item.itemNumber)} />
+                <Info>
+                  <p onClick={() => onMove(item.itemNumber)}>{item.name}</p>
+                  <InfoLine>
+                    <h2>{item.price}</h2>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                      />
+                    </svg>
+                  </InfoLine>
+                </Info>
+              </Product>
+            ))
+            .slice(0, 4)}
+        </Recommand>
       </Body>
       <Footer />
     </Container>

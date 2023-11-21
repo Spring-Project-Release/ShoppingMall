@@ -17,6 +17,7 @@ const Grobals = createGlobalStyle`
 
   body {
     user-select: none;
+    min-width: 1200px;
   }
 `;
 
