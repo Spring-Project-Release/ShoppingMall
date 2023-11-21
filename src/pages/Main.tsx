@@ -5,7 +5,10 @@ import SideBar from "../components/SideBar";
 import Footer from "../components/Footer";
 import { images } from "../jsons/imgList";
 import { useNavigate } from "react-router-dom";
-
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { theme } from "../utils/colors";
 const Container = styled.div`
   width: 100%;
 `;
@@ -81,45 +84,94 @@ const InfoLine = styled.div`
   }
 `;
 
+const SliderBox = styled.div<{ color?: string }>`
+  height: 360px;
+  background-color: ${(props) =>
+    props.color === "green"
+      ? theme.green
+      : props.color === "gray"
+      ? theme.gray
+      : theme.white};
+`;
+
+const SliderTab = styled.div`
+  margin-bottom: 36px;
+`;
+
 export default function Main() {
   const nav = useNavigate();
   const onMove = (itemNumber: string) => {
     nav(`/detail/${itemNumber}`);
   };
 
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+    autoplay: true,
+    autoplaySpeed: 3000,
+  };
+
   return (
     <Container>
       <Navigation />
       <DetailBar />
+      <SliderTab>
+        <Slider {...settings}>
+          <SliderBox color="green">
+            <h3>1</h3>
+          </SliderBox>
+          <SliderBox color="gray">
+            <h3>2</h3>
+          </SliderBox>
+          <SliderBox>
+            <h3>3</h3>
+          </SliderBox>
+          <SliderBox color="green">
+            <h3>4</h3>
+          </SliderBox>
+          <SliderBox color="gray">
+            <h3>5</h3>
+          </SliderBox>
+          <SliderBox>
+            <h3>6</h3>
+          </SliderBox>
+        </Slider>
+      </SliderTab>
       <Body>
-        <h2>이 물품은 어떠세요?</h2>
-        <Recommand>
-          {images.items.map((item) => (
-            <Product key={item.itemNumber}>
-              <img src={item.url} onClick={() => onMove(item.itemNumber)} />
-              <Info>
-                <p onClick={() => onMove(item.itemNumber)}>{item.name}</p>
-                <InfoLine>
-                  <h2>{item.price}</h2>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-6 h-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-                    />
-                  </svg>
-                </InfoLine>
-              </Info>
-            </Product>
-          ))}
-        </Recommand>
+        <>
+          <h2>이 물품은 어떠세요?</h2>
+          <Recommand>
+            {images.items.map((item) => (
+              <Product key={item.itemNumber}>
+                <img src={item.url} onClick={() => onMove(item.itemNumber)} />
+                <Info>
+                  <p onClick={() => onMove(item.itemNumber)}>{item.name}</p>
+                  <InfoLine>
+                    <h2>{item.price}</h2>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                      />
+                    </svg>
+                  </InfoLine>
+                </Info>
+              </Product>
+            ))}
+          </Recommand>
+        </>
       </Body>
       <Footer />
     </Container>

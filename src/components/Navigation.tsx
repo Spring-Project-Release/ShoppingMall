@@ -73,7 +73,7 @@ export default function Navigation() {
   return (
     <Container>
       <Logo onClick={onMove} id="home">
-        <img src="Frunet-icon.png" />
+        <img src="../Frunet-icon.png" />
       </Logo>
 
       <Buttons>
