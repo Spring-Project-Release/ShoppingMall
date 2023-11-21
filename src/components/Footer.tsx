@@ -5,7 +5,7 @@ const Container = styled.div`
   width: 100%;
   height: 24vh;
 
-  margin-top: 48px;
+  margin: 48px 0;
   background-color: ${(props) => props.theme.white};
 `;
 
