@@ -97,7 +97,7 @@ const InfoLine = styled.div`
   }
 `;
 
-const SliderBox = styled.div<{ color?: string }>`
+const SliderBox = styled.div<{ color?: string; url?: string }>`
   height: 360px;
   background-color: ${(props) =>
     props.color === "green"
@@ -105,6 +105,11 @@ const SliderBox = styled.div<{ color?: string }>`
       : props.color === "gray"
       ? theme.gray
       : theme.mint};
+
+  background-image: url(${(props) => props.url});
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 `;
 
 const SliderTab = styled.div`
@@ -135,24 +140,10 @@ export default function Main() {
       <DetailBar />
       <SliderTab>
         <Slider {...settings}>
-          <SliderBox color="green">
-            <h3>1</h3>
-          </SliderBox>
-          <SliderBox color="gray">
-            <h3>2</h3>
-          </SliderBox>
-          <SliderBox>
-            <h3>3</h3>
-          </SliderBox>
-          <SliderBox color="green">
-            <h3>4</h3>
-          </SliderBox>
-          <SliderBox color="gray">
-            <h3>5</h3>
-          </SliderBox>
-          <SliderBox>
-            <h3>6</h3>
-          </SliderBox>
+          <SliderBox color="green" url="../../main_banner_01.jpg" />
+          <SliderBox color="gray" url="../../main_banner_02.jpg" />
+          <SliderBox color="green" url="../../main_banner_03.jpg" />
+          <SliderBox color="gray" url="../../main_banner_04.jpg" />
         </Slider>
       </SliderTab>
       <Body color={"white"}>

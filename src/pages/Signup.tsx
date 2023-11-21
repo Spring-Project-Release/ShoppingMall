@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Navigation from "../components/Navigation";
 import DetailBar from "../components/DetailBar";
 import { useForm } from "react-hook-form";
-import { ILoginFormData } from "../apis/interface";
+import { ISignupFormData } from "../apis/interface";
 import { getLoginData } from "../apis/api";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
@@ -29,7 +29,7 @@ const Main = styled.div`
   form {
     /* background-color: blue; */
     width: 30%;
-    height: 60vh;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -41,6 +41,7 @@ const Main = styled.div`
       width: 100%;
       padding: 4px 8px;
       cursor: pointer;
+      background-color: ${(props) => theme.gray};
 
       margin-top: 48px;
 
@@ -83,15 +84,28 @@ const Line = styled.span`
   }
 `;
 
-const SignupButton = styled.p`
-  font-size: 16px;
-  margin-bottom: 16px;
-  transition: color 0.3s linear;
-  cursor: pointer;
+const LineId = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
 
-  &:hover {
-    color: ${(props) => theme.green};
-  }
+const Checker = styled.div`
+  width: 40%;
+  height: 48px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 8px;
+
+  border: 1px solid lightgray;
+  border-left: 0;
+  cursor: pointer;
+  background-color: ${(props) => theme.gray};
 `;
 
 const BASE_URL = "http://localhost:8080"; // 서버 주소 설정
@@ -101,11 +115,12 @@ export default function Login() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ILoginFormData>();
+    getValues,
+  } = useForm<ISignupFormData>();
 
   const reset = useScrollReset();
 
-  const onValid = async (data: ILoginFormData) => {
+  const onValid = async (data: ISignupFormData) => {
     // 서버로 요청을 보내는 부분
     const url = "http://localhost:8080/user/login";
     console.log(data);
@@ -122,33 +137,48 @@ export default function Login() {
       .catch((error) => console.log(error));
   };
 
-  const onMove = () => {
-    reset("/signup");
+  const onIdCheck = () => {
+    const memberId = getValues("memberId");
+    // 멤버 아이디 가져오기
+  };
+
+  const checkDuplicated = async (id: string) => {
+    const url = "http://localhost:8080/user/idCheck";
+
+    //axios.get(url, { params: { memberId: id } });
+    // 잠시 보류
+    // 데이터를 일단 주고 넘길 것인지 error 처리 할 것인지 백앤드와 상의
   };
 
   return (
     <Container>
-      <Hood title="로그인" />
+      <Hood title="회원 가입" />
       <Navigation />
       <DetailBar />
       <Main>
         <form onSubmit={handleSubmit(onValid)}>
-          <h1>로그인</h1>
+          <h1>회원 가입</h1>
 
           <Line>
             <label htmlFor="memberId">아이디</label>
-            <input
-              {...register("memberId", {
-                required: "아이디를 입력해주세요.",
-                minLength: {
-                  value: 5,
-                  message: "아이디는 5글자 이상입니다.",
-                },
-              })}
-              id="memberId"
-              name="memberId"
-              placeholder="아이디"
-            />
+
+            <LineId>
+              <input
+                {...register("memberId", {
+                  required: "아이디를 입력해주세요.",
+                  minLength: {
+                    value: 5,
+                    message: "아이디는 5글자 이상입니다.",
+                  },
+                })}
+                id="memberId"
+                name="memberId"
+                placeholder="아이디"
+              />
+              <Checker onClick={onIdCheck}>
+                <p>중복 확인</p>
+              </Checker>
+            </LineId>
           </Line>
           <Line>
             <label htmlFor="memberPassword">비밀번호</label>
@@ -167,10 +197,25 @@ export default function Login() {
             />
           </Line>
 
-          <button>로 그 인</button>
-        </form>
+          <Line>
+            <label htmlFor="memberPasswordCheck">비밀번호 확인</label>
+            <input
+              {...register("memberPasswordCheck", {
+                required: "비밀번호를 입력해주세요.",
+                minLength: {
+                  value: 8,
+                  message: "비밀번호는 8글자 이상입니다.",
+                },
+              })}
+              id="memberPasswordCheck"
+              name="memberPasswordCheck"
+              type="password"
+              placeholder="비밀번호 확인"
+            />
+          </Line>
 
-        <SignupButton onClick={onMove}>회원가입</SignupButton>
+          <button>회원 가입</button>
+        </form>
 
         <span
           style={{

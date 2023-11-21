@@ -7,12 +7,14 @@ import MyPage from "./pages/MyPage";
 import Recent from "./pages/Recent";
 import Cart from "./pages/Cart";
 import Cs from "./pages/Cs";
+import Signup from "./pages/Signup";
 
 export default function App() {
   return (
     <Routes>
       <Route path={"/"} element={<Main />} />
       <Route path={"/login"} element={<Login />} />
+      <Route path={"/signup"} element={<Signup />} />
       <Route path={"/mypage"} element={<MyPage />} />
       <Route path={"/cs"} element={<Cs />} />
       <Route path={"/cart"} element={<Cart />} />
