@@ -46,3 +46,56 @@ export const images = {
     },
   ],
 };
+
+export const cardList = {
+  cards: [
+    {
+      cardNumber: 1,
+      cardName: "국민",
+    },
+    {
+      cardNumber: 2,
+      cardName: "신한",
+    },
+    {
+      cardNumber: 3,
+      cardName: "우리",
+    },
+    {
+      cardNumber: 4,
+      cardName: "하나",
+    },
+    {
+      cardNumber: 5,
+      cardName: "국민",
+    },
+    {
+      cardNumber: 6,
+      cardName: "신한",
+    },
+    {
+      cardNumber: 7,
+      cardName: "우리",
+    },
+    {
+      cardNumber: 8,
+      cardName: "하나",
+    },
+    {
+      cardNumber: 9,
+      cardName: "국민",
+    },
+    {
+      cardNumber: 10,
+      cardName: "신한",
+    },
+    {
+      cardNumber: 11,
+      cardName: "우리",
+    },
+    {
+      cardNumber: 12,
+      cardName: "하나",
+    },
+  ],
+};
