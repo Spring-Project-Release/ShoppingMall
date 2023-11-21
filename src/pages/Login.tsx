@@ -7,6 +7,8 @@ import { getLoginData } from "../apis/api";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import axios from "axios";
+import useScrollReset from "../utils/useScrollReset";
+import Hood from "../components/Hood";
 
 const Container = styled.div`
   height: auto;
@@ -88,7 +90,7 @@ export default function Login() {
     formState: { errors },
   } = useForm<ILoginFormData>();
 
-  const nav = useNavigate();
+  const reset = useScrollReset();
 
   const onValid = async (data: ILoginFormData) => {
     // 서버로 요청을 보내는 부분
@@ -109,6 +111,7 @@ export default function Login() {
 
   return (
     <Container>
+      <Hood title="로그인" />
       <Navigation />
       <DetailBar />
       <Main>

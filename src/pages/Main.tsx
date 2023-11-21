@@ -9,6 +9,8 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { theme } from "../utils/colors";
+import useScrollReset from "../utils/useScrollReset";
+import Hood from "../components/Hood";
 const Container = styled.div`
   width: 100%;
 `;
@@ -102,7 +104,7 @@ const SliderBox = styled.div<{ color?: string }>`
       ? theme.lightGreen
       : props.color === "gray"
       ? theme.gray
-      : theme.white};
+      : theme.mint};
 `;
 
 const SliderTab = styled.div`
@@ -110,9 +112,9 @@ const SliderTab = styled.div`
 `;
 
 export default function Main() {
-  const nav = useNavigate();
+  const reset = useScrollReset();
   const onMove = (itemNumber: string) => {
-    nav(`/detail/${itemNumber}`);
+    reset(`/detail/${itemNumber}`);
   };
 
   const settings = {
@@ -128,6 +130,7 @@ export default function Main() {
 
   return (
     <Container>
+      <Hood title="홈페이지" />
       <Navigation />
       <DetailBar />
       <SliderTab>

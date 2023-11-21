@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import useScrollReset from "../utils/useScrollReset";
 
 const Container = styled.div`
   width: 100%;
@@ -62,12 +63,12 @@ const Button = styled.div`
 `;
 
 export default function Navigation() {
-  const nav = useNavigate();
+  const reset = useScrollReset();
 
   const onMove = (event: React.MouseEvent<HTMLElement>) => {
     let destination = event.currentTarget.id;
 
-    destination === "home" ? nav("/") : nav(`/${destination}`);
+    destination === "home" ? reset("/") : reset(`/${destination}`);
   };
 
   return (

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import useScrollReset from "../utils/useScrollReset";
 
 const Container = styled.div`
   width: 100%;
@@ -66,13 +67,13 @@ const Item = styled.div`
 `;
 
 export default function DetailBar() {
-  const nav = useNavigate();
+  const reset = useScrollReset();
 
   const onMove = (event: React.MouseEvent<HTMLElement>) => {
     console.log(event.currentTarget.id);
     // console.log-test
 
-    nav(`/${event.currentTarget.id}`);
+    reset(`/${event.currentTarget.id}`);
   };
 
   return (
