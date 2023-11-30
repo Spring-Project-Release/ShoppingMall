@@ -33,23 +33,38 @@ public class OrderService {
     };
 
     public Optional<Order> readOrder(Long orderId) {
-
+        return orderRepository.findByOrderId(orderId);
     }
 
     public Optional<List<Order>> findByMemberId(String memberId) {
-
-    }
+        return orderRepository.findByMemberId(memberId);
+}
 
     public Optional<List<Order>> findByItemId(Long itemId) {
-
+        return orderRepository.findByItemId(itemId);
     }
 
     public Optional<List<Order>> findAll() {
-
+        return orderRepository.findAll();
     }
 
     public void deleteOrder(Long orderId) {
+        Optional<Order> canceledOrder = orderRepository.findByOrderId(orderId);
 
+        if (canceledOrder.isPresent()) {
+            Order order = canceledOrder.get();
+            Long itemId = order.getItemId();
+            int canceledQuantity = order.getCount();
+
+            if (itemService.getStock(itemId) == 0) {
+                itemService.updateIsSoldout(itemId);
+            }
+
+            itemService.updateStock(itemId, -canceledQuantity);
+            orderRepository.cancel(orderId);
+        } else {
+            throw new IllegalStateException("해당 주문을 찾을 수 없습니다. 주문 ID: " + orderId);
+        }
     };
 
 
