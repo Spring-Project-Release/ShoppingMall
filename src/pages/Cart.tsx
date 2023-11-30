@@ -141,6 +141,7 @@ const AddressInput = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 
   border: 1px solid ${(props) => theme.green};
   background-color: ${theme.green};
