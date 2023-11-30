@@ -30,20 +30,23 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public Optional<List<Cart>> readMemberCartItems(String memberId, Long itemId) {
+    public Optional<Cart> readMemberCartItems(String memberId, Long itemId) {
         //return cartRepository.findByMemberIdAndItemId(member.getMemberId(), item.getItemId());
         return cartRepository.findByMemberIdAndItemId(memberId, itemId);
     }
 
-    /*@Override
-    public int addCartItem(Cart cart) {
-        return cartRepository.save(cart);
-    }*/
-
     @Override
     public int addCartItem(Cart cart) {
         try {
-            return cartRepository.save(cart);
+            Optional<Cart> isCartExist = cartRepository.findByMemberIdAndItemId(cart.getMemberId(), cart.getItemId());
+            if (isCartExist.isPresent()){
+                Cart currentCart = isCartExist.get();
+                currentCart.setAmount(currentCart.getAmount() + cart.getAmount());
+                return cartRepository.updateCartAmount(currentCart.getCartId(), currentCart.getAmount());
+            }
+            else {
+                return cartRepository.save(cart);
+            }
         } catch (DataIntegrityViolationException e) {
             // 외래 키 제약 조건 위배로 인한 예외 처리
             throw new IllegalArgumentException("Failed to create cart. 해당하는 itemId나 memberId가 존재하지 않습니다", e);
@@ -54,7 +57,7 @@ public class CartServiceImpl implements CartService{
     public int deleteCartItem(String memberId, Long itemId) {
         //String memberId = member.getMemberId();
         //Long itemId = item.getItemId();
-        Optional<List<Cart>> isCartItemExist = cartRepository.findByMemberIdAndItemId(memberId, itemId);
+        Optional<Cart> isCartItemExist = cartRepository.findByMemberIdAndItemId(memberId, itemId);
 
         if (isCartItemExist.isPresent()) {
             return cartRepository.deleteByMemberIdAndItemId(memberId, itemId);
@@ -75,26 +78,6 @@ public class CartServiceImpl implements CartService{
         }
     }
 
-    /*@Override
-    public int decreaseCartItem(String memberId, Long itemId) {
-        //String memberId = member.getMemberId();
-        //Long itemId = item.getItemId();
-        int amount = -1;
-        cartRepository.updateCartAmount(memberId, itemId, amount);
-
-        return cartRepository.deleteCartIfAmountIsZero(memberId, itemId);
-    }
-    //decrease를 해서 amount값이 0이 되면 해당 데이터를 삭제하도록 구현하였음
-    //아니면 값이 amount가 2 이상일 때만 decreaseCartItem 함수를 실행할 수 있도록 바꿀까..?
-
-    @Override
-    public int increaseCartItem(String memberId, Long itemId, int amount) { //증가의 경우 상품페이지에서 바로 담을 수 있으므로 한번에 여러개의 상품이 증가할 수 있음
-        //String memberId = member.getMemberId();
-        //Long itemId = item.getItemId();
-
-        return cartRepository.updateCartAmount(memberId, itemId, amount);
-    }*/
-
     @Override
     public int decreaseCartItem(Long cartId) {
         int amount = -1;
@@ -111,4 +94,3 @@ public class CartServiceImpl implements CartService{
     }
 
 }
-//mybatis에서 get...를 사둉하는 게 좋을지 생각해볼것

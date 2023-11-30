@@ -51,11 +51,11 @@ public class CartImpl implements CartRepository {
     }*/
 
     @Override
-    public Optional<List<Cart>> findByMemberIdAndItemId(@Param("memberId") String memberId, @Param("itemId") Long itemId) {
+    public Optional<Cart> findByMemberIdAndItemId(@Param("memberId") String memberId, @Param("itemId") Long itemId) {
         Map<String, Object> params = new HashMap<>();
         params.put("memberId", memberId);
         params.put("itemId", itemId);
-        return Optional.ofNullable(sqlSession.selectList(NS + "findByMemberIdAndItemId", params));
+        return Optional.ofNullable(sqlSession.selectOne(NS + "findByMemberIdAndItemId", params));
     }
 
     /*public int updateCartAmount(@Param("memberId") String memberId, @Param("itemId") Long itemId, @Param("amount") int amount) {

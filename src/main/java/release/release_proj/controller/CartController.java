@@ -29,11 +29,11 @@ public class CartController {
     }
 
     @GetMapping("/user/{memberId}/item/{itemId}")
-    public ResponseEntity<List<Cart>> cartList(@PathVariable(name="memberId") String memberId, @PathVariable(name="itemId") Long itemId) {
-        Optional<List<Cart>> carts = cartService.readMemberCartItems(memberId, itemId);
+    public ResponseEntity<Cart> cartList(@PathVariable(name="memberId") String memberId, @PathVariable(name="itemId") Long itemId) {
+        Optional<Cart> cart = cartService.readMemberCartItems(memberId, itemId);
 
-        if (carts.isPresent()){
-            return ResponseEntity.ok(carts.get());
+        if (cart.isPresent()){
+            return ResponseEntity.ok(cart.get());
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -78,26 +78,6 @@ public class CartController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당하는 cartId가 존재하지 않습니다");
         }
     }
-
-    /*@PutMapping("user/{memerId}/item/{itemId}")
-    public ResponseEntity<String> decreaseCartItemAmount(@PathVariable(name = "memberId") String memberId, @PathVariable(name="itemId") Long itemId) {
-        int result = cartService.decreaseCartItem(memberId, itemId);
-        if (result != 0){
-            return ResponseEntity.ok("User's cartItem amount decreased successfully.");
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("해당하는 cart가 존재하지 않거나 오류가 발생했습니다.");
-        }
-    }
-
-    @PutMapping("user/{memberId}/item/{itemId}")
-    public ResponseEntity<String> increaseCartItemAmount(@PathVariable(name = "memberId") String memberId, @PathVariable(name="itemId") Long itemId, @RequestBody int amount) {
-        int result = cartService.increaseCartItem(memberId, itemId, amount);
-        if (result != 0){
-            return ResponseEntity.ok("User's cartItem amount increased successfully.");
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("해당하는 cart가 존재하지 않거나 오류가 발생했습니다.");
-        }
-    }*/
 
     //@PutMapping("user/{memberId}/item/{itemId}")
     //public ResponseEntity<String> increaseCartItemAmount(@PathVariable(name = "memberId") String memberId, @PathVariable(name="itemId") Long itemId, @RequestBody Integer amount) {

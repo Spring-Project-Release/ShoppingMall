@@ -11,7 +11,6 @@ import release.release_proj.repository.ItemRepository;
 import release.release_proj.repository.MemberDAO;
 import release.release_proj.service.CartService;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -54,9 +53,9 @@ public class CartServiceIntegrationTest {
         int result = cartService.addCartItem(cart);
 
         // Then
-        Optional<List<Cart>> carts = cartService.readMemberCartItems("testMemberId", 1L);
+        Optional<Cart> carts = cartService.readMemberCartItems("testMemberId", 1L);
         assertThat(carts).isPresent();
-        assertEquals(cart.getCartId(), carts.get().get(0).getCartId());
+        assertEquals(cart.getCartId(), carts.get().getCartId());
     }
 
     @Test
