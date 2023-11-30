@@ -1,11 +1,14 @@
 package release.release_proj.repository;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import release.release_proj.domain.Item;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -60,6 +63,19 @@ public class ItemImpl implements ItemRepository {
     @Override
     public int updateIsSoldout(Long itemId){
         return sqlSession.update(NS + "updateIsSoldout", itemId);
+    }
+
+    @Override
+    public int updateStock(@Param("itemId") Long itemId, @Param("decreasingStock") int decreasingStock){
+        Map<String, Object> params = new HashMap<>();
+        params.put("itemId", itemId);
+        params.put("decreasingStock", decreasingStock);
+        return sqlSession.update(NS + "updateStock", params);
+    }
+
+    @Override
+    public int getStock(Long itemId) {
+        return sqlSession.selectOne(NS + "getStock", itemId);
     }
 }
     //@Autowired
