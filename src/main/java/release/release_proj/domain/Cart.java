@@ -54,10 +54,10 @@ public class Cart {
     @Override
     public String toString() {
         return "Cart{" +
-                "cartId=" + cartId +
+                "cartId=" + cartId + '\'' +
                 ", memberId='" + memberId + '\'' +
-                ", itemId=" + itemId +
-                ", amount=" + amount +
+                ", itemId=" + itemId + '\'' +
+                ", amount=" + amount + '\'' +
                 '}';
     }
 }

@@ -2,7 +2,6 @@ package release.release_proj.domain;
 
 import lombok.*;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Builder
@@ -10,7 +9,7 @@ import javax.persistence.Id;
 @AllArgsConstructor //entity(domain)에는 생성자 작성해야 함
 @Getter
 @Setter //dto 적용 시 setter 생략하기
-@Entity
+//@Entity
 public class Item {
 
     @Id
@@ -33,18 +32,18 @@ public class Item {
     @Override
     public String toString() {
         return "Item{" +
-                "itemId=" + itemId +
+                "itemId=" + itemId + '\'' +
                 ", name='" + name + '\'' +
-                ", price=" + price +
-                ", count=" + count +
-                ", stock=" + stock +
+                ", price=" + price + '\'' +
+                ", count=" + count + '\'' +
+                ", stock=" + stock + '\'' +
                 ", category='" + category + '\'' +
                 ", text='" + text + '\'' +
-                ", isSoldout=" + isSoldout +
+                ", isSoldout=" + isSoldout + '\'' +
                 ", picture='" + picture + '\'' +
-                ", discount=" + discount +
+                ", discount=" + discount + '\'' +
                 ", origin='" + origin + '\'' +
-                ", delivery_type=" + delivery_type +
+                ", delivery_type=" + delivery_type + '\'' +
                 ", seller='" + seller + '\'' +
                 ", unit='" + unit + '\'' +
                 '}';

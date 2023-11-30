@@ -69,9 +69,9 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.updateIsSoldout(itemId);
     }
 
-    /*@Override //추후 필요하면 update
-    public void updateStock(Item item, int newStock){
-
-    }*/
+    @Override
+    public int updateStock(Long itemId, int decreasingStock) {
+        return itemRepository.updateStock(itemId, decreasingStock);
+    }
 
 }

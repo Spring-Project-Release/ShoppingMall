@@ -46,4 +46,10 @@
         WHERE item_id = #{itemId}
     </update>
 
+    <update id="updateStock" parameterType="Long">
+        UPDATE item
+        SET stock = stock - #{decreasingStock}
+        WHERE item_id = #{itemId}
+    </update>
+
 </mapper>
