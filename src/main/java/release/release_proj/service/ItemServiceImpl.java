@@ -74,4 +74,9 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.updateStock(itemId, decreasingStock);
     }
 
+    @Override
+    public int getStock(Long itemId) {
+        return itemRepository.getStock(itemId);
+    }
+
 }

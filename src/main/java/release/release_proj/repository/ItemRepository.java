@@ -18,4 +18,5 @@ public interface ItemRepository {
     public int updateItem(Item item);
     public int updateIsSoldout(Long itemId);
     public int updateStock(Long itemId, int decreasingStock);
+    public int getStock(Long itemId);
 }

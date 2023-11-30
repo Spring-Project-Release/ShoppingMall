@@ -12,5 +12,5 @@ public interface OrderRepository {
     public Optional<List<Order>> findByMemberId(String memberId);
     public Optional<List<Order>> findByItemId(Long itemId);
     public Optional<List<Order>> findAll();
-    public void cancelOrder(Long orderId); //주문취소
+    public void cancel(Long orderId); //주문취소
 }

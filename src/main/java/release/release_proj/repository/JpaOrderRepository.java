@@ -49,7 +49,10 @@ public class JpaOrderRepository implements OrderRepository {
         return Optional.ofNullable(order);
     };
 
-    public void cancelOrder(Long orderId){
-        
+    public void cancel(Long orderId){
+        Order order = em.find(Order.class, orderId);
+        if (order != null) {
+            em.remove(order);
+        }
     };
 }

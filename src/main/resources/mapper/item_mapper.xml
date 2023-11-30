@@ -52,4 +52,8 @@
         WHERE item_id = #{itemId}
     </update>
 
+    <select id="getStock" parameterType="Long">
+        SELECT stock FROM item WHERE item_id = #{itemId}
+    </select>
+
 </mapper>

@@ -72,6 +72,11 @@ public class ItemImpl implements ItemRepository {
         params.put("decreasingStock", decreasingStock);
         return sqlSession.update(NS + "updateStock", params);
     }
+
+    @Override
+    public int getStock(Long itemId) {
+        return sqlSession.selectOne(NS + "getStock", itemId);
+    }
 }
     //@Autowired
     //private ItemRepository itemMapper;
