@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import useScrollReset from "../utils/useScrollReset";
+import { useEffect, useState } from "react";
 
 const Container = styled.div`
   width: 100%;
@@ -66,8 +67,12 @@ const Item = styled.div`
   }
 `;
 
+const Greeting = styled.div``;
+
 export default function DetailBar() {
   const reset = useScrollReset();
+  const [isMemberName, setIsMemberName] = useState();
+  const [isLogin, setIsLogin] = useState(false);
 
   const onMove = (event: React.MouseEvent<HTMLElement>) => {
     console.log(event.currentTarget.id);
@@ -75,6 +80,16 @@ export default function DetailBar() {
 
     reset(`/${event.currentTarget.id}`);
   };
+
+  useEffect(() => {
+    const memberInfo = sessionStorage.getItem("memberInfo");
+    if (memberInfo) {
+      const parsingData = JSON.parse(memberInfo);
+      if (parsingData && parsingData.memberName) {
+        setIsMemberName(parsingData.memberName);
+      }
+    }
+  }, []);
 
   return (
     <Container>
@@ -95,6 +110,8 @@ export default function DetailBar() {
           고객센터
         </Item>
       </List>
+
+      {isMemberName && <Greeting>{isMemberName} 님, 어서오세요.</Greeting>}
     </Container>
   );
 }

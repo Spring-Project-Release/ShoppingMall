@@ -7,6 +7,7 @@ export interface ISignupFormData {
   memberId: string;
   memberPassword: string;
   memberPasswordCheck: string;
+  memberName: string;
   memberEmail: string;
   memberPhone: string;
   memberAddress: string;

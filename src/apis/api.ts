@@ -1,14 +1,12 @@
 import axios from "axios";
 import { ILoginFormData, ISignupFormData } from "./interface";
-import { error } from "console";
-
-const BASE_URL = `http://localhost:8080`;
 
 export const postLoginData = async (data: ILoginFormData): Promise<boolean> => {
-  let url = `${BASE_URL}/login`;
+  let url = `${process.env.REACT_APP_BASE_URL}/user/login`;
   return await axios
     .post(url, data)
     .then((response) => {
+      console.log(response);
       if (response.data.status === 200) {
         const accessToken = response.data.accessToken;
         sessionStorage.setItem("memberInfo", accessToken);
@@ -30,7 +28,7 @@ export const postLoginData = async (data: ILoginFormData): Promise<boolean> => {
 export const postSignupData = async (
   data: ISignupFormData
 ): Promise<boolean> => {
-  let url = `${BASE_URL}/user`;
+  let url = `${process.env.REACT_APP_BASE_URL}/user`;
   return await axios
     .post(url, data)
     .then((response) => {
@@ -48,7 +46,7 @@ export const postSignupData = async (
 };
 
 export const getDuplicateId = async (memberId: string): Promise<boolean> => {
-  let url = `${BASE_URL}/user/duplicate`;
+  let url = `${process.env.REACT_APP_BASE_URL}/user/duplicate`;
   return await axios.get(url, {
     params: {
       memberId,

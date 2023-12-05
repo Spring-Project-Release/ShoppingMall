@@ -11,6 +11,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { theme } from "../utils/colors";
 import useScrollReset from "../utils/useScrollReset";
 import Hood from "../components/Hood";
+import { useEffect, useState } from "react";
 const Container = styled.div`
   width: 100%;
 `;
@@ -121,6 +122,7 @@ export default function Main() {
   const onMove = (itemNumber: string) => {
     reset(`/detail/${itemNumber}`);
   };
+  const [isLogin, setIsLogin] = useState(false);
 
   const settings = {
     dots: true,

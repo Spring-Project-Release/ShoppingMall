@@ -108,8 +108,6 @@ const Checker = styled.div`
   background-color: ${(props) => theme.gray};
 `;
 
-const BASE_URL = "http://localhost:8080"; // 서버 주소 설정
-
 export default function Login() {
   const {
     register,
@@ -210,6 +208,23 @@ export default function Login() {
               name="memberPasswordCheck"
               type="password"
               placeholder="비밀번호 확인"
+            />
+          </Line>
+
+          <Line>
+            <label htmlFor="memberName">이름</label>
+            <input
+              {...register("memberName", {
+                required: "이메일 입력해주세요.",
+                minLength: {
+                  value: 8,
+                  message: "비밀번호는 8글자 이상입니다.",
+                },
+              })}
+              id="memberName"
+              name="memberName"
+              type="text"
+              placeholder="이름"
             />
           </Line>
 
