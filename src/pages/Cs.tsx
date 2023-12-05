@@ -73,10 +73,10 @@ export default function Cs() {
   const [isList, setIsList] = useState<IQnAProps[]>();
   const [isFilter, setIsFilter] = useState<string>("");
 
-  const onTab = (event: any) => {
+  const onTab = (event: React.MouseEvent<HTMLDivElement>) => {
     // console.log(event.target.innerText);
-    setIsFilter(event.currentTarget.innerText);
-    console.log(isFilter);
+    let marker = event.currentTarget.innerText;
+    marker === "전체" ? setIsFilter("") : setIsFilter(marker);
   };
 
   useEffect(() => {
@@ -112,6 +112,9 @@ export default function Cs() {
             </Tab>
             <Tab onClick={onTab}>
               <h4>서비스</h4>
+            </Tab>
+            <Tab onClick={onTab}>
+              <h4>전체</h4>
             </Tab>
           </TabList>
 

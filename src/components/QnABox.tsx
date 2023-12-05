@@ -32,12 +32,13 @@ const Type = styled.div`
 `;
 
 const Title = styled.div`
-  padding: 24px 24px;
+  padding: 36px 48px;
   display: flex;
   flex-direction: row;
   justify-content: start;
   align-items: center;
   width: 70%;
+  white-space: pre-line;
 `;
 
 export interface IQnAProps {

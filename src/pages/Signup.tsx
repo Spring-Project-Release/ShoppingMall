@@ -3,13 +3,13 @@ import Navigation from "../components/Navigation";
 import DetailBar from "../components/DetailBar";
 import { useForm } from "react-hook-form";
 import { ISignupFormData } from "../apis/interface";
-import { getLoginData } from "../apis/api";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import axios from "axios";
 import useScrollReset from "../utils/useScrollReset";
 import Hood from "../components/Hood";
 import { theme } from "../utils/colors";
+import { getDuplicateId, postSignupData } from "../apis/api";
 
 const Container = styled.div`
   height: auto;
@@ -122,32 +122,31 @@ export default function Login() {
 
   const onValid = async (data: ISignupFormData) => {
     // 서버로 요청을 보내는 부분
-    const url = "http://localhost:8080/user/login";
-    console.log(data);
-
-    axios
-      .post(url, data)
-      .then((response) => {
-        if (response.data) {
-          sessionStorage.setItem("memberInfo", response.data);
-          console.log(response.data);
-          // test
-        }
-      })
-      .catch((error) => console.log(error));
+    try {
+      let success = await postSignupData(data);
+      if (success) {
+        console.log("회원가입 성공");
+        reset("/");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error);
+      }
+    } finally {
+    }
   };
 
-  const onIdCheck = () => {
-    const memberId = getValues("memberId");
-    // 멤버 아이디 가져오기
-  };
+  const checkDuplicated = async () => {
+    const id = getValues("memberId");
 
-  const checkDuplicated = async (id: string) => {
-    const url = "http://localhost:8080/user/idCheck";
-
-    //axios.get(url, { params: { memberId: id } });
-    // 잠시 보류
-    // 데이터를 일단 주고 넘길 것인지 error 처리 할 것인지 백앤드와 상의
+    if (id) {
+      try {
+        const access = await getDuplicateId(id);
+        console.log(access);
+      } catch (error) {
+      } finally {
+      }
+    }
   };
 
   return (
@@ -175,7 +174,7 @@ export default function Login() {
                 name="memberId"
                 placeholder="아이디"
               />
-              <Checker onClick={onIdCheck}>
+              <Checker onClick={checkDuplicated}>
                 <p>중복 확인</p>
               </Checker>
             </LineId>
@@ -211,6 +210,57 @@ export default function Login() {
               name="memberPasswordCheck"
               type="password"
               placeholder="비밀번호 확인"
+            />
+          </Line>
+
+          <Line>
+            <label htmlFor="memberEmail">이메일</label>
+            <input
+              {...register("memberEmail", {
+                required: "이메일 입력해주세요.",
+                minLength: {
+                  value: 8,
+                  message: "비밀번호는 8글자 이상입니다.",
+                },
+              })}
+              id="memberEmail"
+              name="memberEmail"
+              type="text"
+              placeholder="이 메 일"
+            />
+          </Line>
+
+          <Line>
+            <label htmlFor="memberPhone">전화번호</label>
+            <input
+              {...register("memberPhone", {
+                required: "전화번호를 입력해주세요.",
+                minLength: {
+                  value: 8,
+                  message: "전화번호 형식이 맞지 않습니다.",
+                },
+              })}
+              id="memberPhone"
+              name="memberPhone"
+              type="text"
+              placeholder="전화번호"
+            />
+          </Line>
+
+          <Line>
+            <label htmlFor="memberAddress">주소</label>
+            <input
+              {...register("memberAddress", {
+                required: "주소를 입력해주세요.",
+                minLength: {
+                  value: 8,
+                  message: "주소는 8글자 이상입니다.",
+                },
+              })}
+              id="memberAddress"
+              name="memberAddress"
+              type="text"
+              placeholder="주소"
             />
           </Line>
 

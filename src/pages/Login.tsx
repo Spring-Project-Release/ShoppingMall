@@ -3,7 +3,7 @@ import Navigation from "../components/Navigation";
 import DetailBar from "../components/DetailBar";
 import { useForm } from "react-hook-form";
 import { ILoginFormData } from "../apis/interface";
-import { getLoginData } from "../apis/api";
+import { postLoginData } from "../apis/api";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import axios from "axios";
@@ -94,8 +94,6 @@ const SignupButton = styled.p`
   }
 `;
 
-const BASE_URL = "http://localhost:8080"; // 서버 주소 설정
-
 export default function Login() {
   const {
     register,
@@ -107,19 +105,20 @@ export default function Login() {
 
   const onValid = async (data: ILoginFormData) => {
     // 서버로 요청을 보내는 부분
-    const url = "http://localhost:8080/user/login";
-    console.log(data);
-
-    axios
-      .post(url, data)
-      .then((response) => {
-        if (response.data) {
-          sessionStorage.setItem("memberInfo", response.data);
-          console.log(response.data);
-          // test
-        }
-      })
-      .catch((error) => console.log(error));
+    try {
+      const success = await postLoginData(data);
+      if (success) {
+        // 성공 시 페이지 전환
+        reset("/");
+        console.log("로그인 성공");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        // Error 형식의 에러 발생 시
+        console.error(error);
+      }
+    } finally {
+    }
   };
 
   const onMove = () => {
