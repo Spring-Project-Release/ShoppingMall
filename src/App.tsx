@@ -8,6 +8,10 @@ import Recent from "./pages/Recent";
 import Cart from "./pages/Cart";
 import Cs from "./pages/Cs";
 import Signup from "./pages/Signup";
+import Sale from "./pages/Sale";
+import Special from "./pages/Special";
+import Ranking from "./pages/Ranking";
+import Recommand from "./pages/Recommand";
 
 export default function App() {
   return (
@@ -20,6 +24,10 @@ export default function App() {
       <Route path={"/cart"} element={<Cart />} />
       <Route path={"/recent"} element={<Recent />} />
       <Route path={"/detail/:productId"} element={<Detail />} />
+      <Route path={"/sale"} element={<Sale />} />
+      <Route path={"/special"} element={<Special />} />
+      <Route path={"/ranking"} element={<Ranking />} />
+      <Route path={"/recommand"} element={<Recommand />} />
     </Routes>
   );
 }

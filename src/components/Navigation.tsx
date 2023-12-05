@@ -78,19 +78,19 @@ export default function Navigation() {
       </Logo>
 
       <Buttons>
-        <Button onClick={onMove}>
+        <Button onClick={onMove} id={`sale`}>
           <h2>세 일</h2>
         </Button>
 
-        <Button onClick={onMove}>
+        <Button onClick={onMove} id={`special`}>
           <h2>스페셜</h2>
         </Button>
 
-        <Button onClick={onMove}>
+        <Button onClick={onMove} id={`ranking`}>
           <h2>랭킹</h2>
         </Button>
 
-        <Button onClick={onMove}>
+        <Button onClick={onMove} id={`recommand`}>
           <h2>추천</h2>
         </Button>
       </Buttons>
