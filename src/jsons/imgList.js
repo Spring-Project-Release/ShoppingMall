@@ -13,7 +13,7 @@ export const images = {
       url: "https://shop.hansalim.or.kr/shopping/is/itm/100103012/100103012_1_568.jpg",
       name: "파김치(500g)",
       price: "8,500원",
-      itemNumber: "3",
+      itemNumber: "2",
     },
 
     {

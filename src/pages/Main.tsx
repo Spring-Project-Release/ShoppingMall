@@ -12,6 +12,7 @@ import { theme } from "../utils/colors";
 import useScrollReset from "../utils/useScrollReset";
 import Hood from "../components/Hood";
 import { useEffect, useState } from "react";
+import { addRecent } from "../utils/addRecent";
 const Container = styled.div`
   width: 100%;
 `;
@@ -120,6 +121,7 @@ const SliderTab = styled.div`
 export default function Main() {
   const reset = useScrollReset();
   const onMove = (itemNumber: string) => {
+    addRecent(itemNumber);
     reset(`/detail/${itemNumber}`);
   };
   const [isLogin, setIsLogin] = useState(false);
