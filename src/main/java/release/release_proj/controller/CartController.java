@@ -18,7 +18,7 @@ public class CartController {
     private final CartService cartService;
 
     @GetMapping("/user/{memberId}")
-    public ResponseEntity<List<Cart>> cartList(@PathVariable(name="memberId") String memberId) {
+    public ResponseEntity<List<Cart>> memberCartList(@PathVariable(name="memberId") String memberId) {
         Optional<List<Cart>> carts = cartService.readMemberCarts(memberId);
 
         if (carts.isPresent()){
@@ -29,7 +29,7 @@ public class CartController {
     }
 
     @GetMapping("/user/{memberId}/item/{itemId}")
-    public ResponseEntity<Cart> cartList(@PathVariable(name="memberId") String memberId, @PathVariable(name="itemId") Long itemId) {
+    public ResponseEntity<Cart> memberCartItemList(@PathVariable(name="memberId") String memberId, @PathVariable(name="itemId") Long itemId) {
         Optional<Cart> cart = cartService.readMemberCartItems(memberId, itemId);
 
         if (cart.isPresent()){

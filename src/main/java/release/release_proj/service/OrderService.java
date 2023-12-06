@@ -18,7 +18,7 @@ public class OrderService {
     private final ItemService itemService;
 
     public void save(Order order) {
-        //item.stock가 order.count 비교: stock 수 < count 수이면 error 메시지 띄우기
+        //item.stock과 order.count 비교: stock 수 < count 수이면 error 메시지 띄우기
         int currentStock = itemService.getStock(order.getItemId());
         if (currentStock < order.getCount()) {
             throw new IllegalStateException("해당 상품의 재고가 부족합니다.");
@@ -63,12 +63,7 @@ public class OrderService {
             itemService.updateStock(itemId, -canceledQuantity);
             orderRepository.cancel(orderId);
         } else {
-            throw new IllegalStateException("해당 주문을 찾을 수 없습니다. 주문 ID: " + orderId);
+            throw new IllegalStateException("해당 주문 ID: " + orderId + "가 존재하지 않습니다.");
         }
     };
-
-
-
 }
-
-//장바구니 결제는 cartservice에 따로 구현
