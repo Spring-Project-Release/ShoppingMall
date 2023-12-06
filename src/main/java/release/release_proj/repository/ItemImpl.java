@@ -77,6 +77,11 @@ public class ItemImpl implements ItemRepository {
     public int getStock(Long itemId) {
         return sqlSession.selectOne(NS + "getStock", itemId);
     }
+
+    @Override
+    public int getPrice(Long itemId) {
+        return sqlSession.selectOne(NS + "getPrice", itemId);
+    }
 }
     //@Autowired
     //private ItemRepository itemMapper;

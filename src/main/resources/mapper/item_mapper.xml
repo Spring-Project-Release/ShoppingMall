@@ -56,4 +56,8 @@
         SELECT stock FROM item WHERE item_id = #{itemId}
     </select>
 
+    <select id="getPrice" parameterType="Long">
+        SELECT price FROM item WHERE item_id = #{itemId}
+    </select>
+
 </mapper>

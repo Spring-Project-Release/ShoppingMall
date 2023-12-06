@@ -127,5 +127,6 @@ public interface CartService {
        1. 해당 유저의 장바구니 주문들 중 해당 item 주문들 찾기
        2. 결제 후 해당 유저의 해당 item에 대한 장바구니 삭제
      */
-    
+    public void payAllCart(String memberId);
+    public void paySomeCart(String memberId, List<Long> itemsId);
 }

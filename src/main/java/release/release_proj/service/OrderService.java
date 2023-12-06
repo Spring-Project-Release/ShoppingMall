@@ -49,6 +49,7 @@ public class OrderService {
     }
 
     public void deleteOrder(Long orderId) {
+        //itemRepository.findByItemId로 domain을 가져오고 domain 안에서 아예 updateStock, updateIsSoldout까지 정의하는 게 나을수도?
         Optional<Order> canceledOrder = orderRepository.findByOrderId(orderId);
 
         if (canceledOrder.isPresent()) {
