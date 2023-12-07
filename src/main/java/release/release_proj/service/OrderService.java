@@ -32,7 +32,7 @@ public class OrderService {
         }
     };
 
-    public Optional<Order> readOrder(Long orderId) {
+    public Optional<Order> findOne(Long orderId) {
         return orderRepository.findByOrderId(orderId);
     }
 
