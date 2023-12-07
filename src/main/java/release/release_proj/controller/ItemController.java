@@ -171,7 +171,7 @@ public class ItemController {
 
 
     @DeleteMapping("/{itemId}")
-    public ResponseEntity<String> delete(@PathVariable(name = "itemId") Long itemId) {
+    public ResponseEntity<String> deleteItem(@PathVariable(name = "itemId") Long itemId) {
         int result = itemService.deleteItem(itemId);
         if (result != 0){
             return ResponseEntity.ok("Item deleted successfully.");
