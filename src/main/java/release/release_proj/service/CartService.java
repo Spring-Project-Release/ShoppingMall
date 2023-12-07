@@ -117,7 +117,7 @@ public interface CartService {
     public int decreaseCartItem(Long cartId);
     public int increaseCartItem(Long cartId, int amount);
 
-    //이후 장바구니 결제 함수 추가
+    //장바구니 결제 함수
     /* 해당 유저의 장바구니 전체 결제
        1. 해당 유저의 장바구니 주문들 찾기
        2. 결제 후 해당 유저의 장바구니 삭제
@@ -127,6 +127,6 @@ public interface CartService {
        1. 해당 유저의 장바구니 주문들 중 해당 item 주문들 찾기
        2. 결제 후 해당 유저의 해당 item에 대한 장바구니 삭제
      */
-    public void payAllCart(String memberId);
-    public void paySomeCart(String memberId, List<Long> itemsId);
+    public void payAllCart(String memberId, String memo);
+    public void paySomeCart(String memberId, List<Long> itemsId, String memo);
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import release.release_proj.domain.Cart;
+import release.release_proj.domain.Order;
 import release.release_proj.repository.CartRepository;
 
 import java.util.List;
@@ -96,55 +97,55 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public void payAllCart(String memberId) {
+    public void payAllCart(String memberId, String memo) {
         Optional<List<Cart>> carts = cartRepository.findByMemberId(memberId);
         if (carts.isPresent()) {
             cartRepository.deleteByMemberId(memberId);
             for (Cart cart : carts.get()) {
-                int currentStock = itemService.getStock(cart.getItemId());
+                /*int currentStock = itemService.getStock(cart.getItemId());
                 if (currentStock < cart.getAmount()) {
                     throw new IllegalStateException(cart.getItemId() + " 상품의 재고가 부족합니다.");
                 }
                 else {
                     itemService.updateStock(cart.getItemId(), cart.getAmount());
-                }
+                }*/
 
                 //order 기록 저장- 구매내역으로 무언가를 할 경우(user의 등급을 매길 경우 user에 paymentPrice 항목도 추가를 해야하나?)
-                //order 기록 저장하면 동시에 주문해도 db에 다른 행으로 들어가는 문제가 발생함...
-                /*Order order = new Order();
+                //order 기록 저장하면 동시에 주문해도 db에 다른 행으로 들어가는데 괜찮을까?
+                Order order = new Order();
                 order.setMemberId(cart.getMemberId());
                 order.setItemId(cart.getItemId());
                 order.setCount(cart.getAmount());
                 order.setPrice(cart.getAmount()* itemService.getPrice(cart.getItemId()));
-                //memo 가져오기 - controller에서 memo 가져와서 payAllCart의 인자로 넘겨주어야할듯
-                orderService.save(order);*/
+                order.setMemo(memo != null ? memo : ""); //controller에서 memo를 받아와서 order에 set해줌
+                orderService.save(order);
             }
         }
     }
 
 
     @Override
-    public void paySomeCart(String memberId, List<Long> itemsId) {
+    public void paySomeCart(String memberId, List<Long> itemsId, String memo) {
         for (Long itemId : itemsId) {
             Optional<Cart> cart = cartRepository.findByMemberIdAndItemId(memberId, itemId);
             if (cart.isPresent()) {
                 Cart existCart = cart.get();
                 cartRepository.deleteByMemberIdAndItemId(memberId, itemId);
-                int currentStock = itemService.getStock(existCart.getItemId());
+                /*int currentStock = itemService.getStock(existCart.getItemId());
                 if (currentStock < existCart.getAmount()) {
                     throw new IllegalStateException(existCart.getItemId() + " 상품의 재고가 부족합니다.");
                 }
                 else {
                     itemService.updateStock(existCart.getItemId(), existCart.getAmount());
-                }
+                }*/
 
-                /*Order order = new Order();
+                Order order = new Order();
                 order.setMemberId(existCart.getMemberId());
                 order.setItemId(existCart.getItemId());
                 order.setCount(existCart.getAmount());
                 order.setPrice(existCart.getAmount()* itemService.getPrice(existCart.getItemId()));
-                //memo 가져오기
-                orderService.save(order);*/
+                order.setMemo(memo != null ? memo : ""); //controller에서 memo를 받아와서 order에 set해줌
+                orderService.save(order);
             }
         }
     }
