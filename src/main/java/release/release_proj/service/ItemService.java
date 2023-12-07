@@ -62,6 +62,7 @@ public interface ItemService {
     public Optional<List<Item>> readItems();
     public int updateIsSoldout(Long itemId); //item에서 isSoldout만 반대값으로 update
     public int updateStock(Long itemId, int decreasingStock); //item에서 재고수만 감소
+    public int updateCount(Long itemId, int increasingCount);
     public int getStock(Long itemId);
     public int getPrice(Long itemId);
     public Optional<List<Item>> findByIsSoldout(Boolean isSoldout);

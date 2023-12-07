@@ -79,4 +79,13 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.getStock(itemId);
     }
 
+    @Override
+    public int getPrice(Long itemId) {
+        return itemRepository.getPrice(itemId);
+    }
+
+    @Override
+    public int updateCount(Long itemId, int increasingCount){
+        return itemRepository.updateCount(itemId, increasingCount);
+    }
 }

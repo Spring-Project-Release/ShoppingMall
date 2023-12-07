@@ -27,7 +27,7 @@ public class JpaOrderRepository implements OrderRepository {
     };
 
     public Optional<List<Order>> findByMemberId(String memberId){
-        List<Order> order = em.createQuery("select i from Order i where i.memberId = :", Order.class)
+        List<Order> order = em.createQuery("select i from Order i where i.memberId = :memberId", Order.class)
                 .setParameter("memberId", memberId)
                 .getResultList();
 
@@ -35,7 +35,7 @@ public class JpaOrderRepository implements OrderRepository {
     };
 
     public Optional<List<Order>> findByItemId(Long itemId){
-        List<Order> order = em.createQuery("select i from Order i where i.itemId = :", Order.class)
+        List<Order> order = em.createQuery("select i from Order i where i.itemId = :itemId", Order.class)
                 .setParameter("itemId", itemId)
                 .getResultList();
 
@@ -43,7 +43,7 @@ public class JpaOrderRepository implements OrderRepository {
     };
 
     public Optional<List<Order>> findAll(){
-        List<Order> order = em.createQuery("select i from Item i", Order.class)
+        List<Order> order = em.createQuery("select i from Order i", Order.class)
                 .getResultList();
 
         return Optional.ofNullable(order);

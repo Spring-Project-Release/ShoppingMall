@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor //생성자 주입을 대신 해줌
-public class CartServiceImpl implements CartService{
+public class CartServiceImpl implements CartService {
 
     //@Autowired
     //private CartRepository cartRepository; //필드주입
@@ -44,8 +44,9 @@ public class CartServiceImpl implements CartService{
             Optional<Cart> isCartExist = cartRepository.findByMemberIdAndItemId(cart.getMemberId(), cart.getItemId());
             if (isCartExist.isPresent()){
                 Cart currentCart = isCartExist.get();
-                currentCart.setAmount(currentCart.getAmount() + cart.getAmount());
-                return cartRepository.updateCartAmount(currentCart.getCartId(), currentCart.getAmount());
+                //currentCart.setAmount(currentCart.getAmount() + cart.getAmount());
+                //return cartRepository.updateCartAmount(currentCart.getCartId(), currentCart.getAmount());
+                return cartRepository.updateCartAmount(currentCart.getCartId(), cart.getAmount());
             }
             else {
                 return cartRepository.save(cart);
@@ -100,7 +101,6 @@ public class CartServiceImpl implements CartService{
     public void payAllCart(String memberId, String memo) {
         Optional<List<Cart>> carts = cartRepository.findByMemberId(memberId);
         if (carts.isPresent()) {
-            cartRepository.deleteByMemberId(memberId);
             for (Cart cart : carts.get()) {
                 /*int currentStock = itemService.getStock(cart.getItemId());
                 if (currentStock < cart.getAmount()) {
@@ -108,6 +108,7 @@ public class CartServiceImpl implements CartService{
                 }
                 else {
                     itemService.updateStock(cart.getItemId(), cart.getAmount());
+                    itemService.updateCount(cart.getItemId(), cart.getAmount());
                 }*/
 
                 //order 기록 저장- 구매내역으로 무언가를 할 경우(user의 등급을 매길 경우 user에 paymentPrice 항목도 추가를 해야하나?)
@@ -116,9 +117,10 @@ public class CartServiceImpl implements CartService{
                 order.setMemberId(cart.getMemberId());
                 order.setItemId(cart.getItemId());
                 order.setCount(cart.getAmount());
-                order.setPrice(cart.getAmount()* itemService.getPrice(cart.getItemId()));
+                order.setPrice(cart.getAmount() * itemService.getPrice(cart.getItemId()));
                 order.setMemo(memo != null ? memo : ""); //controller에서 memo를 받아와서 order에 set해줌
                 orderService.save(order);
+                cartRepository.deleteByMemberIdAndItemId(memberId, cart.getItemId());
             }
         }
     }
@@ -130,24 +132,24 @@ public class CartServiceImpl implements CartService{
             Optional<Cart> cart = cartRepository.findByMemberIdAndItemId(memberId, itemId);
             if (cart.isPresent()) {
                 Cart existCart = cart.get();
-                cartRepository.deleteByMemberIdAndItemId(memberId, itemId);
                 /*int currentStock = itemService.getStock(existCart.getItemId());
                 if (currentStock < existCart.getAmount()) {
                     throw new IllegalStateException(existCart.getItemId() + " 상품의 재고가 부족합니다.");
                 }
                 else {
                     itemService.updateStock(existCart.getItemId(), existCart.getAmount());
+                     itemService.updateCount(existCart.getItemId(), existCart.getAmount());
                 }*/
 
                 Order order = new Order();
                 order.setMemberId(existCart.getMemberId());
                 order.setItemId(existCart.getItemId());
                 order.setCount(existCart.getAmount());
-                order.setPrice(existCart.getAmount()* itemService.getPrice(existCart.getItemId()));
+                order.setPrice(existCart.getAmount() * itemService.getPrice(existCart.getItemId()));
                 order.setMemo(memo != null ? memo : ""); //controller에서 memo를 받아와서 order에 set해줌
                 orderService.save(order);
+                cartRepository.deleteByMemberIdAndItemId(memberId, itemId);
             }
         }
     }
-
 }

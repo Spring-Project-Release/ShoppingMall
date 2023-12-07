@@ -40,23 +40,29 @@
         WHERE item_id = #{itemId}
     </update>
 
-    <update id="updateIsSoldout" parameterType="Long">
+    <update id="updateIsSoldout">
         UPDATE item
         SET is_soldout = 1 - is_soldout
         WHERE item_id = #{itemId}
     </update>
 
-    <update id="updateStock" parameterType="Long">
+    <update id="updateStock">
         UPDATE item
         SET stock = stock - #{decreasingStock}
         WHERE item_id = #{itemId}
     </update>
 
-    <select id="getStock" parameterType="Long">
+    <update id="updateCount">
+        UPDATE item
+        SET count = count + #{increasingCount}
+        WHERE item_id = #{itemId}
+    </update>
+
+    <select id="getStock" parameterType="Long" resultType="int">
         SELECT stock FROM item WHERE item_id = #{itemId}
     </select>
 
-    <select id="getPrice" parameterType="Long">
+    <select id="getPrice" parameterType="Long" resultType="int">
         SELECT price FROM item WHERE item_id = #{itemId}
     </select>
 

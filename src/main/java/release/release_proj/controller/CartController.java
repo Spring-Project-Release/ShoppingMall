@@ -45,7 +45,7 @@ public class CartController {
             int result = cartService.addCartItem(cart);
 
             if (result != 0) {
-                return ResponseEntity.ok("Cart created successfully.");
+                return ResponseEntity.ok("Cart created or amount updated successfully.");
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create cart.");
             }
@@ -85,7 +85,6 @@ public class CartController {
     public ResponseEntity<String> increaseCartItemAmount(@PathVariable(name="cartId") Long cartId, @RequestBody(required = false) Integer amount) {
         int result;
         String successMessage;
-        HttpStatus status;
 
         if (amount != null && amount > 0) {
             //result = cartService.increaseCartItem(memberId, itemId, amount);
@@ -102,8 +101,31 @@ public class CartController {
         if (result != 0) {
             return ResponseEntity.ok(successMessage);
         } else {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            return ResponseEntity.status(status).body("The corresponding cart does not exist or an error occurred.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("The corresponding cart does not exist or an error occurred.");
+        }
+    }
+
+    @PostMapping("/order/user/{memberId}")
+    public ResponseEntity<String> payAllCart(@PathVariable(name="memberId") String memberId, @RequestBody(required = false) String memo) {
+        try {
+            cartService.payAllCart(memberId, memo);
+            return ResponseEntity.ok("장바구니 결제가 성공적으로 처리되었습니다.");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("장바구니 결제 처리 중 오류가 발생했습니다.");
+        }
+    }
+
+    @PostMapping("/order/some/user/{memberId}")
+    public ResponseEntity<String> paySomeCart(@PathVariable(name="memberId") String memberId, @RequestBody List<Long> ItemIds, @RequestBody(required = false) String memo) {
+        try {
+            cartService.paySomeCart(memberId, ItemIds, memo);
+            return ResponseEntity.ok("장바구니 결제가 성공적으로 처리되었습니다.");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("장바구니 결제 처리 중 오류가 발생했습니다.");
         }
     }
 }

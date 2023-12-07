@@ -74,6 +74,14 @@ public class ItemImpl implements ItemRepository {
     }
 
     @Override
+    public int updateCount(@Param("itemId") Long itemId, @Param("increasingCount") int increasingCount){
+        Map<String, Object> params = new HashMap<>();
+        params.put("itemId", itemId);
+        params.put("increasingCount", increasingCount);
+        return sqlSession.update(NS + "updateCount", params);
+    }
+
+    @Override
     public int getStock(Long itemId) {
         return sqlSession.selectOne(NS + "getStock", itemId);
     }

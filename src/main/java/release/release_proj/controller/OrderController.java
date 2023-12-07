@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/order")
+@RequestMapping("/orders")
 public class OrderController {
 
     private final OrderService orderService;
@@ -40,7 +40,7 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/{memberId}")
+    @GetMapping("/user/{memberId}")
     public ResponseEntity<List<Order>> memberOrderList(@PathVariable(name="memberId") String memberId) {
         Optional<List<Order>> orders = orderService.findByMemberId(memberId);
 

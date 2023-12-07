@@ -1,6 +1,7 @@
 package release.release_proj.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import release.release_proj.domain.Order;
@@ -18,17 +19,22 @@ public class OrderService {
     private final ItemService itemService;
 
     public void save(Order order) {
-        //item.stock과 order.count 비교: stock 수 < count 수이면 error 메시지 띄우기
-        int currentStock = itemService.getStock(order.getItemId());
-        if (currentStock < order.getCount()) {
-            throw new IllegalStateException("해당 상품의 재고가 부족합니다.");
-        }
+        try {
+            //item.stock과 order.count 비교: stock 수 < count 수이면 error 메시지 띄우기
+            int currentStock = itemService.getStock(order.getItemId());
+            if (currentStock < order.getCount()) {
+                throw new IllegalStateException("해당 상품의 재고가 부족합니다.");
+            }
+            orderRepository.save(order);
+            itemService.updateStock(order.getItemId(), order.getCount()); //item 재고 감소
+            itemService.updateCount(order.getItemId(), order.getCount()); //item 판매개수 상승
 
-        orderRepository.save(order);
-        itemService.updateStock(order.getItemId(), order.getCount());
-
-        if (currentStock - order.getCount() == 0) { //재고가 0인 경우
-            itemService.updateIsSoldout(order.getItemId());
+            if (currentStock - order.getCount() == 0) { //재고가 0인 경우
+                itemService.updateIsSoldout(order.getItemId());
+            }
+        } catch (DataIntegrityViolationException e) {
+            // 외래 키 제약 조건 위배로 인한 예외 처리
+            throw new IllegalArgumentException("Failed to make order. 해당하는 itemId나 memberId가 존재하지 않습니다", e);
         }
     };
 
@@ -62,6 +68,7 @@ public class OrderService {
             }
 
             itemService.updateStock(itemId, -canceledQuantity);
+            itemService.updateStock(order.getItemId(), -canceledQuantity);
             orderRepository.cancel(orderId);
         } else {
             throw new IllegalStateException("해당 주문 ID: " + orderId + "가 존재하지 않습니다.");
