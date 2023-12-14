@@ -25,7 +25,7 @@ public class Item {
     private String picture; //상품 사진 url
     private float discount; //할인률
     private String origin; //원산지
-    private int delivery_type; //배송타입
+    private int deliveryType; //배송타입
     private String seller; //판매자(판매회사) 이름
     private String unit; //판매단위
 
@@ -43,7 +43,7 @@ public class Item {
                 ", picture='" + picture + '\'' +
                 ", discount=" + discount + '\'' +
                 ", origin='" + origin + '\'' +
-                ", delivery_type=" + delivery_type + '\'' +
+                ", deliveryType=" + deliveryType + '\'' +
                 ", seller='" + seller + '\'' +
                 ", unit='" + unit + '\'' +
                 '}';

@@ -11,7 +11,7 @@
 
     <insert id="save" parameterType="release.release_proj.domain.Item" useGeneratedKeys="true" keyProperty="itemId">
         INSERT INTO item (name, price, count, stock, category, text, is_soldout, picture, discount, origin, delivery_type, seller, unit)
-        VALUES (#{name}, #{price}, #{count}, #{stock}, #{category}, #{text}, #{isSoldout}, #{picture}, #{discount}, #{origin}, #{delivery_type}, #{seller}, #{unit})
+        VALUES (#{name}, #{price}, #{count}, #{stock}, #{category}, #{text}, #{isSoldout}, #{picture}, #{discount}, #{origin}, #{deliveryType}, #{seller}, #{unit})
     </insert>
 
     <select id="findByItemId" parameterType="Long" resultType="release.release_proj.domain.Item">
@@ -36,7 +36,7 @@
 
     <update id="updateItem" parameterType="release.release_proj.domain.Item">
         UPDATE item
-        SET name = #{name}, price = #{price}, count = #{count}, stock = #{stock}, category = #{category}, text = #{text}, is_soldout = #{isSoldout}, picture = #{picture}, discount = #{discount}, origin = #{origin}, delivery_type = #{delivery_type}, seller = #{seller}, unit = #{unit}
+        SET name = #{name}, price = #{price}, count = #{count}, stock = #{stock}, category = #{category}, text = #{text}, is_soldout = #{isSoldout}, picture = #{picture}, discount = #{discount}, origin = #{origin}, delivery_type = #{deliveryType}, seller = #{seller}, unit = #{unit}
         WHERE item_id = #{itemId}
     </update>
 
