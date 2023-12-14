@@ -21,4 +21,5 @@ public interface ItemRepository {
     public int updateCount(Long itemId, int increasingCount);
     public int getStock(Long itemId);
     public int getPrice(Long itemId);
+    public int isItemIdExist(Long itemId);
 }

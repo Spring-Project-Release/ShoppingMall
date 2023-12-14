@@ -66,4 +66,10 @@
         SELECT price FROM item WHERE item_id = #{itemId}
     </select>
 
+    <select id="isItemIdExist" parameterType="Long" resultType="int">
+        SELECT COUNT(item_id)
+        FROM item
+        WHERE item_id = #{itemId}
+    </select>
+
 </mapper>

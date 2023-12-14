@@ -88,4 +88,9 @@ public class ItemServiceImpl implements ItemService {
     public int updateCount(Long itemId, int increasingCount){
         return itemRepository.updateCount(itemId, increasingCount);
     }
+
+    @Override
+    public int isItemIdExist(Long itemId) {
+        return itemRepository.isItemIdExist(itemId);
+    }
 }

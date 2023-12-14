@@ -68,4 +68,5 @@ public interface ItemService {
     public Optional<List<Item>> findByIsSoldout(Boolean isSoldout);
     public Optional<List<Item>> findByCategory(String category);
     //public void updateStock(Item item, int newStock); //item에서 stock 값만 update
+    public int isItemIdExist(Long itemId);
 }

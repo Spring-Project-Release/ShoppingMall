@@ -1,10 +1,10 @@
 package release.release_proj.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import release.release_proj.domain.Order;
+import release.release_proj.repository.MemberDAO;
 import release.release_proj.repository.OrderRepository;
 
 import java.util.List;
@@ -17,9 +17,11 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ItemService itemService;
+    private final MemberDAO memberDAO;
 
     public void save(Order order) {
-        try {
+        //try {
+            validateMemberAndItemExistence(order.getMemberId(), order.getItemId());
             //item.stock과 order.count 비교: stock 수 < count 수이면 error 메시지 띄우기
             int currentStock = itemService.getStock(order.getItemId());
             if (currentStock < order.getCount()) {
@@ -32,11 +34,24 @@ public class OrderService {
             if (currentStock - order.getCount() == 0) { //재고가 0인 경우
                 itemService.updateIsSoldout(order.getItemId());
             }
-        } catch (DataIntegrityViolationException e) {
+        /*} catch (DataIntegrityViolationException e) {
             // 외래 키 제약 조건 위배로 인한 예외 처리
-            throw new IllegalArgumentException("Failed to make order. 해당하는 itemId나 memberId가 존재하지 않습니다", e);
-        }
+            throw new IllegalArgumentException("Failed to make order. 해당하는 itemId나 memberId가 존재하지 않습니다.", e);
+        }*/
     };
+
+    private void validateMemberAndItemExistence(String memberId, Long itemId) {
+        // memberId와 itemId가 존재하는지 여부 확인
+        if (memberDAO.isExistMemberId(memberId)==0 && itemService.isItemIdExist(itemId)==0) {
+            throw new IllegalArgumentException("결제 처리에 실패했습니다. 해당하는 memberId와 itemId가 존재하지 않습니다.");
+        }
+        else if (memberDAO.isExistMemberId(memberId)==0) {
+            throw new IllegalArgumentException("결제 처리에 실패했습니다. 해당하는 memberId가 존재하지 않습니다.");
+        }
+        else if (itemService.isItemIdExist(itemId)==0) {
+            throw new IllegalArgumentException("결제 처리에 실패했습니다. 해당하는 itemId가 존재하지 않습니다.");
+        }
+    }
 
     public Optional<Order> findOne(Long orderId) {
         return orderRepository.findByOrderId(orderId);
