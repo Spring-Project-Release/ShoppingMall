@@ -25,7 +25,7 @@ public class OrderService {
             //item.stock과 order.count 비교: stock 수 < count 수이면 error 메시지 띄우기
             int currentStock = itemService.getStock(order.getItemId());
             if (currentStock < order.getCount()) {
-                throw new IllegalStateException("해당 상품의 재고가 부족합니다.");
+                throw new IllegalStateException(order.getItemId()+" 상품의 재고가 부족합니다.");
             }
             orderRepository.save(order);
             itemService.updateStock(order.getItemId(), order.getCount()); //item 재고 감소

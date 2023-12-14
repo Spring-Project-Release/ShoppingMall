@@ -3,9 +3,11 @@ package release.release_proj.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import release.release_proj.domain.Cart;
 import release.release_proj.domain.Order;
 import release.release_proj.repository.CartRepository;
+import release.release_proj.repository.MemberDAO;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +22,7 @@ public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final ItemService itemService;
     private final OrderService orderService;
+    private final MemberDAO memberDAO;
 
     /*@Autowired //생성자 주입
     public CartServiceImpl(CartRepository cartRepository) {
@@ -99,6 +102,10 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void payAllCart(String memberId, String memo) {
+        if (memberDAO.isExistMemberId(memberId) == 0) { //memberId 자체가 member db에 존재하지 않는 경우
+            throw new IllegalArgumentException("Invalid memberId: " + memberId);
+        }
+
         Optional<List<Cart>> carts = cartRepository.findByMemberId(memberId);
         if (carts.isPresent()) {
             for (Cart cart : carts.get()) {
@@ -122,13 +129,23 @@ public class CartServiceImpl implements CartService {
                 orderService.save(order);
                 cartRepository.deleteByMemberIdAndItemId(memberId, cart.getItemId());
             }
+        } else { //해당 memberId 자체는 존재하지만 cart DB에 존재하지 않는 경우
+            throw new IllegalArgumentException("해당하는 memberId: "+memberId+"를 갖는 cart가 존재하지 않습니다.");
         }
     }
 
-
+    @Transactional //하나라도 실행되지 않으면 롤백
     @Override
     public void paySomeCart(String memberId, List<Long> itemsId, String memo) {
+        if (memberDAO.isExistMemberId(memberId) == 0) { //memberId 자체가 member db에 존재하지 않는 경우
+            throw new IllegalArgumentException("Invalid memberId: " + memberId);
+        }
+
         for (Long itemId : itemsId) {
+            if (itemService.isItemIdExist(itemId)==0){ //itemId 자체가 item db에 존재하지 않는 경우
+                throw new IllegalArgumentException("Invalid itemId: " + itemId);
+            }
+
             Optional<Cart> cart = cartRepository.findByMemberIdAndItemId(memberId, itemId);
             if (cart.isPresent()) {
                 Cart existCart = cart.get();
@@ -149,6 +166,8 @@ public class CartServiceImpl implements CartService {
                 order.setMemo(memo != null ? memo : ""); //controller에서 memo를 받아와서 order에 set해줌
                 orderService.save(order);
                 cartRepository.deleteByMemberIdAndItemId(memberId, itemId);
+            } else { //해당 itemId 자체는 존재하지만 cart DB에 존재하지 않는 경우
+                throw new IllegalArgumentException("해당하는 itemId: "+itemId+"와 memberId: "+memberId+"를 갖는 cart가 존재하지 않습니다.");
             }
         }
     }
