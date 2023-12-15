@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
@@ -64,4 +65,93 @@ public class OrderServiceIntegrationTest {
         assertThat(savedItem.getCount()).isEqualTo(1);
     }
 
+    @Test
+    public void 상품결제_외래키_예외_상품과유저_없음() throws Exception {
+        //Given
+        Order order = new Order();
+        order.setMemberId("testMemberId");
+        order.setItemId(99999L);
+        order.setCount(1);
+        order.setPrice(1);
+
+        //Then
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> orderService.save(order));
+        assertThat(e.getMessage()).isEqualTo("결제 처리에 실패했습니다. 해당하는 memberId와 itemId가 존재하지 않습니다.");
+    }
+
+    @Test
+    public void 상품결제_외래키_예외_상품_없음() throws Exception {
+        //Given
+        Item item = new Item();
+        item.setName("testItemName");
+        item.setPrice(1);
+        item.setStock(1);
+        item.setCount(0);
+        item.setIsSoldout(false);
+        itemRepository.save(item);
+
+        Order order = new Order();
+        order.setMemberId("testMemberId");
+        order.setItemId(item.getItemId());
+        order.setCount(1);
+        order.setPrice(1);
+
+        //Then
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> orderService.save(order));
+        assertThat(e.getMessage()).isEqualTo("결제 처리에 실패했습니다. 해당하는 memberId가 존재하지 않습니다.");
+    }
+
+    @Test
+    public void 상품결제_외래키_예외_유저_없음() throws Exception {
+        //Given
+        MemberVO member = new MemberVO();
+        member.setMemberId("testMemberId");
+        member.setName("testMemberName");
+        member.setPassword("testMemberPassword");
+        member.setPhone("testMemberPhone");
+        member.setAddress("testMemberAddress");
+        member.setEmail("testMemberEmail");
+        memberDAO.insertMember(member);
+
+        Order order = new Order();
+        order.setMemberId("testMemberId");
+        order.setItemId(99999L);
+        order.setCount(1);
+        order.setPrice(1);
+
+        //Then
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> orderService.save(order));
+        assertThat(e.getMessage()).isEqualTo("결제 처리에 실패했습니다. 해당하는 itemId가 존재하지 않습니다.");
+    }
+
+    @Test
+    public void 상품결제_예외_상품재고부족() throws Exception {
+        // Given
+        MemberVO member = new MemberVO();
+        member.setMemberId("testMemberId");
+        member.setName("testMemberName");
+        member.setPassword("testMemberPassword");
+        member.setPhone("testMemberPhone");
+        member.setAddress("testMemberAddress");
+        member.setEmail("testMemberEmail");
+        memberDAO.insertMember(member);
+
+        Item item = new Item();
+        item.setName("testItemName");
+        item.setPrice(1);
+        item.setStock(1);
+        item.setCount(0);
+        item.setIsSoldout(false);
+        itemRepository.save(item);
+
+        Order order = new Order();
+        order.setMemberId("testMemberId");
+        order.setItemId(item.getItemId());
+        order.setCount(2);
+        order.setPrice(order.getCount()*item.getPrice());
+
+        // Then
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> orderService.save(order));
+        assertThat(e.getMessage()).isEqualTo(order.getItemId()+" 상품의 재고가 부족합니다.");
+    }
 }
