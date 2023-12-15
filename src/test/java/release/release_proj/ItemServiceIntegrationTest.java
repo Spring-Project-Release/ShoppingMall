@@ -27,7 +27,7 @@ public class ItemServiceIntegrationTest {
         Item item = new Item();
         item.setName("testItemId");
         item.setPrice(1);
-        item.setIsSoldout(true);
+        item.setIsSoldout(false);
 
         //When
         int result = itemService.saveItem(item);
@@ -44,12 +44,12 @@ public class ItemServiceIntegrationTest {
         Item item1 = new Item();
         item1.setName("testItemId");
         item1.setPrice(1);
-        item1.setIsSoldout(true);
+        item1.setIsSoldout(false);
 
         Item item2 = new Item();
         item2.setName("testItemId");
         item2.setPrice(1);
-        item2.setIsSoldout(true);
+        item2.setIsSoldout(false);
 
         //When
         int result = itemService.saveItem(item1);
