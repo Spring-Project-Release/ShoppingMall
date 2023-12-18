@@ -30,11 +30,11 @@ public class CartServiceIntegrationTest {
         // Given
         MemberVO member = new MemberVO();
         member.setMemberId("testMemberId");
-        member.setName("testMemberName");
-        member.setPassword("testMemberPassword");
-        member.setPhone("testMemberPhone");
-        member.setAddress("testMemberAddress");
-        member.setEmail("testMemberEmail");
+        member.setMemberName("testMemberName");
+        member.setMemberPassword("testMemberPassword");
+        member.setMemberPhone("testMemberPhone");
+        member.setMemberAddress("testMemberAddress");
+        member.setMemberEmail("testMemberEmail");
         memberDAO.insertMember(member);
 
         Item item = new Item();
