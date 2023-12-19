@@ -82,7 +82,7 @@ export default function DetailBar() {
   };
 
   useEffect(() => {
-    const memberInfo = sessionStorage.getItem("memberInfo");
+    const memberInfo = sessionStorage.getItem("userInfo");
     if (memberInfo) {
       const parsingData = JSON.parse(memberInfo);
       if (parsingData && parsingData.memberName) {

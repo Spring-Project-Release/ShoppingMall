@@ -1,15 +1,19 @@
-import axios from "axios";
+//import axios from "axios";
+import axios, { AxiosRequestConfig } from 'axios';
 import { ILoginFormData, ISignupFormData } from "./interface";
 
 export const postLoginData = async (data: ILoginFormData): Promise<boolean> => {
   let url = `${process.env.REACT_APP_BASE_URL}/user/login`;
+  const config: AxiosRequestConfig = {
+    withCredentials: true, // withCredentials 옵션 추가
+  };
+
   return await axios
-    .post(url, data)
+    .post(url, data, config)
     .then((response) => {
       console.log(response);
-      if (response.data.status === 200) {
-        const accessToken = response.data.accessToken;
-        sessionStorage.setItem("memberInfo", accessToken);
+      if (response.status === 200) {
+        sessionStorage.setItem("userInfo", JSON.stringify(response.data));
         return true;
         // 성공시 true
       } else {
