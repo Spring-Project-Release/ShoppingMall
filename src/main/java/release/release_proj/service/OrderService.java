@@ -83,7 +83,7 @@ public class OrderService {
             }
 
             itemService.updateStock(itemId, -canceledQuantity);
-            itemService.updateStock(order.getItemId(), -canceledQuantity);
+            itemService.updateCount(itemId, -canceledQuantity);
             orderRepository.cancel(orderId);
         } else {
             throw new IllegalStateException("해당 주문 ID: " + orderId + "가 존재하지 않습니다.");

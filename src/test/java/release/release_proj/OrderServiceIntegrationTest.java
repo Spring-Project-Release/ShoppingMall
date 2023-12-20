@@ -11,6 +11,7 @@ import release.release_proj.repository.ItemRepository;
 import release.release_proj.repository.MemberDAO;
 import release.release_proj.service.OrderService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +48,7 @@ public class OrderServiceIntegrationTest {
         itemRepository.save(item);
 
         Order order = new Order();
-        order.setMemberId("testMemberId");
+        order.setMemberId(member.getMemberId());
         order.setItemId(item.getItemId());
         order.setCount(1);
         order.setPrice(order.getCount()*item.getPrice());
@@ -56,10 +57,10 @@ public class OrderServiceIntegrationTest {
         orderService.save(order);
 
         // Then
-        Optional<List<Order>> savedOrder = orderService.findByMemberId("testMemberId");
+        Optional<List<Order>> savedOrder = orderService.findByMemberId(member.getMemberId());
+        Item savedItem = itemRepository.findByItemId(item.getItemId()).get();
         assertThat(savedOrder).isPresent();
         assertEquals(order.getOrderId(),savedOrder.get().get(0).getOrderId());
-        Item savedItem = itemRepository.findByItemId(item.getItemId()).get();
         assertThat(savedItem.getStock()).isEqualTo(0);
         assertThat(savedItem.getIsSoldout()).isEqualTo(true);
         assertThat(savedItem.getCount()).isEqualTo(1);
@@ -80,7 +81,7 @@ public class OrderServiceIntegrationTest {
     }
 
     @Test
-    public void 상품결제_외래키_예외_상품_없음() throws Exception {
+    public void 상품결제_외래키_예외_유저_없음() throws Exception {
         //Given
         Item item = new Item();
         item.setName("testItemName");
@@ -91,8 +92,8 @@ public class OrderServiceIntegrationTest {
         itemRepository.save(item);
 
         Order order = new Order();
-        order.setMemberId("testMemberId");
         order.setItemId(item.getItemId());
+        order.setMemberId("testMemberId");
         order.setCount(1);
         order.setPrice(1);
 
@@ -102,7 +103,7 @@ public class OrderServiceIntegrationTest {
     }
 
     @Test
-    public void 상품결제_외래키_예외_유저_없음() throws Exception {
+    public void 상품결제_외래키_예외_상품_없음() throws Exception {
         //Given
         MemberVO member = new MemberVO();
         member.setMemberId("testMemberId");
@@ -114,7 +115,7 @@ public class OrderServiceIntegrationTest {
         memberDAO.insertMember(member);
 
         Order order = new Order();
-        order.setMemberId("testMemberId");
+        order.setMemberId(member.getMemberId());
         order.setItemId(99999L);
         order.setCount(1);
         order.setPrice(1);
@@ -145,7 +146,7 @@ public class OrderServiceIntegrationTest {
         itemRepository.save(item);
 
         Order order = new Order();
-        order.setMemberId("testMemberId");
+        order.setMemberId(member.getMemberId());
         order.setItemId(item.getItemId());
         order.setCount(2);
         order.setPrice(order.getCount()*item.getPrice());
@@ -153,5 +154,79 @@ public class OrderServiceIntegrationTest {
         // Then
         IllegalStateException e = assertThrows(IllegalStateException.class, () -> orderService.save(order));
         assertThat(e.getMessage()).isEqualTo(order.getItemId()+" 상품의 재고가 부족합니다.");
+    }
+
+    @Test
+    public void 주문삭제() throws Exception { //재고가 품절되었는데 주문삭제로 품절취소되는 경우까지 테스트
+        // Given
+        MemberVO member = new MemberVO();
+        member.setMemberId("testMemberId");
+        member.setMemberName("testMemberName");
+        member.setMemberPassword("testMemberPassword");
+        member.setMemberPhone("testMemberPhone");
+        member.setMemberAddress("testMemberAddress");
+        member.setMemberEmail("testMemberEmail");
+        memberDAO.insertMember(member);
+
+        Item item = new Item();
+        item.setName("testItemName");
+        item.setPrice(1);
+        item.setStock(1);
+        item.setCount(0);
+        item.setIsSoldout(false);
+        itemRepository.save(item);
+
+        Order order = new Order();
+        order.setMemberId(member.getMemberId());
+        order.setItemId(item.getItemId());
+        order.setCount(1);
+        order.setPrice(order.getCount()*item.getPrice());
+
+        orderService.save(order);
+
+        //When
+        orderService.deleteOrder(order.getOrderId());
+
+        // Then
+        Item savedItem = itemRepository.findByItemId(item.getItemId()).get();
+        MemberVO savedMember = memberDAO.findMemberById(member.getMemberId());
+        assertThat(orderService.findByMemberId(savedMember.getMemberId()).get()).isEqualTo(Collections.emptyList());
+        assertThat(orderService.findByItemId(savedItem.getItemId()).get()).isEqualTo(Collections.emptyList());
+        assertThat(savedItem.getStock()).isEqualTo(1);
+        assertThat(savedItem.getIsSoldout()).isEqualTo(false);
+        assertThat(savedItem.getCount()).isEqualTo(0);
+    }
+
+    @Test
+    public void 주문삭제_예외() throws Exception { //존재하지 않는 orderId 이용하는 경우
+        // Given
+        MemberVO member = new MemberVO();
+        member.setMemberId("testMemberId");
+        member.setMemberName("testMemberName");
+        member.setMemberPassword("testMemberPassword");
+        member.setMemberPhone("testMemberPhone");
+        member.setMemberAddress("testMemberAddress");
+        member.setMemberEmail("testMemberEmail");
+        memberDAO.insertMember(member);
+
+        Item item = new Item();
+        item.setName("testItemName");
+        item.setPrice(1);
+        item.setStock(1);
+        item.setCount(0);
+        item.setIsSoldout(false);
+        itemRepository.save(item);
+
+        Order order = new Order();
+        order.setMemberId(member.getMemberId());
+        order.setItemId(item.getItemId());
+        order.setCount(1);
+        order.setPrice(order.getCount()*item.getPrice());
+
+        orderService.save(order);
+
+        // Then
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> orderService.deleteOrder(9999L));
+        assertThat(e.getMessage()).isEqualTo("해당 주문 ID: " + 9999 + "가 존재하지 않습니다.");
     }
 }
