@@ -95,17 +95,6 @@ import java.util.Optional;
 
 public interface CartService {
 
-    /*
-    public Optional<List<Cart>> readMemberCarts(MemberVO member); //특정 member의 장바구니 전체 조회
-    public Optional<List<Cart>> readMemberCartItems(MemberVO member, Item item); //특정 member의 특정 item 조회
-    //public void addCartItem(MemberVO member, Item item, int amount); //특정 member에 장바구니 상품 추가
-    public Long addCartItem(Cart cart); //특정 member에 장바구니 상품 추가
-    public int deleteCartItem(MemberVO member, Item item); //특정 member의 장바구니에서 특정 item 삭제
-    public int deleteCart(MemberVO member); //특정 member의 장바구니 전체 삭제
-    public int decreaseCartItem(MemberVO member, Item item); //특정 member의 장바구니에서 특정 item의 개수 감소
-    public int increaseCartItem(MemberVO member, Item item); //특정 member의 장바구니에서 특정 item의 개수 증가
-    */
-
     public Optional<List<Cart>> readMemberCarts(String memberId); //특정 member의 장바구니 전체 조회
     public Optional<Cart> readMemberCartItems(String memberId, Long itemId); //특정 member의 특정 item 조회
     //public void addCartItem(MemberVO member, Item item, int amount); //특정 member에 장바구니 상품 추가

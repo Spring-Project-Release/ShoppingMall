@@ -9,11 +9,9 @@ import javax.persistence.Id;
 @AllArgsConstructor //entity(domain)에는 생성자 작성해야 함
 @Getter
 @Setter //dto 적용 시 setter 생략하기
-//@Entity
 public class Item {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY) //auto increment
     private Long itemId;
     private String name; //상품 이름
     private int price;

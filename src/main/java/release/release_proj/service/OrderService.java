@@ -20,24 +20,19 @@ public class OrderService {
     private final MemberDAO memberDAO;
 
     public void save(Order order) {
-        //try {
-            validateMemberAndItemExistence(order.getMemberId(), order.getItemId());
-            //item.stock과 order.count 비교: stock 수 < count 수이면 error 메시지 띄우기
-            int currentStock = itemService.getStock(order.getItemId());
-            if (currentStock < order.getCount()) {
-                throw new IllegalStateException(order.getItemId()+" 상품의 재고가 부족합니다.");
-            }
-            orderRepository.save(order);
-            itemService.updateStock(order.getItemId(), order.getCount()); //item 재고 감소
-            itemService.updateCount(order.getItemId(), order.getCount()); //item 판매개수 상승
+        validateMemberAndItemExistence(order.getMemberId(), order.getItemId());
+        //item.stock과 order.count 비교: stock 수 < count 수이면 error 메시지 띄우기
+        int currentStock = itemService.getStock(order.getItemId());
+        if (currentStock < order.getCount()) {
+            throw new IllegalStateException(order.getItemId()+" 상품의 재고가 부족합니다.");
+        }
+        orderRepository.save(order);
+        itemService.updateStock(order.getItemId(), order.getCount()); //item 재고 감소
+        itemService.updateCount(order.getItemId(), order.getCount()); //item 판매개수 상승
 
-            if (currentStock - order.getCount() == 0) { //재고가 0인 경우
-                itemService.updateIsSoldout(order.getItemId());
-            }
-        /*} catch (DataIntegrityViolationException e) {
-            // 외래 키 제약 조건 위배로 인한 예외 처리
-            throw new IllegalArgumentException("Failed to make order. 해당하는 itemId나 memberId가 존재하지 않습니다.", e);
-        }*/
+        if (currentStock - order.getCount() == 0) { //재고가 0인 경우
+            itemService.updateIsSoldout(order.getItemId());
+        }
     };
 
     private void validateMemberAndItemExistence(String memberId, Long itemId) {

@@ -49,10 +49,6 @@ public class CartController {
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create cart.");
             }
-            //} catch (DataIntegrityViolationException e) {
-            //    // 외래 키 제약 조건 위배로 인한 예외 처리
-            //    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create cart. 해당하는 itemId나 memberId가 존재하지 않습니다");
-            //}
         } catch (IllegalArgumentException e) {
             // DataIntegrityViolationException이 IllegalArgumentException로 변환되었을 경우
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

@@ -42,14 +42,6 @@ public class CartImpl implements CartRepository {
         return Optional.ofNullable(sqlSession.selectList(NS + "findByMemberId", memberId));
     }
 
-    /*@Override
-    public Optional<Cart> findOneByMemberIdAndItemId(@Param("memberId") String memberId, @Param("itemId") Long itemId) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("memberId", memberId);
-        params.put("itemId", itemId);
-        return Optional.ofNullable(sqlSession.selectOne(NS + "findByMemberIdAndItemId", params));
-    }*/
-
     @Override
     public Optional<Cart> findByMemberIdAndItemId(@Param("memberId") String memberId, @Param("itemId") Long itemId) {
         Map<String, Object> params = new HashMap<>();
@@ -58,14 +50,6 @@ public class CartImpl implements CartRepository {
         return Optional.ofNullable(sqlSession.selectOne(NS + "findByMemberIdAndItemId", params));
     }
 
-    /*public int updateCartAmount(@Param("memberId") String memberId, @Param("itemId") Long itemId, @Param("amount") int amount) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("memberId", memberId);
-        params.put("itemId", itemId);
-        params.put("amount", amount);
-        return sqlSession.update(NS+"updateCartAmount", params);
-    }*/
-
     @Override
     public int updateCartAmount(@Param("cartId") Long cartId, @Param("amount") int amount) {
         Map<String, Object> params = new HashMap<>();
@@ -73,14 +57,6 @@ public class CartImpl implements CartRepository {
         params.put("amount", amount);
         return sqlSession.update(NS+"updateCartAmount", params);
     }
-
-    /*@Override
-    public int deleteCartIfAmountIsZero(@Param("memberId") String memberId, @Param("itemId") Long itemId){
-        Map<String, Object> params = new HashMap<>();
-        params.put("memberId", memberId);
-        params.put("itemId", itemId);
-        return sqlSession.delete(NS+"deleteCartIfAmountIsZero", params);
-    }*/
 
     @Override
     public int deleteCartIfAmountIsZero(Long cartId){
