@@ -26,6 +26,7 @@ public class ItemServiceIntegrationTest {
         //Given
         Item item = new Item();
         item.setName("testItemId");
+        item.setStock(1);
         item.setPrice(1);
         item.setIsSoldout(false);
 
@@ -36,28 +37,121 @@ public class ItemServiceIntegrationTest {
         Optional<Item> savedItem = itemService.findOne(item.getItemId());
         assertThat(savedItem).isPresent();
         assertEquals(item.getName(), savedItem.get().getName());
+        assertThat(result).isGreaterThan(0);
     }
 
     @Test
-    public void 상품등록중복예외처리() throws Exception {
+    public void 상품등록_예외_중복() throws Exception {
         //Given
         Item item1 = new Item();
         item1.setName("testItemId");
+        item1.setStock(1);
         item1.setPrice(1);
         item1.setIsSoldout(false);
 
         Item item2 = new Item();
         item2.setName("testItemId");
+        item2.setStock(1);
         item2.setPrice(1);
         item2.setIsSoldout(false);
 
         //When
         int result = itemService.saveItem(item1);
-        IllegalStateException e = assertThrows(IllegalStateException.class,
-                ()->itemService.saveItem(item2)); //예외가 발생해야 함
 
         //Then
+        IllegalStateException e = assertThrows(IllegalStateException.class, ()->itemService.saveItem(item2)); //예외가 발생해야 함
         assertThat(e.getMessage()).isEqualTo("이미 존재하는 상품 이름입니다. 이름을 변경해 주십시오.");
     }
 
+    @Test
+    public void 상품_업데이트() throws Exception {
+        //Given
+        Item item = new Item();
+        item.setName("testItemId");
+        item.setStock(1);
+        item.setPrice(1);
+        item.setIsSoldout(false);
+        itemService.saveItem(item);
+
+        Item updateItem = new Item();
+        updateItem.setItemId(item.getItemId());
+        updateItem.setName("updatedItemId");
+        updateItem.setStock(0);
+        updateItem.setPrice(2);
+        updateItem.setIsSoldout(true);
+
+        //When
+        int result = itemService.updateItem(updateItem);
+
+        //Then
+        Optional<Item> savedItem = itemService.findOne(item.getItemId());
+        assertThat(savedItem).isPresent();
+        assertThat(savedItem.get().getName()).isEqualTo("updatedItemId");
+        assertThat(savedItem.get().getStock()).isEqualTo(0);
+        assertThat(savedItem.get().getPrice()).isEqualTo(2);
+        assertThat(savedItem.get().getIsSoldout()).isEqualTo(true);
+        assertThat(result).isGreaterThan(0);
+    }
+
+    @Test
+    public void 상품_품절여부_업데이트() throws Exception {
+        //Given
+        Item item = new Item();
+        item.setName("testItemId");
+        item.setStock(1);
+        item.setPrice(1);
+        item.setIsSoldout(false);
+        itemService.saveItem(item);
+
+        //When
+        int result = itemService.updateIsSoldout(item.getItemId());
+
+        //Then
+        Optional<Item> savedItem = itemService.findOne(item.getItemId());
+        assertThat(savedItem).isPresent();
+        assertThat(savedItem.get().getIsSoldout()).isEqualTo(true);
+        assertThat(result).isGreaterThan(0);
+    }
+
+    @Test
+    public void 상품_재고량과_판매량_업데이트() throws Exception {
+        //Given
+        Item item = new Item();
+        item.setName("testItemId");
+        item.setStock(3);
+        item.setPrice(1);
+        item.setIsSoldout(false);
+        itemService.saveItem(item);
+
+        //When
+        int result1 = itemService.updateStock(item.getItemId(), 2);
+        int result2 = itemService.updateCount(item.getItemId(), 1);
+
+        //Then
+        Optional<Item> savedItem = itemService.findOne(item.getItemId());
+        assertThat(savedItem).isPresent();
+        assertThat(savedItem.get().getStock()).isEqualTo(1);
+        assertThat(savedItem.get().getCount()).isEqualTo(1);
+        assertThat(result1).isGreaterThan(0);
+        assertThat(result2).isGreaterThan(0);
+    }
+
+    @Test
+    public void 상품_삭제() throws Exception {
+        //Given
+        Item item = new Item();
+        item.setName("testItemId");
+        item.setStock(3);
+        item.setPrice(1);
+        item.setIsSoldout(false);
+        itemService.saveItem(item);
+
+        //When
+        int result = itemService.deleteItem(item.getItemId());
+
+        //Then
+        assertThat(result).isGreaterThan(0);
+        IllegalStateException e = assertThrows(IllegalStateException.class, ()->itemService.findOne(item.getItemId()));
+        assertThat(e.getMessage()).isEqualTo("해당 itemId를 가진 상품이 존재하지 않습니다.");
+    }
 }
