@@ -55,18 +55,16 @@ public class UserController {
     }
 
     // 회원가입
-    @PostMapping("/user")
+    @PostMapping("/user/signup")
     public ResponseEntity registerUser(@RequestBody HashMap<String, Object> requestJsonHashMap, HttpSession session) throws Exception{
         MemberVO vo = new MemberVO();
         vo.setMemberId((String) requestJsonHashMap.get("memberId"));
-        vo.setMemberEmail((String) requestJsonHashMap.get("email"));
-        vo.setMemberPassword((String) requestJsonHashMap.get("password"));
-        vo.setMemberName((String) requestJsonHashMap.get("username"));
-        vo.setMemberPhone((String) requestJsonHashMap.get("phone"));
-        vo.setMemberAddress((String) requestJsonHashMap.get("address"));
+        vo.setMemberEmail((String) requestJsonHashMap.get("memberEmail"));
+        vo.setMemberPassword((String) requestJsonHashMap.get("memberPassword"));
+        vo.setMemberName((String) requestJsonHashMap.get("memberName"));
+        vo.setMemberPhone((String) requestJsonHashMap.get("memberPhone"));
+        vo.setMemberAddress((String) requestJsonHashMap.get("memberAddress"));
 
-
-        System.out.println(vo);
         //DB insert
         int result = memberService.insertMember(vo);
 
@@ -84,8 +82,9 @@ public class UserController {
         System.out.println(memberId);
 
         int result = memberService.isExistMemberId(memberId);
+        System.out.println("result = " + result);
 
-        if(result == 0) { //중복되는 경우
+        if(result != 0) { //중복되는 경우
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
         else //사용가능한 아이디인 경우
