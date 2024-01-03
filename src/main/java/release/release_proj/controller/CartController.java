@@ -60,8 +60,8 @@ public class CartController {
         int result = cartService.deleteCart(memberId);
         if (result != 0){
             return ResponseEntity.ok("User's cart deleted successfully.");
-        } else { //해당하는 cartId가 존재하지 않아 삭제 동작이 필요하지 않았던 경우
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당하는 cartId가 존재하지 않습니다");
+        } else { //해당하는 cart들이 존재하지 않아 삭제 동작이 필요하지 않았던 경우
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당하는 cart들이 존재하지 않습니다.");
         }
     }
 
@@ -70,24 +70,20 @@ public class CartController {
         int result = cartService.deleteCartItem(memberId, itemId);
         if (result != 0){
             return ResponseEntity.ok("User's cartItem deleted successfully.");
-        } else { //해당하는 cartId가 존재하지 않아 삭제 동작이 필요하지 않았던 경우
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당하는 cartId가 존재하지 않습니다");
+        } else { //해당하는 cart가 존재하지 않아 삭제 동작이 필요하지 않았던 경우
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당하는 cart가 존재하지 않습니다.");
         }
     }
 
-    //@PutMapping("user/{memberId}/item/{itemId}")
-    //public ResponseEntity<String> increaseCartItemAmount(@PathVariable(name = "memberId") String memberId, @PathVariable(name="itemId") Long itemId, @RequestBody Integer amount) {
-    @PutMapping("/{cartId}")
+    @PutMapping("/{cartId}/amount")
     public ResponseEntity<String> increaseCartItemAmount(@PathVariable(name="cartId") Long cartId, @RequestBody(required = false) Integer amount) {
         int result;
         String successMessage;
 
         if (amount != null && amount > 0) {
-            //result = cartService.increaseCartItem(memberId, itemId, amount);
             result = cartService.increaseCartItem(cartId, amount);
             successMessage = "User's cartItem amount increased successfully.";
         } else if (amount == null) {
-            //result = cartService.decreaseCartItem(memberId, itemId);
             result = cartService.decreaseCartItem(cartId);
             successMessage = "User's cartItem amount decreased successfully.";
         } else {
