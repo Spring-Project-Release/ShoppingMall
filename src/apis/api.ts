@@ -32,11 +32,12 @@ export const postLoginData = async (data: ILoginFormData): Promise<boolean> => {
 export const postSignupData = async (
   data: ISignupFormData
 ): Promise<boolean> => {
-  let url = `${process.env.REACT_APP_BASE_URL}/user`;
+  let url = `${process.env.REACT_APP_BASE_URL}/user/signup`;
   return await axios
     .post(url, data)
     .then((response) => {
-      if (response.data.status === 200) {
+      console.log(response);
+      if (response.status === 200) {
         return true;
       } else throw new Error("회원가입 실패");
     })
