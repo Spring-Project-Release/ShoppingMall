@@ -6,14 +6,10 @@ import release.release_proj.domain.Item;
 import release.release_proj.repository.ItemRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
-
-    //@Autowired
-    //private ItemRepository itemRepository;
 
     private final ItemRepository itemRepository;
 
@@ -42,26 +38,40 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Optional<Item> findOne(Long itemId){ //나중에 itemName을 인자로 사용할수도?
-        Optional<Item> item = itemRepository.findByItemId(itemId);
-        if (item.isPresent()) {
-            return item;
-        } else {
-            throw new IllegalStateException("해당 itemId를 가진 상품이 존재하지 않습니다.");
-        }
+    public Item findOne(Long itemId) {
+        return itemRepository.findByItemId(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 itemId를 가진 상품이 존재하지 않습니다."));
     }
 
     @Override
-    public Optional<List<Item>> readItems(){
-        return itemRepository.findAll();
+    public List<Item> readItems() {
+        return itemRepository.findAll()
+                .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
     }
 
-    public Optional<List<Item>> findByIsSoldout(Boolean isSoldout) {
-        return itemRepository.findByIsSoldout(isSoldout);
+    @Override
+    public List<Item> findItemsBySellerId(String sellerId) {
+        List<Item> items = itemRepository.findBySellerId(sellerId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 sellerId를 가진 상품이 존재하지 않습니다."));
+        return items;
     }
 
-    public Optional<List<Item>> findByCategory(String category){
-        return itemRepository.findByCategory(category);
+    @Override
+    public List<Item> findItemsBySellerName(String sellerName) {
+        List<Item> items = itemRepository.findBySellerName(sellerName)
+                .orElseThrow(() -> new IllegalArgumentException("해당 sellerName을 가진 상품이 존재하지 않습니다."));
+        return items;
+    }
+
+    public List<Item> findByIsSoldout(Boolean isSoldout) {
+        return itemRepository.findByIsSoldout(isSoldout)
+                .orElseThrow(() -> new IllegalArgumentException("해당 조건을 만족하는 상품이 존재하지 않습니다."));
+    }
+
+    public List<Item> findByCategory(String category) {
+        List<Item> items = itemRepository.findByCategory(category)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리를 가진 상품이 존재하지 않습니다."));
+        return items;
     }
 
     @Override

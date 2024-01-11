@@ -24,7 +24,8 @@ public class Item {
     private float discount; //할인률
     private String origin; //원산지
     private int deliveryType; //배송타입
-    private String seller; //판매자(판매회사) 이름
+    private String sellerName; //판매자(판매회사) 이름
+    private String sellerId; //판매자 유저 아이디
     private String unit; //판매단위
 
     @Override
@@ -42,7 +43,8 @@ public class Item {
                 ", discount=" + discount + '\'' +
                 ", origin='" + origin + '\'' +
                 ", deliveryType=" + deliveryType + '\'' +
-                ", seller='" + seller + '\'' +
+                ", sellerName='" + sellerName + '\'' +
+                ", selleIdr='" + sellerId + '\'' +
                 ", unit='" + unit + '\'' +
                 '}';
     }

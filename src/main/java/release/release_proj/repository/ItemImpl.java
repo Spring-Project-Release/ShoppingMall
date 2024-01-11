@@ -41,6 +41,16 @@ public class ItemImpl implements ItemRepository {
     }
 
     @Override
+    public Optional<List<Item>> findBySellerId(String sellerId){
+        return Optional.ofNullable(sqlSession.selectList(NS + "findBySellerId"));
+    }
+
+    @Override
+    public Optional<List<Item>> findBySellerName(String sellerName){
+        return Optional.ofNullable(sqlSession.selectList(NS + "findBySellerName"));
+    }
+
+    @Override
     public Optional<List<Item>> findAll() {
         return Optional.ofNullable(sqlSession.selectList(NS + "findAll"));
     }

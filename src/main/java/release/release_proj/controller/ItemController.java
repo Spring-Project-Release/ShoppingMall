@@ -1,6 +1,7 @@
 package release.release_proj.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,8 +9,8 @@ import release.release_proj.domain.Item;
 import release.release_proj.service.ItemService;
 
 import java.util.List;
-import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/items")
@@ -19,44 +20,66 @@ public class ItemController {
 
     @GetMapping
     public ResponseEntity<List<Item>> itemList() {
-        Optional<List<Item>> items = itemService.readItems();
-
-        if (items.isPresent()){
-            return ResponseEntity.ok(items.get());
-        } else {
+        try {
+            List<Item> items = itemService.readItems();
+            return ResponseEntity.ok(items);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<List<Item>> itemCategory(@PathVariable(name="category") String category) {
-        Optional<List<Item>> items = itemService.findByCategory(category);
-
-        if (items.isPresent()){
-            return ResponseEntity.ok(items.get());
-        } else {
+    public ResponseEntity<List<Item>> getItemByCategory(@PathVariable(name="category") String category) {
+        try {
+            List<Item> items = itemService.findByCategory(category);
+            return ResponseEntity.ok(items);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/isSoldout/{isSoldout}")
-    public ResponseEntity<List<Item>> itemIsSoldout(@PathVariable(name="isSoldout") Boolean isSoldout) {
-        Optional<List<Item>> items = itemService.findByIsSoldout(isSoldout);
-
-        if (items.isPresent()){
-            return ResponseEntity.ok(items.get());
-        } else {
+    public ResponseEntity<List<Item>> getItemByIsSoldout(@PathVariable(name="isSoldout") Boolean isSoldout) {
+        try {
+            List<Item> items = itemService.findByIsSoldout(isSoldout);
+            return ResponseEntity.ok(items);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/{itemId}")
     public ResponseEntity<Item> getItem(@PathVariable(name = "itemId") Long itemId) {
-        Optional<Item> item = itemService.findOne(itemId);
+        try {
+            Item item = itemService.findOne(itemId);
+            return ResponseEntity.ok(item);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
 
-        if (item.isPresent()) {
-            return ResponseEntity.ok(item.get());
-        } else {
+    @GetMapping("/sellerId/{sellerId}")
+    public ResponseEntity<List<Item>> getItemBySellerId(@PathVariable(name = "sellerId") String sellerId) {
+        try {
+            List<Item> items = itemService.findItemsBySellerId(sellerId);
+            return ResponseEntity.ok(items);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/sellerName/{sellerName}")
+    public ResponseEntity<?> getItemBySellerName(@PathVariable(name = "sellerName") String sellerName) {
+        try {
+            List<Item> items = itemService.findItemsBySellerName(sellerName);
+            return ResponseEntity.ok(items);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }

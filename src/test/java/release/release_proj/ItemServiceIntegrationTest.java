@@ -8,11 +8,8 @@ import release.release_proj.domain.Item;
 import release.release_proj.repository.ItemRepository;
 import release.release_proj.service.ItemService;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -34,9 +31,9 @@ public class ItemServiceIntegrationTest {
         int result = itemService.saveItem(item);
 
         //Then
-        Optional<Item> savedItem = itemService.findOne(item.getItemId());
-        assertThat(savedItem).isPresent();
-        assertEquals(item.getName(), savedItem.get().getName());
+        Item savedItem = itemService.findOne(item.getItemId());
+        assertThat(savedItem).isNotNull();
+        assertThat(item.getName()).isEqualTo(savedItem.getName());
         assertThat(result).isGreaterThan(0);
     }
 
@@ -84,12 +81,12 @@ public class ItemServiceIntegrationTest {
         int result = itemService.updateItem(updateItem);
 
         //Then
-        Optional<Item> savedItem = itemService.findOne(item.getItemId());
-        assertThat(savedItem).isPresent();
-        assertThat(savedItem.get().getName()).isEqualTo("updatedItemId");
-        assertThat(savedItem.get().getStock()).isEqualTo(0);
-        assertThat(savedItem.get().getPrice()).isEqualTo(2);
-        assertThat(savedItem.get().getIsSoldout()).isEqualTo(true);
+        Item savedItem = itemService.findOne(item.getItemId());
+        assertThat(savedItem).isNotNull();
+        assertThat(savedItem.getName()).isEqualTo("updatedItemId");
+        assertThat(savedItem.getStock()).isZero();
+        assertThat(savedItem.getPrice()).isEqualTo(2);
+        assertThat(savedItem.getIsSoldout()).isTrue();
         assertThat(result).isGreaterThan(0);
     }
 
@@ -107,9 +104,9 @@ public class ItemServiceIntegrationTest {
         int result = itemService.updateIsSoldout(item.getItemId());
 
         //Then
-        Optional<Item> savedItem = itemService.findOne(item.getItemId());
-        assertThat(savedItem).isPresent();
-        assertThat(savedItem.get().getIsSoldout()).isEqualTo(true);
+        Item savedItem = itemService.findOne(item.getItemId());
+        assertThat(savedItem).isNotNull();
+        assertThat(savedItem.getName()).isEqualTo(item.getName());
         assertThat(result).isGreaterThan(0);
     }
 
@@ -128,10 +125,10 @@ public class ItemServiceIntegrationTest {
         int result2 = itemService.updateCount(item.getItemId(), 1);
 
         //Then
-        Optional<Item> savedItem = itemService.findOne(item.getItemId());
-        assertThat(savedItem).isPresent();
-        assertThat(savedItem.get().getStock()).isEqualTo(1);
-        assertThat(savedItem.get().getCount()).isEqualTo(1);
+        Item savedItem = itemService.findOne(item.getItemId());
+        assertThat(savedItem).isNotNull();
+        assertThat(savedItem.getStock()).isEqualTo(1);
+        assertThat(savedItem.getCount()).isEqualTo(1);
         assertThat(result1).isGreaterThan(0);
         assertThat(result2).isGreaterThan(0);
     }
