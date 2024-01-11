@@ -45,6 +45,8 @@ public class OrderServiceIntegrationTest {
         item.setStock(1);
         item.setCount(0);
         item.setIsSoldout(false);
+        item.setSellerId("testSellerId");
+        item.setSellerName("testSellerName");
         itemRepository.save(item);
 
         Order order = new Order();
@@ -89,6 +91,8 @@ public class OrderServiceIntegrationTest {
         item.setStock(1);
         item.setCount(0);
         item.setIsSoldout(false);
+        item.setSellerId("testSellerId");
+        item.setSellerName("testSellerName");
         itemRepository.save(item);
 
         Order order = new Order();
@@ -143,6 +147,8 @@ public class OrderServiceIntegrationTest {
         item.setStock(1);
         item.setCount(0);
         item.setIsSoldout(false);
+        item.setSellerId("testSellerId");
+        item.setSellerName("testSellerName");
         itemRepository.save(item);
 
         Order order = new Order();
@@ -174,6 +180,8 @@ public class OrderServiceIntegrationTest {
         item.setStock(1);
         item.setCount(0);
         item.setIsSoldout(false);
+        item.setSellerId("testSellerId");
+        item.setSellerName("testSellerName");
         itemRepository.save(item);
 
         Order order = new Order();
@@ -215,6 +223,8 @@ public class OrderServiceIntegrationTest {
         item.setStock(1);
         item.setCount(0);
         item.setIsSoldout(false);
+        item.setSellerId("testSellerId");
+        item.setSellerName("testSellerName");
         itemRepository.save(item);
 
         Order order = new Order();
