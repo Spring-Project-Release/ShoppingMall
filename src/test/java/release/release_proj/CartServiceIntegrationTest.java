@@ -15,7 +15,6 @@ import release.release_proj.service.CartService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -60,9 +59,9 @@ public class CartServiceIntegrationTest {
         int result = cartService.addCartItem(cart);
 
         // Then
-        Optional<Cart> savedCart = cartService.readMemberCartItems(member.getMemberId(), item.getItemId());
-        assertThat(savedCart).isPresent();
-        assertEquals(cart.getCartId(), savedCart.get().getCartId());
+        Cart savedCart = cartService.readMemberCartItems(member.getMemberId(), item.getItemId());
+        assertThat(savedCart).isNotNull();
+        assertEquals(cart.getCartId(), savedCart.getCartId());
     }
 
     @Test
@@ -101,10 +100,10 @@ public class CartServiceIntegrationTest {
         int result2 = cartService.addCartItem(newCart);
 
         // Then
-        Optional<Cart> savedCart = cartService.readMemberCartItems(member.getMemberId(), item.getItemId());
-        assertThat(savedCart).isPresent();
-        assertThat(savedCart.get().getAmount()).isEqualTo(3);
-        assertEquals(cart.getCartId(), savedCart.get().getCartId());
+        Cart savedCart = cartService.readMemberCartItems(member.getMemberId(), item.getItemId());
+        assertThat(savedCart).isNotNull();
+        assertThat(savedCart.getAmount()).isEqualTo(3);
+        assertEquals(cart.getCartId(), savedCart.getCartId());
     }
 
     @Test
@@ -150,8 +149,8 @@ public class CartServiceIntegrationTest {
         int result = cartService.deleteCart(member.getMemberId());
 
         // Then
-       assertThat(result).isGreaterThan(0);
-       assertThat(cartService.readMemberCarts(member.getMemberId()).get()).isEqualTo(Collections.emptyList());
+        assertThat(result).isGreaterThan(0);
+        assertThat(cartService.readMemberCarts(member.getMemberId())).isEqualTo(Collections.emptyList());
     }
 
     @Test
@@ -171,7 +170,7 @@ public class CartServiceIntegrationTest {
 
         // Then
         assertThat(result).isEqualTo(0);
-        assertThat(cartService.readMemberCarts(member.getMemberId()).get()).isEqualTo(Collections.emptyList());
+        assertThat(cartService.readMemberCarts(member.getMemberId())).isEqualTo(Collections.emptyList());
     }
 
     @Test
@@ -222,9 +221,10 @@ public class CartServiceIntegrationTest {
 
         // Then
         assertThat(result).isGreaterThan(0);
-        assertThat(cartService.readMemberCartItems(member.getMemberId(), item2.getItemId())).isPresent();
-        assertThat(cartService.readMemberCarts(member.getMemberId())).isPresent();
-        assertThat(cartService.readMemberCartItems(member.getMemberId(), item1.getItemId())).isEmpty();
+        assertThat(cartService.readMemberCartItems(member.getMemberId(), item2.getItemId())).isNotNull();
+        assertThat(cartService.readMemberCarts(member.getMemberId())).isNotNull();
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.readMemberCartItems(member.getMemberId(), item1.getItemId()));
+        assertThat(e.getMessage()).isEqualTo("해당 memberId와 itemId를 가지는 장바구니가 존재하지 않습니다.");
     }
 
     @Test
@@ -253,7 +253,8 @@ public class CartServiceIntegrationTest {
 
         // Then
         assertThat(result).isEqualTo(0);
-        assertThat(cartService.readMemberCartItems(member.getMemberId(), item.getItemId())).isEmpty();
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.readMemberCartItems(member.getMemberId(), item.getItemId()));
+        assertThat(e.getMessage()).isEqualTo("해당 memberId와 itemId를 가지는 장바구니가 존재하지 않습니다.");
     }
 
     @Test
@@ -288,14 +289,14 @@ public class CartServiceIntegrationTest {
 
         // When
         cartService.decreaseCartItem(cart.getCartId());
-        Optional<Cart> savedCart1 = cartService.readMemberCartItems(memberId, itemId);
+        Cart savedCart1 = cartService.readMemberCartItems(memberId, itemId);
         cartService.decreaseCartItem(cart.getCartId());
-        Optional<Cart> savedCart2 = cartService.readMemberCartItems(memberId, itemId);
 
         // Then
-        assertThat(savedCart1).isPresent();
-        assertThat(savedCart1.get().getAmount()).isEqualTo(1);
-        assertThat(savedCart2).isEmpty();
+        assertThat(savedCart1).isNotNull();
+        assertThat(savedCart1.getAmount()).isEqualTo(1);;
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.readMemberCartItems(memberId, itemId));
+        assertThat(e.getMessage()).isEqualTo("해당 memberId와 itemId를 가지는 장바구니가 존재하지 않습니다.");
     }
 
     @Test
@@ -327,11 +328,11 @@ public class CartServiceIntegrationTest {
 
         // When
         cartService.increaseCartItem(cart.getCartId(), 2);
-        Optional<Cart> savedCart1 = cartService.readMemberCartItems(member.getMemberId(), item.getItemId());
+        Cart savedCart1 = cartService.readMemberCartItems(member.getMemberId(), item.getItemId());
 
         // Then
-        assertThat(savedCart1).isPresent();
-        assertThat(savedCart1.get().getAmount()).isEqualTo(4);
+        assertThat(savedCart1).isNotNull();
+        assertThat(savedCart1.getAmount()).isEqualTo(4);
     }
 
     @Test
@@ -388,7 +389,7 @@ public class CartServiceIntegrationTest {
         assertThat(orderRepository.findByMemberId(memberId).get().get(1).getItemId()).isEqualTo(item2.getItemId());
         assertThat(orderRepository.findByMemberId(memberId).get().get(0).getMemo()).isEqualTo("전체결제");
         assertThat(orderRepository.findByMemberId(memberId).get().get(1).getMemo()).isEqualTo("전체결제");
-        assertThat(cartService.readMemberCarts(memberId)).get().isEqualTo(Collections.emptyList()); //유저의 장바구니 전체가 삭제됨
+        assertThat(cartService.readMemberCarts(memberId)).isEqualTo(Collections.emptyList()); //유저의 장바구니 전체가 삭제됨
     }
 
     @Test
@@ -470,7 +471,7 @@ public class CartServiceIntegrationTest {
         assertEquals(orderRepository.findByMemberId(memberId).get().size(), 1);
         assertThat(orderRepository.findByMemberId(memberId).get().get(0).getItemId()).isEqualTo(item1.getItemId());
         assertThat(orderRepository.findByMemberId(memberId).get().get(0).getMemo()).isEqualTo("일부결제");
-        assertThat(cartService.readMemberCarts(memberId).get().get(0).getItemId()).isEqualTo(item2.getItemId()); //유저의 장바구니 전체가 삭제됨
+        assertThat(cartService.readMemberCarts(memberId).get(0).getItemId()).isEqualTo(item2.getItemId()); //유저의 장바구니 전체가 삭제됨
     }
 
     @Test

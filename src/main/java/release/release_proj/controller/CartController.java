@@ -1,6 +1,7 @@
 package release.release_proj.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,8 +9,8 @@ import release.release_proj.domain.Cart;
 import release.release_proj.service.CartService;
 
 import java.util.List;
-import java.util.Optional;
 
+@Slf4j //log 사용
 @RestController
 @RequiredArgsConstructor //생성자 주입을 자동으로 해줌
 @RequestMapping("/carts")
@@ -19,22 +20,22 @@ public class CartController {
 
     @GetMapping("/user/{memberId}")
     public ResponseEntity<List<Cart>> memberCartList(@PathVariable(name="memberId") String memberId) {
-        Optional<List<Cart>> carts = cartService.readMemberCarts(memberId);
-
-        if (carts.isPresent()){
-            return ResponseEntity.ok(carts.get());
-        } else {
+        try {
+            List<Cart> carts = cartService.readMemberCarts(memberId);
+            return ResponseEntity.ok(carts);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/user/{memberId}/item/{itemId}")
     public ResponseEntity<Cart> memberCartItemList(@PathVariable(name="memberId") String memberId, @PathVariable(name="itemId") Long itemId) {
-        Optional<Cart> cart = cartService.readMemberCartItems(memberId, itemId);
-
-        if (cart.isPresent()){
-            return ResponseEntity.ok(cart.get());
-        } else {
+        try {
+            Cart cart = cartService.readMemberCartItems(memberId, itemId);
+            return ResponseEntity.ok(cart);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }

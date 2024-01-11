@@ -23,15 +23,16 @@ public class CartServiceImpl implements CartService {
     private final MemberDAO memberDAO;
 
     @Override
-    public Optional<List<Cart>> readMemberCarts(String memberId) {
+    public List<Cart> readMemberCarts(String memberId) {
         //return cartRepository.findByMemberId(member.getMemberId());
-        return cartRepository.findByMemberId(memberId);
+        return cartRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 memberId를 가지는 장바구니가 존재하지 않습니다."));
     }
 
     @Override
-    public Optional<Cart> readMemberCartItems(String memberId, Long itemId) {
-        //return cartRepository.findByMemberIdAndItemId(member.getMemberId(), item.getItemId());
-        return cartRepository.findByMemberIdAndItemId(memberId, itemId);
+    public Cart readMemberCartItems(String memberId, Long itemId) {
+        return cartRepository.findByMemberIdAndItemId(memberId, itemId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 memberId와 itemId를 가지는 장바구니가 존재하지 않습니다."));
     }
 
     @Override
