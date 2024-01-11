@@ -11,9 +11,7 @@ import release.release_proj.repository.ItemRepository;
 import release.release_proj.repository.MemberDAO;
 import release.release_proj.service.OrderService;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -59,10 +57,10 @@ public class OrderServiceIntegrationTest {
         orderService.save(order);
 
         // Then
-        Optional<List<Order>> savedOrder = orderService.findByMemberId(member.getMemberId());
+        List<Order> savedOrder = orderService.findByMemberId(member.getMemberId());
         Item savedItem = itemRepository.findByItemId(item.getItemId()).get();
-        assertThat(savedOrder).isPresent();
-        assertEquals(order.getOrderId(),savedOrder.get().get(0).getOrderId());
+        assertThat(savedOrder).isNotNull();
+        assertEquals(order.getOrderId(),savedOrder.get(0).getOrderId());
         assertThat(savedItem.getStock()).isEqualTo(0);
         assertThat(savedItem.getIsSoldout()).isEqualTo(true);
         assertThat(savedItem.getCount()).isEqualTo(1);
@@ -198,8 +196,11 @@ public class OrderServiceIntegrationTest {
         // Then
         Item savedItem = itemRepository.findByItemId(item.getItemId()).get();
         MemberVO savedMember = memberDAO.findMemberById(member.getMemberId());
-        assertThat(orderService.findByMemberId(savedMember.getMemberId()).get()).isEqualTo(Collections.emptyList());
-        assertThat(orderService.findByItemId(savedItem.getItemId()).get()).isEqualTo(Collections.emptyList());
+        ////////////////////////
+        IllegalArgumentException e1 = assertThrows(IllegalArgumentException.class, () -> orderService.findByMemberId(savedMember.getMemberId()));
+        assertThat(e1.getMessage()).isEqualTo("해당 memberId를 가지는 주문내역이 존재하지 않습니다.");
+        IllegalArgumentException e2 = assertThrows(IllegalArgumentException.class, () -> orderService.findByItemId(savedItem.getItemId()));
+        assertThat(e2.getMessage()).isEqualTo("해당 itemId를 가지는 주문내역이 존재하지 않습니다.");
         assertThat(savedItem.getStock()).isEqualTo(1);
         assertThat(savedItem.getIsSoldout()).isEqualTo(false);
         assertThat(savedItem.getCount()).isEqualTo(0);

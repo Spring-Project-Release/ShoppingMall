@@ -1,6 +1,7 @@
 package release.release_proj.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,8 +9,8 @@ import release.release_proj.domain.Order;
 import release.release_proj.service.OrderService;
 
 import java.util.List;
-import java.util.Optional;
 
+@Slf4j //log 사용
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/orders")
@@ -33,44 +34,44 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<Order>> orderList() {
-        Optional<List<Order>> orders = orderService.findAll();
-
-        if (orders.isPresent()){
-            return ResponseEntity.ok(orders.get());
-        } else {
+        try {
+            List<Order> orders = orderService.findAll();
+            return ResponseEntity.ok(orders);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/user/{memberId}")
-    public ResponseEntity<List<Order>> memberOrderList(@PathVariable(name="memberId") String memberId) {
-        Optional<List<Order>> orders = orderService.findByMemberId(memberId);
-
-        if (orders.isPresent()){
-            return ResponseEntity.ok(orders.get());
-        } else {
+    public ResponseEntity<List<Order>> memberOrderList(@PathVariable(name = "memberId") String memberId) {
+        try {
+            List<Order> orders = orderService.findByMemberId(memberId);
+            return ResponseEntity.ok(orders);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping("item/{itemId}")
-    public ResponseEntity<List<Order>> itemOrderList(@PathVariable(name="itemId") Long itemId) {
-        Optional<List<Order>> orders = orderService.findByItemId(itemId);
-
-        if (orders.isPresent()){
-            return ResponseEntity.ok(orders.get());
-        } else {
+    @GetMapping("/item/{itemId}")
+    public ResponseEntity<List<Order>> itemOrderList(@PathVariable(name = "itemId") Long itemId) {
+        try {
+            List<Order> orders = orderService.findByItemId(itemId);
+            return ResponseEntity.ok(orders);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Order> readOrder(@PathVariable(name="orderId") Long orderId) {
-        Optional<Order> order = orderService.findOne(orderId);
-
-        if (order.isPresent()){
-            return ResponseEntity.ok(order.get());
-        } else {
+    public ResponseEntity<Order> readOrder(@PathVariable(name = "orderId") Long orderId) {
+        try {
+            Order order = orderService.findOne(orderId);
+            return ResponseEntity.ok(order);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }

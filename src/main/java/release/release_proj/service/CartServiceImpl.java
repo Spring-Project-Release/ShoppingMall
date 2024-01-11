@@ -24,7 +24,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public List<Cart> readMemberCarts(String memberId) {
-        //return cartRepository.findByMemberId(member.getMemberId());
         return cartRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 memberId를 가지는 장바구니가 존재하지 않습니다."));
     }

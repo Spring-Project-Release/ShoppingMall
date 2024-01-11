@@ -48,20 +48,36 @@ public class OrderService {
         }
     }
 
-    public Optional<Order> findOne(Long orderId) {
-        return orderRepository.findByOrderId(orderId);
+    public Order findOne(Long orderId) {
+        return orderRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 orderId를 가지는 주문내역이 존재하지 않습니다."));
     }
 
-    public Optional<List<Order>> findByMemberId(String memberId) {
-        return orderRepository.findByMemberId(memberId);
-}
+    public List<Order> findByMemberId(String memberId) {
+        Optional<List<Order>> orders = orderRepository.findByMemberId(memberId);
+        if (orders.isEmpty() || orders.get().isEmpty()){
+            throw new IllegalArgumentException("해당 memberId를 가지는 주문내역이 존재하지 않습니다.");
+        }
 
-    public Optional<List<Order>> findByItemId(Long itemId) {
-        return orderRepository.findByItemId(itemId);
+        return orders.get();
     }
 
-    public Optional<List<Order>> findAll() {
-        return orderRepository.findAll();
+    public List<Order> findByItemId(Long itemId) {
+        Optional<List<Order>> orders = orderRepository.findByItemId(itemId);
+        if (orders.isEmpty() || orders.get().isEmpty()){
+            throw new IllegalArgumentException("해당 itemId를 가지는 주문내역이 존재하지 않습니다.");
+        }
+
+        return orders.get();
+    }
+
+    public List<Order> findAll() {
+        Optional<List<Order>> orders = orderRepository.findAll();
+        if (orders.isEmpty() || orders.get().isEmpty()){
+            throw new IllegalArgumentException("주문내역이 존재하지 않습니다.");
+        }
+
+        return orders.get();
     }
 
     public void deleteOrder(Long orderId) {
