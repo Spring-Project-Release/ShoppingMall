@@ -3,57 +3,75 @@
 1. itemList()
 : '/items' 경로
 : get 요청
-: 전체 상품 리스트와 status 200 반환, 상품이 아예 없으면 204 status 반환
+: 전체 상품 리스트와 status 200 반환, 상품이 아예 없으면 404 status 반환
+: 404 status 반환 시 로그에 "상품이 존재하지 않습니다."라는 메시지 출력
 
 2. itemCategory()
 : '/items/category/{category}' 경로
 : get 요청
-: 해당 category의 상품들이 있으면 해당 상품 리스트와 status 200 반환, 없으면 204 status 반환
+: 해당 category의 상품들이 있으면 해당 상품 리스트와 status 200 반환, 없으면 404 status 반환
+: 404 status 반환 시 로그에 "해당 카테고리를 가진 상품이 존재하지 않습니다."라는 메시지 출력
 
 3. itemIsSoldout()
 : '/items/isSoldout/{isSoldout}' 경로
 : get 요청
-: true나 false 중 하나가 {isSoldout} (또는 1이나 0) 값임, 각각 품절된 상품과 품절되지 않은 상품 리스트를 보여주며 해당 상품이 없으면 204 status 반환
+: true나 false 중 하나가 {isSoldout} (또는 1이나 0) 값임, 각각 품절된 상품과 품절되지 않은 상품 리스트를 보여주며 해당 상품이 없으면 404 status 반환
+: 404 status 반환 시 로그에 "해당 품절여부 조건을 만족하는 상품이 존재하지 않습니다."라는 메시지 출력
 
 4. getItem()
 : '/items/{itemId}' 경로
 : get 요청
-: 해당 itemId를 가지는 상품이 있으면 해당 상품과 status 200 반환, 없으면 204 status 반환
+: 해당 itemId를 가지는 상품이 있으면 해당 상품과 status 200 반환, 없으면 404 status 반환
+: 404 status 반환 시 로그에 "해당 itemId를 가진 상품이 존재하지 않습니다."라는 메시지 출력
 
-5. newItem()
+5. getItemBySellerId()
+: '/items/sellerId/{sellerId}' 경로
+: get 요청
+: 해당 sellerId를 가지는 상품이 있으면 해당 상품과 status 200 반환, 없으면 404 status 반환
+: 404 status 반환 시 로그에 "해당 sellerId를 가진 상품이 존재하지 않습니다."라는 메시지 출력
+
+6. getItemBySellerId()
+: '/items/sellerName/{sellerName}' 경로
+: get 요청
+: 해당 sellerName을 가지는 상품이 있으면 해당 상품과 status 200 반환, 없으면 404 status 반환
+: 404 status 반환 시 로그에 "해당 sellerName을 가진 상품이 존재하지 않습니다."라는 메시지 출력
+
+7. newItem()
 : '/items' 경로
 : post 요청
 : parameter로 Item을 받음
 : parameter로 받은 Item을 DB에 저장, 저장이 되면 "Item created successfully." 메세지와 200 status 반환, 아니면 INTERNAL_SERVER_ERROR status와 "Failed to create Item." 메세지 반환
 : IllegalStateException일때, 즉 parameter의 name이 기존의 DB에 있는 상품의 이름과 중복되었을 때 BAD_REQUEST status와 "이미 존재하는 상품 이름입니다. 이름을 변경해 주십시오." 메시지 반환
 
-6. update()
+8. update()
 : '/items/{itemId}' 경로
 : put 요청
 : parameter로 Item을 받음(ItemId 있는 것 없는 것 상관 없음)
 : parameter로 받은 Item의 내용으로 url의 itemId를 가지는 상품의 내용을 업데이트하는데, 업데이트에 성공하면 "Item updated successfully." 메시지와 200 status 반환, 실패하면 INTERNAL_SERVER_ERROR status와 "존재하지 않는 itemId입니다." 메시지 반환
 
-7. updateIsSoldout()
+9. updateIsSoldout()
 : '/items/{itemId}/isSoldout' 경로
 : put 요청
 : 해당 itemId를 가지는 상품의 품절상태를 반대로 바꿈, 바꾸는데에 성공하면 "Item isSoldout updated successfully." 메시지와 200 status 반환, 실패하면 INTERNAL_SERVER_ERROR status와 "존재하지 않는 itemId이거나 update 오류가 발생했습니다." 메시지 반환
 
-8. deleteItem()
+10. deleteItem()
 : '/items/{itemId} 경로
 : delete 요청
-: 해당 itemId를 가지는 상품을 DB에서 삭제, 삭제하는데에 성공하면 "Item deleted successfully." 메시지와 200 status 반환, 실패하면 204 status와 "존재하지 않는 itemId입니다." 메시지 반환
+: 해당 itemId를 가지는 상품을 DB에서 삭제, 삭제하는데에 성공하면 "Item deleted successfully." 메시지와 200 status 반환, 실패하면 404 status와 "존재하지 않는 itemId입니다." 메시지 반환
 
 *CartController API
 
 1. memberCartList()
 : '/carts/user/{memberId} 경로
 : get 요청
-: 해당 memberId를 가지는 장바구니들이 있으면 장바구니 리스트와 status 200 반환, 아예 없으면 204 status 반환
+: 해당 memberId를 가지는 장바구니들이 있으면 장바구니 리스트와 status 200 반환, 아예 없으면 404 status 반환
+: 404 status 반환 시 로그에 "해당 memberId를 가지는 장바구니가 존재하지 않습니다."라는 메시지 출력
 
 2. memberCartItemList()
 : '/carts/user/{memberId}/item/{itemId}' 경로
 : get 요청
-: 해당 memberId를 가지는 장바구니 중 해당 itemId를 가지는 장바구니와 status 200 반환(존재한다면 하나만 존재), 없으면 204 status 반환
+: 해당 memberId를 가지는 장바구니 중 해당 itemId를 가지는 장바구니와 status 200 반환(존재한다면 하나만 존재), 없으면 404 status 반환
+: 404 status 반환 시 로그에 "해당 memberId와 itemId를 가지는 장바구니가 존재하지 않습니다."라는 메시지 출력
 
 3. newCart()
 : '/carts' 경로
@@ -65,12 +83,12 @@
 4. deleteCart()
 : '/carts/user/{memberId}' 경로
 : delete 요청
-: 해당 memberId를 가지는 장바구니들을 모두 DB에서 삭제, 삭제하는데에 성공하면 "User's cart deleted successfully." 메시지와 200 status 반환, 실패하면 204 status와 "해당하는 cart들이 존재하지 않습니다." 메시지 반환
+: 해당 memberId를 가지는 장바구니들을 모두 DB에서 삭제, 삭제하는데에 성공하면 "User's cart deleted successfully." 메시지와 200 status 반환, 실패하면 404 status와 "해당하는 cart들이 존재하지 않습니다." 메시지 반환
 
 5. deleteCartItem()
 : 'carts/user/{memberId}/item/{itemId}' 경로
 : delete 요청
-: 해당 memberId와 itemId를 가지는 장바구니를 DB에서 삭제, 삭제하는데에 성공하면 "User's cartItem deleted successfully." 메시지와 200 status 반환, 실패하면 204 status와 "해당하는 cart가 존재하지 않습니다." 메시지 반환
+: 해당 memberId와 itemId를 가지는 장바구니를 DB에서 삭제, 삭제하는데에 성공하면 "User's cartItem deleted successfully." 메시지와 200 status 반환, 실패하면 404 status와 "해당하는 cart가 존재하지 않습니다." 메시지 반환
 
 6. increaseCartItemAmount()
 : 'carts/{cartId}/amount' 경로
@@ -123,22 +141,26 @@
 2. orderList()
 : '/orders' 경로
 : get 요청
-: 전체 주문 리스트와 status 200 반환, 주문이 아예 없으면 204 status 반환
+: 전체 주문 리스트와 status 200 반환, 주문이 아예 없으면 404 status 반환
+: 404 status 반환 시 로그에 "주문내역이 존재하지 않습니다."라는 메시지 출력
 
 3. memberOrderList()
 : '/orders/user/{memberId}' 경로
 : get 요청
-: 해당 유저의 주문 리스트와 status 200을 반환, 해당 유저가 주문한 기록이 아예 없으면 204 status 반환
+: 해당 유저의 주문 리스트와 status 200을 반환, 해당 유저가 주문한 기록이 아예 없으면 404 status 반환
+: 404 status 반환 시 로그에 "해당 memberId를 가지는 주문내역이 존재하지 않습니다."라는 메시지 출력
 
 4. itemOrderList()
 : '/orders/item/{itemId}' 경로
 : get 요청
-: 해당 상품의 주문 리스트와 status 200을 반환, 해당 상품 주문 기록이 아예 없으면 204 status 반환
+: 해당 상품의 주문 리스트와 status 200을 반환, 해당 상품 주문 기록이 아예 없으면 404 status 반환
+: 404 status 반환 시 로그에 "해당 itemrId를 가지는 주문내역이 존재하지 않습니다."라는 메시지 출력
 
 5. readOrder()
 : '/orders/{orderId}'
 : get 요청
-: 해당 orderId를 가지는 주문이 있으면 해당 주문과 status 200 반환, 없으면 204 status 반환
+: 해당 orderId를 가지는 주문이 있으면 해당 주문과 status 200 반환, 없으면 404 status 반환
+: 404 status 반환 시 로그에 "해당 orderId를 가지는 주문내역이 존재하지 않습니다."라는 메시지 출력
 
 6. deleteOrder()
 : '/orders/{orderId}'
@@ -147,15 +169,3 @@
 : 주문한 상품의 재고나 품절상태 등 상품의 상태도 복구함
 : 해당 orderId를 가지는 주문이 orders DB에 존재하지 않으면, 즉 IllegalStateException인 경우 BAD_REQUEST status와 "해당 주문 ID: {orderId}가 존재하지 않습니다." 메시지 반환
 : 기타 예외의 경우 INTERNAL_SERVER_ERROR status와 "주문 삭제 중 오류가 발생했습니다." 메세지 반환
-
-
-
-
-
-
-
-
-
-
-
-
