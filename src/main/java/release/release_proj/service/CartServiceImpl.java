@@ -24,8 +24,12 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public List<Cart> readMemberCarts(String memberId) {
-        return cartRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 memberId를 가지는 장바구니가 존재하지 않습니다."));
+        Optional<List<Cart>> cartListOptional = cartRepository.findByMemberId(memberId);
+        if (cartListOptional.isEmpty() || cartListOptional.get().isEmpty()) {
+            throw new IllegalArgumentException("해당 memberId를 가지는 장바구니가 존재하지 않습니다.");
+        }
+
+        return cartListOptional.get();
     }
 
     @Override
@@ -53,8 +57,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public int deleteCartItem(String memberId, Long itemId) {
-        //String memberId = member.getMemberId();
-        //Long itemId = item.getItemId();
         Optional<Cart> isCartItemExist = cartRepository.findByMemberIdAndItemId(memberId, itemId);
 
         if (isCartItemExist.isPresent()) {

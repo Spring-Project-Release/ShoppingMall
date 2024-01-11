@@ -13,7 +13,6 @@ import release.release_proj.repository.OrderRepository;
 import release.release_proj.service.CartService;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -150,7 +149,8 @@ public class CartServiceIntegrationTest {
 
         // Then
         assertThat(result).isGreaterThan(0);
-        assertThat(cartService.readMemberCarts(member.getMemberId())).isEqualTo(Collections.emptyList());
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.readMemberCarts(member.getMemberId()));
+        assertThat(e.getMessage()).isEqualTo("해당 memberId를 가지는 장바구니가 존재하지 않습니다.");
     }
 
     @Test
@@ -170,7 +170,8 @@ public class CartServiceIntegrationTest {
 
         // Then
         assertThat(result).isEqualTo(0);
-        assertThat(cartService.readMemberCarts(member.getMemberId())).isEqualTo(Collections.emptyList());
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.readMemberCarts(member.getMemberId()));
+        assertThat(e.getMessage()).isEqualTo("해당 memberId를 가지는 장바구니가 존재하지 않습니다.");
     }
 
     @Test
@@ -389,7 +390,8 @@ public class CartServiceIntegrationTest {
         assertThat(orderRepository.findByMemberId(memberId).get().get(1).getItemId()).isEqualTo(item2.getItemId());
         assertThat(orderRepository.findByMemberId(memberId).get().get(0).getMemo()).isEqualTo("전체결제");
         assertThat(orderRepository.findByMemberId(memberId).get().get(1).getMemo()).isEqualTo("전체결제");
-        assertThat(cartService.readMemberCarts(memberId)).isEqualTo(Collections.emptyList()); //유저의 장바구니 전체가 삭제됨
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.readMemberCarts(memberId));
+        assertThat(e.getMessage()).isEqualTo("해당 memberId를 가지는 장바구니가 존재하지 않습니다.");
     }
 
     @Test
