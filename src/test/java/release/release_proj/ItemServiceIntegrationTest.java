@@ -84,6 +84,8 @@ public class ItemServiceIntegrationTest {
         updateItem.setStock(0);
         updateItem.setPrice(2);
         updateItem.setIsSoldout(true);
+        updateItem.setSellerId("testSellerId2");
+        updateItem.setSellerName("testSellerName2");
 
         //When
         int result = itemService.updateItem(updateItem);
@@ -162,7 +164,7 @@ public class ItemServiceIntegrationTest {
 
         //Then
         assertThat(result).isGreaterThan(0);
-        IllegalStateException e = assertThrows(IllegalStateException.class, ()->itemService.findOne(item.getItemId()));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, ()->itemService.findOne(item.getItemId()));
         assertThat(e.getMessage()).isEqualTo("해당 itemId를 가진 상품이 존재하지 않습니다.");
     }
 }
