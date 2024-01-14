@@ -26,9 +26,17 @@ public class JpaOrderRepository implements OrderRepository {
         return Optional.ofNullable(order);
     };
 
-    public Optional<List<Order>> findByMemberId(String memberId){
-        List<Order> order = em.createQuery("select i from Order i where i.memberId = :memberId", Order.class)
-                .setParameter("memberId", memberId)
+    public Optional<List<Order>> findByBuyerId(String buyerId){
+        List<Order> order = em.createQuery("select i from Order i where i.buyerId = :buyerId", Order.class)
+                .setParameter("buyerId", buyerId)
+                .getResultList();
+
+        return Optional.ofNullable(order);
+    };
+
+    public Optional<List<Order>> findBySellerId(String sellerId){
+        List<Order> order = em.createQuery("select i from Order i where i.sellerId = :sellerId", Order.class)
+                .setParameter("sellerId", sellerId)
                 .getResultList();
 
         return Optional.ofNullable(order);

@@ -43,10 +43,21 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/user/{memberId}")
-    public ResponseEntity<List<Order>> memberOrderList(@PathVariable(name = "memberId") String memberId) {
+    @GetMapping("/buyer/{buyerId}")
+    public ResponseEntity<List<Order>> memberPurchaseList(@PathVariable(name = "buyerId") String buyerId) {
         try {
-            List<Order> orders = orderService.findByMemberId(memberId);
+            List<Order> orders = orderService.findByBuyerId(buyerId);
+            return ResponseEntity.ok(orders);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/seller/{sellerId}")
+    public ResponseEntity<List<Order>> memberSaleList(@PathVariable(name = "sellerId") String sellerId) {
+        try {
+            List<Order> orders = orderService.findBySellerId(sellerId);
             return ResponseEntity.ok(orders);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
@@ -80,11 +91,11 @@ public class OrderController {
     public ResponseEntity<String> deleteOrder(@PathVariable(name="orderId") Long orderId) {
         try {
             orderService.deleteOrder(orderId);
-            return ResponseEntity.ok("주문이 성공적으로 삭제되었습니다.");
+            return ResponseEntity.ok("주문이 성공적으로 취소되었습니다.");
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("주문 삭제 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("주문 취소 중 오류가 발생했습니다.");
         }
     }
 

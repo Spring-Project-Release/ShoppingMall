@@ -5,6 +5,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import release.release_proj.domain.Cart;
+import release.release_proj.domain.Item;
 import release.release_proj.domain.Order;
 import release.release_proj.repository.CartRepository;
 import release.release_proj.repository.MemberDAO;
@@ -107,8 +108,10 @@ public class CartServiceImpl implements CartService {
             for (Cart cart : carts.get()) {
                 //order 기록 저장- 구매내역으로 무언가를 할 경우(user의 등급을 매길 경우 user에 paymentPrice 항목도 추가를 해야하나?)
                 Order order = new Order();
-                order.setMemberId(cart.getMemberId());
+                order.setBuyerId(cart.getMemberId());
                 order.setItemId(cart.getItemId());
+                Item item = itemService.findOne(cart.getItemId());
+                order.setSellerId(item.getSellerId());
                 order.setCount(cart.getAmount());
                 order.setPrice(cart.getAmount() * itemService.getPrice(cart.getItemId()));
                 order.setMemo(memo != null ? memo : ""); //controller에서 memo를 받아와서 order에 set해줌
@@ -134,8 +137,10 @@ public class CartServiceImpl implements CartService {
             if (cart.isPresent()) {
                 Cart existCart = cart.get();
                 Order order = new Order();
-                order.setMemberId(existCart.getMemberId());
+                order.setBuyerId(existCart.getMemberId());
                 order.setItemId(existCart.getItemId());
+                Item item = itemService.findOne(existCart.getItemId());
+                order.setSellerId(item.getSellerId());
                 order.setCount(existCart.getAmount());
                 order.setPrice(existCart.getAmount() * itemService.getPrice(existCart.getItemId()));
                 order.setMemo(memo != null ? memo : ""); //controller에서 memo를 받아와서 order에 set해줌

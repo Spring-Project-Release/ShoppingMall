@@ -20,7 +20,7 @@ public class OrderService {
     private final MemberDAO memberDAO;
 
     public void save(Order order) {
-        validateMemberAndItemExistence(order.getMemberId(), order.getItemId());
+        validateMemberAndItemExistence(order.getBuyerId(), order.getItemId());
         //item.stock과 order.count 비교: stock 수 < count 수이면 error 메시지 띄우기
         int currentStock = itemService.getStock(order.getItemId());
         if (currentStock < order.getCount()) {
@@ -35,13 +35,13 @@ public class OrderService {
         }
     };
 
-    private void validateMemberAndItemExistence(String memberId, Long itemId) {
-        // memberId와 itemId가 존재하는지 여부 확인
-        if (memberDAO.isExistMemberId(memberId)==0 && itemService.isItemIdExist(itemId)==0) {
-            throw new IllegalArgumentException("결제 처리에 실패했습니다. 해당하는 memberId와 itemId가 존재하지 않습니다.");
+    private void validateMemberAndItemExistence(String buyerId, Long itemId) {
+        // buyerId와 itemId가 존재하는지 여부 확인
+        if (memberDAO.isExistMemberId(buyerId)==0 && itemService.isItemIdExist(itemId)==0) {
+            throw new IllegalArgumentException("결제 처리에 실패했습니다. 해당하는 buyerId와 itemId가 존재하지 않습니다.");
         }
-        else if (memberDAO.isExistMemberId(memberId)==0) {
-            throw new IllegalArgumentException("결제 처리에 실패했습니다. 해당하는 memberId가 존재하지 않습니다.");
+        else if (memberDAO.isExistMemberId(buyerId)==0) {
+            throw new IllegalArgumentException("결제 처리에 실패했습니다. 해당하는 buyerId가 존재하지 않습니다.");
         }
         else if (itemService.isItemIdExist(itemId)==0) {
             throw new IllegalArgumentException("결제 처리에 실패했습니다. 해당하는 itemId가 존재하지 않습니다.");
@@ -53,10 +53,19 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 orderId를 가지는 주문내역이 존재하지 않습니다."));
     }
 
-    public List<Order> findByMemberId(String memberId) {
-        Optional<List<Order>> orders = orderRepository.findByMemberId(memberId);
+    public List<Order> findByBuyerId(String buyerId) {
+        Optional<List<Order>> orders = orderRepository.findByBuyerId(buyerId);
         if (orders.isEmpty() || orders.get().isEmpty()){
-            throw new IllegalArgumentException("해당 memberId를 가지는 주문내역이 존재하지 않습니다.");
+            throw new IllegalArgumentException("해당 buyerId를 가지는 구매내역이 존재하지 않습니다.");
+        }
+
+        return orders.get();
+    }
+
+    public List<Order> findBySellerId(String sellerId) {
+        Optional<List<Order>> orders = orderRepository.findBySellerId(sellerId);
+        if (orders.isEmpty() || orders.get().isEmpty()){
+            throw new IllegalArgumentException("해당 sellerId를 가지는 판매내역이 존재하지 않습니다.");
         }
 
         return orders.get();
