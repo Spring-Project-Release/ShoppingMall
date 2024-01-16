@@ -1,0 +1,12 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+.nav-button-styles {
+  height: calc(100% -16px);
+  transition: border-bottom 0.3s ease;
+}
+
+.nav-button-styles:hover {
+  border-bottom: 3px solid rgb(163 230 53 / var(--tw-text-opacity));
+}

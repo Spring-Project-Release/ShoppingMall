@@ -3,134 +3,47 @@ import Navigation from "../components/Navigation";
 import DetailBar from "../components/DetailBar";
 import { useForm } from "react-hook-form";
 import { ISignupFormData } from "../apis/interface";
-import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
-import axios from "axios";
 import useScrollReset from "../utils/useScrollReset";
 import Hood from "../components/Hood";
-import { theme } from "../utils/colors";
 import { getDuplicateId, postSignupData } from "../apis/api";
-
-const Container = styled.div`
-  height: auto;
-`;
-
-const Main = styled.div`
-  /* background-color: red; */
-  width: 100%;
-  height: auto;
-  padding: 8vh 0;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  form {
-    /* background-color: blue; */
-    width: 30%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-
-    button {
-      border: 1px solid lightgray;
-      height: 56px;
-      width: 100%;
-      padding: 4px 8px;
-      cursor: pointer;
-      background-color: ${(props) => theme.gray};
-
-      margin-top: 48px;
-
-      &:focus {
-        border: 1px solid greenyellow;
-      }
-    }
-
-    span {
-      margin-top: 12px;
-    }
-  }
-`;
-
-const Line = styled.span`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: start;
-  /* background-color: gray; */
-
-  gap: 8px;
-
-  input {
-    border: 1px solid lightgray;
-    height: 48px;
-    width: calc(100% - 18px);
-    padding: 4px 8px;
-
-    &:focus {
-      border-color: greenyellow;
-    }
-  }
-
-  label {
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-  }
-`;
-
-const LineId = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-`;
-
-const Checker = styled.div`
-  width: 40%;
-  height: 48px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 4px 8px;
-
-  border: 1px solid lightgray;
-  border-left: 0;
-  cursor: pointer;
-  background-color: ${(props) => theme.gray};
-`;
+import { useState } from "react";
+import Container from "../components/Container";
 
 export default function Login() {
+  const [isDupCheck, setIsDupCheck] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
     getValues,
+    setError,
+    setFocus,
+    clearErrors,
   } = useForm<ISignupFormData>();
 
   const reset = useScrollReset();
 
   const onValid = async (data: ISignupFormData) => {
     // 서버로 요청을 보내는 부분
-    try {
-      let success = await postSignupData(data);
-      if (success) {
-        console.log("회원가입 성공");
-        reset("/");
+    if (getValues("memberPassword") === getValues("memberPasswordCheck")) {
+      try {
+        let success = await postSignupData(data);
+        if (success) {
+          console.log("회원가입 성공");
+          reset("/");
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(error);
+        }
+      } finally {
       }
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error);
-      }
-    } finally {
+    } else {
+      setError("memberPasswordCheck", {
+        message: "비밀번호가 다릅니다.",
+      });
+      setFocus("memberPasswordCheck");
     }
   };
 
@@ -138,29 +51,40 @@ export default function Login() {
     const id = getValues("memberId");
 
     if (id) {
-      try {
-        const access = await getDuplicateId(id);
-        console.log(access);
-      } catch (error) {
-      } finally {
-      }
+      await getDuplicateId(id).then((response) => {
+        // console.log(response.status);
+        if (response?.status && response.status === 200) {
+          setIsDupCheck(true);
+        } else if (response?.status && response.status === 204) {
+          setError("memberId", {
+            message: "중복 아이디 입니다",
+          });
+        }
+      });
     }
   };
 
   return (
     <Container>
       <Hood title="회원 가입" />
-      <Navigation />
-      <DetailBar />
-      <Main>
-        <form onSubmit={handleSubmit(onValid)}>
-          <h1>회원 가입</h1>
+      {/* MAIN */}
+      <div className="w-full h-auto px-[8vh] flex flex-col justify-center items-center">
+        <form
+          className="w-1/3 h-auto flex flex-col justify-start items-center"
+          onSubmit={handleSubmit(onValid)}
+        >
+          <h1 className="font-bold text-xl mt-12 mb-4">회원 가입</h1>
 
-          <Line>
-            <label htmlFor="memberId">아이디</label>
+          {/* LINE */}
+          <div className="mb-6 w-full flex flex-col justify-between items-start gap-2">
+            <label className="font-bold text-lg" htmlFor="memberId">
+              아이디
+            </label>
 
-            <LineId>
+            {/* LINE-ID */}
+            <div className="flex flex-row justify-between items-center w-full">
               <input
+                className="border border-gray-300 h-12 w-full px-1 py-2 focus:border-lime-500"
                 {...register("memberId", {
                   required: "아이디를 입력해주세요.",
                   minLength: {
@@ -171,15 +95,35 @@ export default function Login() {
                 id="memberId"
                 name="memberId"
                 placeholder="아이디"
+                onChange={() => {
+                  setIsDupCheck(false);
+                  clearErrors("memberId");
+                }}
               />
-              <Checker onClick={checkDuplicated}>
+              <div
+                className="w-2/5 h-12 flex flex-col justify-center items-center px-1 py-2 border border-gray-300 border-l-0 cursor-pointer"
+                onClick={checkDuplicated}
+              >
                 <p>중복 확인</p>
-              </Checker>
-            </LineId>
-          </Line>
-          <Line>
-            <label htmlFor="memberPassword">비밀번호</label>
+              </div>
+            </div>
+          </div>
+          {isDupCheck && (
+            <span className="text-lime-500 font-bold text-lg">
+              사용가능한 아이디입니다.
+            </span>
+          )}
+          {errors?.memberId?.message && (
+            <span className="text-red-500 font-bold text-lg">
+              {errors.memberId.message}
+            </span>
+          )}
+          <div className="mb-6 w-full flex flex-col justify-between items-start gap-2">
+            <label className="font-bold text-lg" htmlFor="memberPassword">
+              비밀번호
+            </label>
             <input
+              className="border border-gray-300 h-12 w-full px-1 py-2 focus:border-lime-500"
               {...register("memberPassword", {
                 required: "비밀번호를 입력해주세요.",
                 minLength: {
@@ -192,11 +136,19 @@ export default function Login() {
               type="password"
               placeholder="비밀번호"
             />
-          </Line>
+          </div>
+          {errors?.memberPassword?.message && (
+            <span className="text-red-500 font-bold text-lg">
+              {errors.memberPassword.message}
+            </span>
+          )}
 
-          <Line>
-            <label htmlFor="memberPasswordCheck">비밀번호 확인</label>
+          <div className="mb-6 w-full flex flex-col justify-between items-start gap-2">
+            <label className="font-bold text-lg" htmlFor="memberPasswordCheck">
+              비밀번호 확인
+            </label>
             <input
+              className="border border-gray-300 h-12 w-full px-1 py-2 focus:border-lime-500"
               {...register("memberPasswordCheck", {
                 required: "비밀번호를 입력해주세요.",
                 minLength: {
@@ -209,33 +161,47 @@ export default function Login() {
               type="password"
               placeholder="비밀번호 확인"
             />
-          </Line>
+          </div>
 
-          <Line>
-            <label htmlFor="memberName">이름</label>
+          {errors?.memberPasswordCheck?.message && (
+            <span className="text-red-500 font-bold text-lg">
+              {errors.memberPasswordCheck.message}
+            </span>
+          )}
+
+          <div className="mb-6 w-full flex flex-col justify-between items-start gap-2">
+            <label className="font-bold text-lg" htmlFor="memberName">
+              이름
+            </label>
             <input
+              className="border border-gray-300 h-12 w-full px-1 py-2 focus:border-lime-500"
               {...register("memberName", {
-                required: "이메일 입력해주세요.",
-                minLength: {
-                  value: 8,
-                  message: "비밀번호는 8글자 이상입니다.",
-                },
+                required: "이름을 입력해주세요.",
+                minLength: 2,
               })}
               id="memberName"
               name="memberName"
               type="text"
               placeholder="이름"
             />
-          </Line>
+          </div>
+          {errors?.memberName?.message && (
+            <span className="text-red-500 font-bold text-lg">
+              {errors.memberName.message}
+            </span>
+          )}
 
-          <Line>
-            <label htmlFor="memberEmail">이메일</label>
+          <div className="mb-6 w-full flex flex-col justify-between items-start gap-2">
+            <label className="font-bold text-lg" htmlFor="memberEmail">
+              이메일
+            </label>
             <input
+              className="border border-gray-300 h-12 w-full px-1 py-2 focus:border-lime-500"
               {...register("memberEmail", {
                 required: "이메일 입력해주세요.",
-                minLength: {
-                  value: 8,
-                  message: "비밀번호는 8글자 이상입니다.",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "이메일 형식이 아닙니다.",
                 },
               })}
               id="memberEmail"
@@ -243,16 +209,25 @@ export default function Login() {
               type="text"
               placeholder="이 메 일"
             />
-          </Line>
+          </div>
 
-          <Line>
-            <label htmlFor="memberPhone">전화번호</label>
+          {errors?.memberEmail?.message && (
+            <span className="text-red-500 font-bold text-lg">
+              {errors.memberEmail.message}
+            </span>
+          )}
+
+          <div className="mb-6 w-full flex flex-col justify-between items-start gap-2">
+            <label className="font-bold text-lg" htmlFor="memberPhone">
+              전화번호
+            </label>
             <input
+              className="border border-gray-300 h-12 w-full px-1 py-2 focus:border-lime-500"
               {...register("memberPhone", {
                 required: "전화번호를 입력해주세요.",
-                minLength: {
-                  value: 8,
-                  message: "전화번호 형식이 맞지 않습니다.",
+                pattern: {
+                  value: /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/,
+                  message: "전화번호 형식이 아닙니다.",
                 },
               })}
               id="memberPhone"
@@ -260,29 +235,40 @@ export default function Login() {
               type="text"
               placeholder="전화번호"
             />
-          </Line>
+          </div>
+          {errors?.memberPhone?.message && (
+            <span className="text-red-500 font-bold text-lg">
+              {errors.memberPhone.message}
+            </span>
+          )}
 
-          <Line>
-            <label htmlFor="memberAddress">주소</label>
+          <div className="mb-6 w-full flex flex-col justify-between items-start gap-2">
+            <label className="font-bold text-lg" htmlFor="memberAddress">
+              주소
+            </label>
             <input
+              className="border border-gray-300 h-12 w-full px-1 py-2 focus:border-lime-500"
               {...register("memberAddress", {
                 required: "주소를 입력해주세요.",
-                minLength: {
-                  value: 8,
-                  message: "주소는 8글자 이상입니다.",
-                },
               })}
               id="memberAddress"
               name="memberAddress"
               type="text"
               placeholder="주소"
             />
-          </Line>
+          </div>
+          {errors?.memberAddress?.message && (
+            <span className="text-red-500 font-bold text-lg">
+              {errors.memberAddress.message}
+            </span>
+          )}
 
-          <button>회원 가입</button>
+          <button className="border border-gray-300 h-14 w-full px-1 py-2 cursor-pointer mt-12 focus:border-lime-500">
+            회원 가입
+          </button>
         </form>
 
-        <span
+        {/* <span
           style={{
             color: "tomato",
             fontSize: "18px",
@@ -293,10 +279,19 @@ export default function Login() {
             ? errors?.memberId?.message
             : errors?.memberPassword?.message
             ? errors?.memberPassword?.message
+            : errors?.memberPasswordCheck?.message
+            ? errors?.memberPasswordCheck?.message
+            : errors?.memberAddress?.message
+            ? errors?.memberAddress?.message
+            : errors?.memberEmail?.message
+            ? errors?.memberEmail?.message
+            : errors?.memberName?.message
+            ? errors?.memberName?.message
+            : errors?.memberPhone?.message
+            ? errors?.memberPhone?.message
             : " "}
-        </span>
-      </Main>
-      <Footer />
+        </span> */}
+      </div>
     </Container>
   );
 }

@@ -1,98 +1,9 @@
-import styled from "styled-components";
-import Navigation from "../components/Navigation";
-import DetailBar from "../components/DetailBar";
 import { useForm } from "react-hook-form";
 import { ILoginFormData } from "../apis/interface";
 import { postLoginData } from "../apis/api";
-import { useNavigate } from "react-router-dom";
-import Footer from "../components/Footer";
-import axios from "axios";
 import useScrollReset from "../utils/useScrollReset";
 import Hood from "../components/Hood";
-import { theme } from "../utils/colors";
-
-const Container = styled.div`
-  height: auto;
-`;
-
-const Main = styled.div`
-  /* background-color: red; */
-  width: 100%;
-  height: auto;
-  padding: 8vh 0;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  form {
-    /* background-color: blue; */
-    width: 30%;
-    height: 60vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-
-    button {
-      border: 1px solid lightgray;
-      height: 56px;
-      width: 100%;
-      padding: 4px 8px;
-      cursor: pointer;
-
-      margin-top: 48px;
-
-      &:focus {
-        border: 1px solid greenyellow;
-      }
-    }
-
-    span {
-      margin-top: 12px;
-    }
-  }
-`;
-
-const Line = styled.span`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: start;
-  /* background-color: gray; */
-
-  gap: 8px;
-
-  input {
-    border: 1px solid lightgray;
-    height: 48px;
-    width: calc(100% - 18px);
-    padding: 4px 8px;
-
-    &:focus {
-      border-color: greenyellow;
-    }
-  }
-
-  label {
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-  }
-`;
-
-const SignupButton = styled.p`
-  font-size: 16px;
-  margin-bottom: 16px;
-  transition: color 0.3s linear;
-  cursor: pointer;
-
-  &:hover {
-    color: ${(props) => theme.green};
-  }
-`;
+import Container from "../components/Container";
 
 export default function Login() {
   const {
@@ -128,15 +39,19 @@ export default function Login() {
   return (
     <Container>
       <Hood title="로그인" />
-      <Navigation />
-      <DetailBar />
-      <Main>
-        <form onSubmit={handleSubmit(onValid)}>
-          <h1>로그인</h1>
+      <div className="mt-12 w-full h-auto px-[8vh] flex flex-col justify-center items-center">
+        <form
+          onSubmit={handleSubmit(onValid)}
+          className="w-1/3 h-[60vh] flex flex-col justify-start items-center"
+        >
+          <h1 className="text-2xl font-bold">로그인</h1>
 
-          <Line>
-            <label htmlFor="memberId">아이디</label>
+          <span className="mt-3 w-full flex flex-col justify-between items-start gap-2">
+            <label htmlFor="memberId" className="font-bold text-lg">
+              아이디
+            </label>
             <input
+              className="border border-gray-300 h-12 w-full px-1 py-2 focus:bg-lime-200"
               {...register("memberId", {
                 required: "아이디를 입력해주세요.",
                 minLength: {
@@ -148,10 +63,13 @@ export default function Login() {
               name="memberId"
               placeholder="아이디"
             />
-          </Line>
-          <Line>
-            <label htmlFor="memberPassword">비밀번호</label>
+          </span>
+          <span className="mt-3 w-full flex flex-col justify-between items-start gap-2">
+            <label htmlFor="memberPassword" className="font-bold text-lg">
+              비밀번호
+            </label>
             <input
+              className="border border-gray-300 h-12 w-full px-1 py-2 focus:bg-lime-200"
               {...register("memberPassword", {
                 required: "비밀번호를 입력해주세요.",
                 minLength: {
@@ -164,12 +82,27 @@ export default function Login() {
               type="password"
               placeholder="비밀번호"
             />
-          </Line>
+          </span>
 
-          <button>로 그 인</button>
+          <button className="border border-gray-300 h-14 w-full px-1 py-2 cursor-pointer mt-12 focus:border-yellow-100">
+            로 그 인
+          </button>
         </form>
 
-        <SignupButton onClick={onMove}>회원가입</SignupButton>
+        {/*   font-size: 16px;
+  margin-bottom: 16px;
+  transition: color 0.3s linear;
+  cursor: pointer;
+
+  &:hover {
+    color: ${(props) => theme.green};
+  } */}
+        <div
+          onClick={onMove}
+          className="text-base mb-4 transition-color duration-300 ease-linear cursor-pointer hover:text-lime-500"
+        >
+          회원가입
+        </div>
 
         <span
           style={{
@@ -184,8 +117,7 @@ export default function Login() {
             ? errors?.memberPassword?.message
             : " "}
         </span>
-      </Main>
-      <Footer />
+      </div>
     </Container>
   );
 }

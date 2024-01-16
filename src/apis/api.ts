@@ -1,5 +1,5 @@
 //import axios from "axios";
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig } from "axios";
 import { ILoginFormData, ISignupFormData } from "./interface";
 
 export const postLoginData = async (data: ILoginFormData): Promise<boolean> => {
@@ -50,7 +50,7 @@ export const postSignupData = async (
     });
 };
 
-export const getDuplicateId = async (memberId: string): Promise<boolean> => {
+export const getDuplicateId = async (memberId: string) => {
   let url = `${process.env.REACT_APP_BASE_URL}/user/duplicate`;
   return await axios.get(url, {
     params: {

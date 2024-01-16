@@ -1,73 +1,5 @@
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
 import useScrollReset from "../utils/useScrollReset";
 import { useEffect, useState } from "react";
-
-const Container = styled.div`
-  width: 100%;
-  height: 7vh;
-
-  border-bottom: 1px solid lightgray;
-
-  position: sticky;
-  top: 0;
-  z-index: 100;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-  align-items: center;
-
-  background-color: white;
-`;
-
-const Login = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  width: 12%;
-  height: 70%;
-  border: 1px solid lightgray;
-
-  transition: background-color 0.3s ease, color 0.3s ease;
-
-  cursor: pointer;
-  &:hover {
-    background-color: lightgray;
-    color: white;
-  }
-`;
-
-const List = styled.div`
-  width: 90%;
-  height: 70%;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-  align-items: center;
-`;
-
-const Item = styled.div`
-  height: 100%;
-  width: 12%;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  border-right: 1px solid lightgray;
-  cursor: pointer;
-
-  &:last-child {
-    border: none;
-  }
-`;
-
-const Greeting = styled.div``;
 
 export default function DetailBar() {
   const reset = useScrollReset();
@@ -92,26 +24,46 @@ export default function DetailBar() {
   }, []);
 
   return (
-    <Container>
-      <List>
-        <Item onClick={onMove} id={"login"}>
+    <div className="w-full h-10 border-b border-gray-200 sticky top-0 z-50 flex flex-row justify-start items-center bg-white">
+      <div className="w-11/12 h-3/5 flex flex-row justify-start items-center">
+        <div
+          onClick={onMove}
+          id={"login"}
+          className="h-full w-2/12 flex flex-col justify-center items-center border-r border-gray-200"
+        >
           <p>로 그 인</p>
-        </Item>
-        <Item onClick={onMove} id={"mypage"}>
+        </div>
+        <div
+          onClick={onMove}
+          id={"mypage"}
+          className="h-full w-2/12 flex flex-col justify-center items-center border-r border-gray-200"
+        >
           마이 페이지
-        </Item>
-        <Item onClick={onMove} id={"recent"}>
+        </div>
+        <div
+          onClick={onMove}
+          id={"recent"}
+          className="h-full w-2/12 flex flex-col justify-center items-center border-r border-gray-200"
+        >
           최근 본 상품
-        </Item>
-        <Item onClick={onMove} id={"cart"}>
+        </div>
+        <div
+          onClick={onMove}
+          id={"cart"}
+          className="h-full w-2/12 flex flex-col justify-center items-center border-r border-gray-200"
+        >
           장바구니
-        </Item>
-        <Item onClick={onMove} id={"cs"}>
+        </div>
+        <div
+          onClick={onMove}
+          id={"cs"}
+          className="h-full w-2/12 flex flex-col justify-center items-center border-r border-gray-200 border-none"
+        >
           고객센터
-        </Item>
-      </List>
+        </div>
+      </div>
 
-      {isMemberName && <Greeting>{isMemberName} 님, 어서오세요.</Greeting>}
-    </Container>
+      {isMemberName && <div>{isMemberName} 님, 어서오세요.</div>}
+    </div>
   );
 }

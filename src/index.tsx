@@ -4,6 +4,7 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 import { theme } from "../src/utils/colors";
+import "./css/index.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

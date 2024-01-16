@@ -1,45 +1,4 @@
 import { useState } from "react";
-import styled from "styled-components";
-
-const Box = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const QnAInfo = styled.div<{ hidden: boolean }>`
-  display: ${(props) => (props.hidden ? "flex" : "none")};
-  flex-direction: row;
-  background-color: lightgray;
-  color: #3e3d3d;
-`;
-
-const QnA = styled.div`
-  display: flex;
-  flex-direction: row;
-  border-bottom: 1px solid lightgray;
-  cursor: pointer;
-`;
-
-const Type = styled.div`
-  padding: 24px 0px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 30%;
-
-  font-weight: bold;
-`;
-
-const Title = styled.div`
-  padding: 36px 48px;
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-  align-items: center;
-  width: 70%;
-  white-space: pre-line;
-`;
 
 export interface IQnAProps {
   question: string;
@@ -56,15 +15,39 @@ export default function QnABox({ type, question, answer }: IQnAProps) {
   };
 
   return (
-    <Box>
-      <QnA onClick={onClicked}>
-        <Type>{type}</Type>
-        <Title>{question}</Title>
-      </QnA>
-      <QnAInfo hidden={isClicked}>
-        <Type>답 변</Type>
-        <Title>{answer}</Title>
-      </QnAInfo>
-    </Box>
+    // BOX
+    <div className="flex flex-col">
+      {/* QNA */}
+      <div
+        onClick={onClicked}
+        className="flex flex-row border-b border-gray-300 cursor-pointer"
+      >
+        <div className="px-6 flex flex-col justify-center items-center w-1/3 font-bold">
+          {type}
+        </div>
+        <div
+          className="py-9 px-12 flex justify-start items-center w-2/3"
+          style={{ whiteSpace: "pre-line" }}
+        >
+          {question}
+        </div>
+      </div>
+
+      <div
+        className={`${
+          !isClicked && "hidden"
+        } flex flex-row bg-gray-300 text-slate-700`}
+      >
+        <div className="px-6 flex flex-col justify-center items-center w-1/3 font-bold">
+          답 변
+        </div>
+        <div
+          className="py-9 px-12 flex justify-start items-center w-2/3"
+          style={{ whiteSpace: "pre-line" }}
+        >
+          {answer}
+        </div>
+      </div>
+    </div>
   );
 }

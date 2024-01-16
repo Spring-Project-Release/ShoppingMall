@@ -3,150 +3,12 @@ import Navigation from "../components/Navigation";
 import DetailBar from "../components/DetailBar";
 import Hood from "../components/Hood";
 import { images, cardList } from "../jsons/imgList";
-import { theme } from "../utils/colors";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Footer from "../components/Footer";
+import Container from "../components/Container";
 
-const Container = styled.div`
-  width: 100%;
-`;
-
-const Body = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Carts = styled.div`
-  margin-top: 24px;
-  width: 60%;
-  /* background-color: rebeccapurple; */
-`;
-
-const CartBox = styled.div`
-  width: calc(100% - 2px);
-  height: 180px;
-
-  border: 1px solid lightgray;
-  margin: 24px 0;
-
-  display: flex;
-  flex-direction: row;
-`;
-
-const CartInfo = styled.div`
-  width: 70%;
-  /* background-color: blue; */
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 24px;
-`;
-const CartImg = styled.div<{ url: string }>`
-  width: 30%;
-  height: 100%;
-
-  background-image: url(${(props) => props.url});
-  background-position: center;
-  background-size: cover;
-`;
-
-const Bill = styled.div`
-  width: calc(100% - 50px);
-  height: 360px;
-
-  border-top: 1px solid lightgray;
-  margin: 24px 0;
-  padding: 0px 24px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const BillLine = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  justify-content: space-between;
-`;
-
-const Cards = styled.div`
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 8px;
-`;
-
-const Card = styled.div`
-  border: 1px solid lightgray;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 4px;
-
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
-
-  &:hover {
-    background-color: lightgray;
-  }
-`;
-
-const Purchase = styled.div`
-  background-color: ${(props) => theme.green};
-  color: white;
-  padding: 24px 48px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Address = styled.div`
-  width: 50%;
-
-  h2 {
-    margin-bottom: 12px;
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-
-    input {
-      width: 100%;
-      height: 32px;
-      border: 1px solid lightgray;
-    }
-  }
-`;
-
-const AddressLine = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
-const AddressInput = styled.div`
-  width: 40%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-
-  border: 1px solid ${(props) => theme.green};
-  background-color: ${theme.green};
-  color: white;
-`;
+const AddressInput = styled.div``;
 
 interface IAddressData {
   fullAddress: string;
@@ -184,72 +46,94 @@ export default function Cart() {
   return (
     <Container>
       <Hood title="장바구니" />
-      <Navigation />
-      <DetailBar />
-      <Body>
-        <Carts>
-          <h2>장바구니</h2>
+
+      {/* BODY */}
+      <div className="w-full flex flex-col justify-center items-center">
+        {/* CART */}
+        <div className="mt-6 w-3/5">
+          <h2 className="text-2xl font-bold">장바구니</h2>
           {images &&
             images.items.map((item) => (
-              <CartBox>
-                <CartInfo>
+              // CART-BOX
+              <div className="w-full mt-12 h-44 border border-gray-300 mx-6 flex flex-row">
+                {/* CART-INFO */}
+                <div className="w-2/3 flex flex-col justify-between p-6">
                   <div>
                     <h3>{item.name}</h3>
                     <p>{item.price}</p>
                   </div>
 
                   <p>수량</p>
-                </CartInfo>
-                <CartImg url={item.url}></CartImg>
-              </CartBox>
+                </div>
+                {/* CART-IMG */}
+                <div
+                  style={{
+                    backgroundImage: `url(${item.url})`,
+                  }}
+                  className="w-1/3 h-full bg-cover bg-center"
+                ></div>
+              </div>
             ))}
-          <Bill>
-            <BillLine>
-              <h2>총 합계</h2>
-              <h1>123123123 원</h1>
-            </BillLine>
+          <div className="w-full h-auto border-t mt-12 border-gray-300 mx-6 py-6 flex flex-col justify-around items-center">
+            <div className="flex flex-row w-full justify-between mt-12">
+              <h2 className="text-2xl font-bold">총 합계</h2>
+              <h1 className="text-3xl font-bold">123123123 원</h1>
+            </div>
 
-            <Cards>
+            <div className="w-full grid grid-cols-8 flex-row justify-between gap-2 mt-12">
               {cardList &&
                 cardList.cards.map((card) => (
-                  <Card key={card.cardNumber}>{card.cardName}</Card>
+                  // CARD
+                  <div
+                    key={card.cardNumber}
+                    className="border border-gray-300 flex justify-center items-center p-1 cursor-pointer transition-colors duration-300 ease-in-out hover:bg-gray-300"
+                  >
+                    {card.cardName}
+                  </div>
                 ))}
-            </Cards>
+            </div>
 
-            <BillLine>
-              <Address>
-                <h2>주소 입력</h2>
-                <form onSubmit={handleSubmit(onValid)}>
-                  <AddressLine>
+            <div className="w-full h-96 border-t mt-12 border-gray-300 mx-6 py-6 flex flex-col justify-start items-start">
+              <div className="w-1/2">
+                <h2 className="mb-3">주소 입력</h2>
+                <form
+                  onSubmit={handleSubmit(onValid)}
+                  className="flex flex-col gap-3"
+                >
+                  {/* ADDRESSLINE */}
+                  <div className="flex flex-row justify-between">
                     <input
+                      className="w-full h-8 border border-gray-300"
                       defaultValue={address?.fullAddress}
                       {...register("fullAddress", {
                         required: "주소를 등록해 주세요",
                       })}
                       readOnly
-                      style={{
-                        background: `${theme.lightGreen}`,
-                        border: "none",
-                      }}
                     />
-                    <AddressInput onClick={handleAddressSearch}>
+                    {/* ADDRESS INPUT */}
+                    <div
+                      className="w-2/5 flex justify-center items-center cursor-pointer bg-gray-300 text-white"
+                      onClick={handleAddressSearch}
+                    >
                       <p>주소 입력</p>
-                    </AddressInput>
-                  </AddressLine>
+                    </div>
+                  </div>
                   <input
+                    className="w-full h-8 border border-gray-300"
                     defaultValue={address?.zoneCode}
                     {...register("zoneCode", {
                       required: "상세 주소를 등록해 주세요.",
                     })}
                   />
                 </form>
-              </Address>
-              <Purchase>결제 하기</Purchase>
-            </BillLine>
-          </Bill>
-        </Carts>
-      </Body>
-      <Footer />
+              </div>
+              <div className="text-white px-6 py-12 cursor-pointer flex justify-center items-center">
+                결제 하기
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </Container>
   );
 }
