@@ -1,38 +1,60 @@
+import { useRecoilState } from "recoil";
 import useScrollReset from "../utils/useScrollReset";
 import { useEffect, useState } from "react";
+import { loginState, userInfoState } from "../utils/atoms";
+import { getLogoutData } from "../apis/api";
 
 export default function DetailBar() {
   const reset = useScrollReset();
-  const [isMemberName, setIsMemberName] = useState();
-  const [isLogin, setIsLogin] = useState(false);
+  const [isMemberName, setIsMemberName] = useState<string | null>();
+  const [isLogin, setIsLogin] = useRecoilState(loginState);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   const onMove = (event: React.MouseEvent<HTMLElement>) => {
-    console.log(event.currentTarget.id);
-    // console.log-test
-
     reset(`/${event.currentTarget.id}`);
   };
 
-  useEffect(() => {
-    const memberInfo = sessionStorage.getItem("userInfo");
-    if (memberInfo) {
-      const parsingData = JSON.parse(memberInfo);
-      if (parsingData && parsingData.memberName) {
-        setIsMemberName(parsingData.memberName);
+  const onLogout = async () => {
+    try {
+      if (isLogin && userInfo) {
+        const response = await getLogoutData(userInfo.memberId);
+        console.log(response);
       }
+    } catch (error) {
+    } finally {
+      setIsLogin(false);
+      setUserInfo(null);
+      setIsMemberName(null);
+    }
+  };
+
+  useEffect(() => {
+    if (userInfo) {
+      // console.log(userInfo.memberName);
+      setIsMemberName(userInfo.memberName);
     }
   }, []);
 
   return (
     <div className="w-full h-10 border-b border-gray-200 sticky top-0 z-50 flex flex-row justify-start items-center bg-white">
-      <div className="w-11/12 h-3/5 flex flex-row justify-start items-center">
-        <div
-          onClick={onMove}
-          id={"login"}
-          className="h-full w-2/12 flex flex-col justify-center items-center border-r border-gray-200"
-        >
-          <p>로 그 인</p>
-        </div>
+      <div className="w-10/12 h-3/5 flex flex-row justify-start items-center">
+        {isLogin ? (
+          <div
+            onClick={onLogout}
+            id={"logout"}
+            className="cursor-pointer h-full w-2/12 flex flex-col justify-center items-center border-r border-gray-200"
+          >
+            <p>로그 아웃</p>
+          </div>
+        ) : (
+          <div
+            onClick={onMove}
+            id={"login"}
+            className="cursor-pointer h-full w-2/12 flex flex-col justify-center items-center border-r border-gray-200"
+          >
+            <p>로 그 인</p>
+          </div>
+        )}
         <div
           onClick={onMove}
           id={"mypage"}
@@ -63,7 +85,7 @@ export default function DetailBar() {
         </div>
       </div>
 
-      {isMemberName && <div>{isMemberName} 님, 어서오세요.</div>}
+      {isLogin && isMemberName && <div>{isMemberName} 님, 어서오세요.</div>}
     </div>
   );
 }

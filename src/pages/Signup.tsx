@@ -1,12 +1,7 @@
-import styled from "styled-components";
-import Navigation from "../components/Navigation";
-import DetailBar from "../components/DetailBar";
 import { useForm } from "react-hook-form";
 import { ISignupFormData } from "../apis/interface";
-import Footer from "../components/Footer";
 import useScrollReset from "../utils/useScrollReset";
 import Hood from "../components/Hood";
-import { getDuplicateId, postSignupData } from "../apis/api";
 import { useState } from "react";
 import Container from "../components/Container";
 
@@ -24,45 +19,9 @@ export default function Login() {
 
   const reset = useScrollReset();
 
-  const onValid = async (data: ISignupFormData) => {
-    // 서버로 요청을 보내는 부분
-    if (getValues("memberPassword") === getValues("memberPasswordCheck")) {
-      try {
-        let success = await postSignupData(data);
-        if (success) {
-          console.log("회원가입 성공");
-          reset("/");
-        }
-      } catch (error) {
-        if (error instanceof Error) {
-          console.error(error);
-        }
-      } finally {
-      }
-    } else {
-      setError("memberPasswordCheck", {
-        message: "비밀번호가 다릅니다.",
-      });
-      setFocus("memberPasswordCheck");
-    }
-  };
+  const onValid = async (data: ISignupFormData) => {};
 
-  const checkDuplicated = async () => {
-    const id = getValues("memberId");
-
-    if (id) {
-      await getDuplicateId(id).then((response) => {
-        // console.log(response.status);
-        if (response?.status && response.status === 200) {
-          setIsDupCheck(true);
-        } else if (response?.status && response.status === 204) {
-          setError("memberId", {
-            message: "중복 아이디 입니다",
-          });
-        }
-      });
-    }
-  };
+  const checkDuplicated = async () => {};
 
   return (
     <Container>

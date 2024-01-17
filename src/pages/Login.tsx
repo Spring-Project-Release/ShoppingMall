@@ -4,8 +4,13 @@ import { postLoginData } from "../apis/api";
 import useScrollReset from "../utils/useScrollReset";
 import Hood from "../components/Hood";
 import Container from "../components/Container";
+import { useSetRecoilState } from "recoil";
+import { loginState, userInfoState } from "../utils/atoms";
 
 export default function Login() {
+  const setUserInfo = useSetRecoilState(userInfoState);
+  const setIsLogin = useSetRecoilState(loginState);
+
   const {
     register,
     handleSubmit,
@@ -15,19 +20,15 @@ export default function Login() {
   const reset = useScrollReset();
 
   const onValid = async (data: ILoginFormData) => {
-    // 서버로 요청을 보내는 부분
     try {
-      const success = await postLoginData(data);
-      if (success) {
-        // 성공 시 페이지 전환
+      const response = await postLoginData(data);
+      console.log(response);
+      if (response.status === 200) {
+        setUserInfo(response.data);
+        setIsLogin(true);
         reset("/");
-        console.log("로그인 성공");
       }
     } catch (error) {
-      if (error instanceof Error) {
-        // Error 형식의 에러 발생 시
-        console.error(error);
-      }
     } finally {
     }
   };
