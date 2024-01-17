@@ -31,6 +31,7 @@ public class UserController {
 
         if (rvo != null) { //로그인 성공
             HttpSession session = request.getSession(true);
+            System.out.println("JSESSEIONID = "+ session.getId());
             session.setAttribute("userInfo", rvo); //세션 바인딩
             return new ResponseEntity(rvo, HttpStatus.OK);
         } else { //로그인 실패
@@ -91,6 +92,21 @@ public class UserController {
         {
             return new ResponseEntity(memberId, HttpStatus.OK);
         }
+    }
+
+    @GetMapping(value="/user/logout", params={"memberId"})
+    public ResponseEntity logout(@RequestParam String memberId, HttpServletRequest request) throws Exception{
+        System.out.println("로그 아웃 요청 들어옴");
+        System.out.println(memberId);
+
+        HttpSession session = request.getSession(false);
+        System.out.println("로그아웃 요청 된 세션 아이디 " + session.getId());
+        if(session != null) {
+            session.invalidate();
+            return new ResponseEntity(memberId, HttpStatus.OK);
+        }
+        else return new ResponseEntity(HttpStatus.NO_CONTENT);
+
     }
 
 }
