@@ -27,7 +27,7 @@ public class ItemServiceImpl implements ItemService {
     public void isItemNameDuplicate(Item item){
         itemRepository.findByItemName(item.getName())
                 .ifPresent(i -> {
-                    throw new IllegalArgumentException("이미 존재하는 상품 이름입니다. 이름을 변경해 주십시오.");
+                    throw new IllegalStateException("이미 존재하는 상품 이름입니다. 이름을 변경해 주십시오.");
                 });
     }
 

@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import release.release_proj.domain.Item;
+import release.release_proj.domain.MemberVO;
 import release.release_proj.repository.ItemRepository;
+import release.release_proj.repository.MemberDAO;
 import release.release_proj.service.ItemService;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -17,16 +19,26 @@ public class ItemServiceIntegrationTest {
 
     @Autowired ItemRepository itemRepository;
     @Autowired ItemService itemService;
+    @Autowired MemberDAO memberDAO;
 
     @Test
     public void 상품등록() throws Exception {
         //Given
+        MemberVO member = new MemberVO();
+        member.setMemberId("testMemberId1");
+        member.setMemberName("testMemberName1");
+        member.setMemberPassword("testMemberPassword1");
+        member.setMemberPhone("testMemberPhone1");
+        member.setMemberAddress("testMemberAddress1");
+        member.setMemberEmail("testMemberEmail1");
+        memberDAO.insertMember(member);
+
         Item item = new Item();
         item.setName("testItemId");
         item.setStock(1);
         item.setPrice(1);
         item.setIsSoldout(false);
-        item.setSellerId("testSellerId");
+        item.setSellerId(member.getMemberId());
 
         //When
         int result = itemService.saveItem(item);
@@ -49,26 +61,35 @@ public class ItemServiceIntegrationTest {
         item.setSellerId("testSellerId");
 
         //Then
-        IllegalStateException e = assertThrows(IllegalStateException.class, ()->itemService.saveItem(item)); //예외가 발생해야 함
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, ()->itemService.saveItem(item)); //예외가 발생해야 함
         assertThat(e.getMessage()).isEqualTo("해당하는 상품의 sellerId가 유저 DB에 존재하지 않습니다.");
     }
 
     @Test
     public void 상품등록_예외_상품이름_중복() throws Exception {
         //Given
+        MemberVO member = new MemberVO();
+        member.setMemberId("testMemberId1");
+        member.setMemberName("testMemberName1");
+        member.setMemberPassword("testMemberPassword1");
+        member.setMemberPhone("testMemberPhone1");
+        member.setMemberAddress("testMemberAddress1");
+        member.setMemberEmail("testMemberEmail1");
+        memberDAO.insertMember(member);
+
         Item item1 = new Item();
         item1.setName("testItemId");
         item1.setStock(1);
         item1.setPrice(1);
         item1.setIsSoldout(false);
-        item1.setSellerId("testSellerId");
+        item1.setSellerId(member.getMemberId());
 
         Item item2 = new Item();
         item2.setName("testItemId");
         item2.setStock(1);
         item2.setPrice(1);
         item2.setIsSoldout(false);
-        item2.setSellerId("testSellerId");
+        item2.setSellerId(member.getMemberId());
 
         //When
         int result = itemService.saveItem(item1);
@@ -81,12 +102,21 @@ public class ItemServiceIntegrationTest {
     @Test
     public void 상품_업데이트() throws Exception {
         //Given
+        MemberVO member = new MemberVO();
+        member.setMemberId("testMemberId1");
+        member.setMemberName("testMemberName1");
+        member.setMemberPassword("testMemberPassword1");
+        member.setMemberPhone("testMemberPhone1");
+        member.setMemberAddress("testMemberAddress1");
+        member.setMemberEmail("testMemberEmail1");
+        memberDAO.insertMember(member);
+
         Item item = new Item();
         item.setName("testItemId");
         item.setStock(1);
         item.setPrice(1);
         item.setIsSoldout(false);
-        item.setSellerId("testSellerId");
+        item.setSellerId(member.getMemberId());
         itemService.saveItem(item);
 
         Item updateItem = new Item();
@@ -95,7 +125,7 @@ public class ItemServiceIntegrationTest {
         updateItem.setStock(0);
         updateItem.setPrice(2);
         updateItem.setIsSoldout(true);
-        updateItem.setSellerId("testSellerId2");
+        updateItem.setSellerId(member.getMemberId());
 
         //When
         int result = itemService.updateItem(updateItem);
@@ -113,12 +143,21 @@ public class ItemServiceIntegrationTest {
     @Test
     public void 상품_품절여부_업데이트() throws Exception {
         //Given
+        MemberVO member = new MemberVO();
+        member.setMemberId("testMemberId1");
+        member.setMemberName("testMemberName1");
+        member.setMemberPassword("testMemberPassword1");
+        member.setMemberPhone("testMemberPhone1");
+        member.setMemberAddress("testMemberAddress1");
+        member.setMemberEmail("testMemberEmail1");
+        memberDAO.insertMember(member);
+
         Item item = new Item();
         item.setName("testItemId");
         item.setStock(1);
         item.setPrice(1);
         item.setIsSoldout(false);
-        item.setSellerId("testSellerId");
+        item.setSellerId(member.getMemberId());
         itemService.saveItem(item);
 
         //When
@@ -134,12 +173,21 @@ public class ItemServiceIntegrationTest {
     @Test
     public void 상품_재고량과_판매량_업데이트() throws Exception {
         //Given
+        MemberVO member = new MemberVO();
+        member.setMemberId("testMemberId1");
+        member.setMemberName("testMemberName1");
+        member.setMemberPassword("testMemberPassword1");
+        member.setMemberPhone("testMemberPhone1");
+        member.setMemberAddress("testMemberAddress1");
+        member.setMemberEmail("testMemberEmail1");
+        memberDAO.insertMember(member);
+
         Item item = new Item();
         item.setName("testItemId");
         item.setStock(3);
         item.setPrice(1);
         item.setIsSoldout(false);
-        item.setSellerId("testSellerId");
+        item.setSellerId(member.getMemberId());
         itemService.saveItem(item);
 
         //When
@@ -158,12 +206,21 @@ public class ItemServiceIntegrationTest {
     @Test
     public void 상품_삭제() throws Exception {
         //Given
+        MemberVO member = new MemberVO();
+        member.setMemberId("testMemberId1");
+        member.setMemberName("testMemberName1");
+        member.setMemberPassword("testMemberPassword1");
+        member.setMemberPhone("testMemberPhone1");
+        member.setMemberAddress("testMemberAddress1");
+        member.setMemberEmail("testMemberEmail1");
+        memberDAO.insertMember(member);
+
         Item item = new Item();
         item.setName("testItemId");
         item.setStock(3);
         item.setPrice(1);
         item.setIsSoldout(false);
-        item.setSellerId("testSellerId");
+        item.setSellerId(member.getMemberId());
         itemService.saveItem(item);
 
         //When

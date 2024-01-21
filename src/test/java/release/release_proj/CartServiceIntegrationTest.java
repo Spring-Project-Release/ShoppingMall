@@ -45,7 +45,7 @@ public class CartServiceIntegrationTest {
         item.setStock(1);
         item.setPrice(1);
         item.setIsSoldout(false);
-        item.setSellerId("testSellerId");
+        item.setSellerId(member.getMemberId());
         itemRepository.save(item);
 
         Cart cart = new Cart();
@@ -79,7 +79,7 @@ public class CartServiceIntegrationTest {
         item.setStock(1);
         item.setPrice(1);
         item.setIsSoldout(false);
-        item.setSellerId("testSellerId");
+        item.setSellerId(member.getMemberId());
         itemRepository.save(item);
 
         Cart cart = new Cart();
@@ -131,7 +131,7 @@ public class CartServiceIntegrationTest {
         item.setStock(1);
         item.setPrice(1);
         item.setIsSoldout(false);
-        item.setSellerId("testSellerId");
+        item.setSellerId(member.getMemberId());
         itemRepository.save(item);
 
         Cart cart = new Cart();
@@ -188,7 +188,7 @@ public class CartServiceIntegrationTest {
         item1.setStock(1);
         item1.setPrice(1);
         item1.setIsSoldout(false);
-        item1.setSellerId("testSellerId");
+        item1.setSellerId(member.getMemberId());
         itemRepository.save(item1);
 
         Item item2 = new Item();
@@ -196,7 +196,7 @@ public class CartServiceIntegrationTest {
         item2.setStock(1);
         item2.setPrice(1);
         item2.setIsSoldout(false);
-        item2.setSellerId("testSellerId");
+        item2.setSellerId(member.getMemberId());
         itemRepository.save(item2);
 
         Cart cart1 = new Cart();
@@ -240,7 +240,7 @@ public class CartServiceIntegrationTest {
         item.setStock(1);
         item.setPrice(1);
         item.setIsSoldout(false);
-        item.setSellerId("testSellerId");
+        item.setSellerId(member.getMemberId());
         itemRepository.save(item);
 
         // When
@@ -269,7 +269,7 @@ public class CartServiceIntegrationTest {
         item.setStock(1);
         item.setPrice(1);
         item.setIsSoldout(false);
-        item.setSellerId("testSellerId");
+        item.setSellerId(member.getMemberId());
         itemRepository.save(item);
 
         Cart cart = new Cart();
@@ -310,7 +310,7 @@ public class CartServiceIntegrationTest {
         item.setStock(1);
         item.setPrice(1);
         item.setIsSoldout(false);
-        item.setSellerId("testSellerId");
+        item.setSellerId(member.getMemberId());
         itemRepository.save(item);
 
         Cart cart = new Cart();
@@ -531,7 +531,7 @@ public class CartServiceIntegrationTest {
         item.setStock(1);
         item.setPrice(1);
         item.setIsSoldout(false);
-        item.setSellerId("testSellerId");
+        item.setSellerId(member.getMemberId());
         itemRepository.save(item);
 
         List<Long> tempList = new ArrayList<>();
