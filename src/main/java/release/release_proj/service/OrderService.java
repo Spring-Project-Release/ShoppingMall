@@ -20,7 +20,7 @@ public class OrderService {
     private final MemberDAO memberDAO;
 
     public void save(Order order) {
-        validateMemberAndItemExistence(order.getBuyerId(), order.getItemId());
+        validateMemberAndItemExistence(order.getBuyerId(), order.getItemId(), order.getSellerId());
         //item.stock과 order.count 비교: stock 수 < count 수이면 error 메시지 띄우기
         int currentStock = itemService.getStock(order.getItemId());
         if (currentStock < order.getCount()) {
@@ -35,13 +35,13 @@ public class OrderService {
         }
     };
 
-    private void validateMemberAndItemExistence(String buyerId, Long itemId) {
-        // buyerId와 itemId가 존재하는지 여부 확인
-        if (memberDAO.isExistMemberId(buyerId)==0 && itemService.isItemIdExist(itemId)==0) {
-            throw new IllegalArgumentException("결제 처리에 실패했습니다. 해당하는 buyerId와 itemId가 존재하지 않습니다.");
-        }
-        else if (memberDAO.isExistMemberId(buyerId)==0) {
+    private void validateMemberAndItemExistence(String buyerId, Long itemId, String sellerId) {
+        // buyerId와 itemId가 존재하는지 여부 확인(외래 키 제약 조건 위배 여부 확인)
+        if (memberDAO.isExistMemberId(buyerId)==0) {
             throw new IllegalArgumentException("결제 처리에 실패했습니다. 해당하는 buyerId가 존재하지 않습니다.");
+        }
+        else if (memberDAO.isExistMemberId(sellerId)==0) {
+            throw new IllegalArgumentException("결제 처리에 실패했습니다. 해당하는 sellerId가 존재하지 않습니다.");
         }
         else if (itemService.isItemIdExist(itemId)==0) {
             throw new IllegalArgumentException("결제 처리에 실패했습니다. 해당하는 itemId가 존재하지 않습니다.");
@@ -110,3 +110,5 @@ public class OrderService {
         }
     };
 }
+
+//seller와 buyer가 겹치는 예외도 처리해야 할까..?

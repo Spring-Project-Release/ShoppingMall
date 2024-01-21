@@ -339,34 +339,43 @@ public class CartServiceIntegrationTest {
     @Test
     public void 유저_장바구니_전체_결제() throws Exception {
         // Given
-        MemberVO member = new MemberVO();
-        member.setMemberId("testMemberId");
-        member.setMemberName("testMemberName");
-        member.setMemberPassword("testMemberPassword");
-        member.setMemberPhone("testMemberPhone");
-        member.setMemberAddress("testMemberAddress");
-        member.setMemberEmail("testMemberEmail");
-        memberDAO.insertMember(member);
+        MemberVO member1 = new MemberVO();
+        member1.setMemberId("testMemberId1");
+        member1.setMemberName("testMemberName1");
+        member1.setMemberPassword("testMemberPassword1");
+        member1.setMemberPhone("testMemberPhone1");
+        member1.setMemberAddress("testMemberAddress1");
+        member1.setMemberEmail("testMemberEmail1");
+        memberDAO.insertMember(member1);
+
+        MemberVO member2 = new MemberVO();
+        member2.setMemberId("testMemberId2");
+        member2.setMemberName("testMemberName2");
+        member2.setMemberPassword("testMemberPassword2");
+        member2.setMemberPhone("testMemberPhone2");
+        member2.setMemberAddress("testMemberAddress2");
+        member2.setMemberEmail("testMemberEmail2");
+        memberDAO.insertMember(member2);
 
         Item item1 = new Item();
         item1.setName("testItemName");
         item1.setStock(1);
         item1.setPrice(1);
         item1.setIsSoldout(false);
-        item1.setSellerId("testSellerId");
-        item1.setSellerName("testSellerName");
+        item1.setSellerId(member2.getMemberId());
+        item1.setSellerName(member2.getMemberName());
         itemRepository.save(item1);
 
         Item item2 = new Item();
-        item2.setName("testItemName");
+        item2.setName("testItemName2");
         item2.setStock(1);
         item2.setPrice(1);
         item2.setIsSoldout(false);
-        item2.setSellerId("testSellerId");
-        item2.setSellerName("testSellerName");
+        item2.setSellerId(member2.getMemberId());
+        item2.setSellerName(member2.getMemberName());
         itemRepository.save(item2);
 
-        String memberId = member.getMemberId();
+        String memberId = member1.getMemberId();
         Cart cart1 = new Cart();
         cart1.setMemberId(memberId);
         cart1.setItemId(item1.getItemId());
@@ -384,14 +393,14 @@ public class CartServiceIntegrationTest {
         cartService.payAllCart(memberId, "전체결제");
 
         // Then
-        assertThat(orderRepository.findByMemberId(memberId)).isPresent();
-        assertEquals(orderRepository.findByMemberId(memberId).get().size(), 2);
-        assertThat(orderRepository.findByMemberId(memberId).get().get(0).getItemId()).isEqualTo(item1.getItemId());
-        assertThat(orderRepository.findByMemberId(memberId).get().get(1).getItemId()).isEqualTo(item2.getItemId());
-        assertThat(orderRepository.findByMemberId(memberId).get().get(0).getMemo()).isEqualTo("전체결제");
-        assertThat(orderRepository.findByMemberId(memberId).get().get(1).getMemo()).isEqualTo("전체결제");
+        assertThat(orderRepository.findByBuyerId(memberId)).isPresent();
+        assertEquals(orderRepository.findByBuyerId(memberId).get().size(), 2);
+        assertThat(orderRepository.findByBuyerId(memberId).get().get(0).getItemId()).isEqualTo(item1.getItemId());
+        assertThat(orderRepository.findByBuyerId(memberId).get().get(1).getItemId()).isEqualTo(item2.getItemId());
+        assertThat(orderRepository.findByBuyerId(memberId).get().get(0).getMemo()).isEqualTo("전체결제");
+        assertThat(orderRepository.findByBuyerId(memberId).get().get(1).getMemo()).isEqualTo("전체결제");
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.readMemberCarts(memberId));
-        assertThat(e.getMessage()).isEqualTo("해당 memberId를 가지는 장바구니가 존재하지 않습니다.");
+        assertThat(e.getMessage()).isEqualTo("해당 memberId를 가지는 장바구니가 존재하지 않습니다."); //유저의 장바구니 전체가 삭제됨
     }
 
     @Test
@@ -422,34 +431,43 @@ public class CartServiceIntegrationTest {
     @Test
     public void 유저_장바구니_일부_결제() throws Exception {
         // Given
-        MemberVO member = new MemberVO();
-        member.setMemberId("testMemberId");
-        member.setMemberName("testMemberName");
-        member.setMemberPassword("testMemberPassword");
-        member.setMemberPhone("testMemberPhone");
-        member.setMemberAddress("testMemberAddress");
-        member.setMemberEmail("testMemberEmail");
-        memberDAO.insertMember(member);
+        MemberVO member1 = new MemberVO();
+        member1.setMemberId("testMemberId1");
+        member1.setMemberName("testMemberName1");
+        member1.setMemberPassword("testMemberPassword1");
+        member1.setMemberPhone("testMemberPhone1");
+        member1.setMemberAddress("testMemberAddress1");
+        member1.setMemberEmail("testMemberEmail1");
+        memberDAO.insertMember(member1);
+
+        MemberVO member2 = new MemberVO();
+        member2.setMemberId("testMemberId2");
+        member2.setMemberName("testMemberName2");
+        member2.setMemberPassword("testMemberPassword2");
+        member2.setMemberPhone("testMemberPhone2");
+        member2.setMemberAddress("testMemberAddress2");
+        member2.setMemberEmail("testMemberEmail2");
+        memberDAO.insertMember(member2);
 
         Item item1 = new Item();
         item1.setName("testItemName");
         item1.setStock(1);
         item1.setPrice(1);
         item1.setIsSoldout(false);
-        item1.setSellerId("testSellerId");
-        item1.setSellerName("testSellerName");
+        item1.setSellerId(member2.getMemberId());
+        item1.setSellerName(member2.getMemberName());
         itemRepository.save(item1);
 
         Item item2 = new Item();
-        item2.setName("testItemName");
+        item2.setName("testItemName2");
         item2.setStock(1);
         item2.setPrice(1);
         item2.setIsSoldout(false);
-        item2.setSellerId("testSellerId");
-        item2.setSellerName("testSellerName");
+        item2.setSellerId(member2.getMemberId());
+        item2.setSellerName(member2.getMemberName());
         itemRepository.save(item2);
 
-        String memberId = member.getMemberId();
+        String memberId = member1.getMemberId();
         Cart cart1 = new Cart();
         cart1.setMemberId(memberId);
         cart1.setItemId(item1.getItemId());
@@ -469,11 +487,12 @@ public class CartServiceIntegrationTest {
         cartService.paySomeCart(memberId, tempList, "일부결제");
 
         // Then
-        assertThat(orderRepository.findByMemberId(memberId)).isPresent();
-        assertEquals(orderRepository.findByMemberId(memberId).get().size(), 1);
-        assertThat(orderRepository.findByMemberId(memberId).get().get(0).getItemId()).isEqualTo(item1.getItemId());
-        assertThat(orderRepository.findByMemberId(memberId).get().get(0).getMemo()).isEqualTo("일부결제");
-        assertThat(cartService.readMemberCarts(memberId).get(0).getItemId()).isEqualTo(item2.getItemId()); //유저의 장바구니 전체가 삭제됨
+        assertThat(orderRepository.findByBuyerId(memberId)).isPresent();
+        assertEquals(orderRepository.findByBuyerId(memberId).get().size(), 1);
+        assertThat(orderRepository.findByBuyerId(memberId).get().get(0).getItemId()).isEqualTo(item1.getItemId());
+        assertThat(orderRepository.findByBuyerId(memberId).get().get(0).getMemo()).isEqualTo("일부결제");
+        assertThat(cartService.readMemberCarts(memberId).size()).isEqualTo(1);
+        assertThat(cartService.readMemberCarts(memberId).get(0).getItemId()).isEqualTo(item2.getItemId());
     }
 
     @Test

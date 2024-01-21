@@ -44,7 +44,7 @@ public class Item {
                 ", origin='" + origin + '\'' +
                 ", deliveryType=" + deliveryType + '\'' +
                 ", sellerName='" + sellerName + '\'' +
-                ", selleIdr='" + sellerId + '\'' +
+                ", sellerId='" + sellerId + '\'' +
                 ", unit='" + unit + '\'' +
                 '}';
     }

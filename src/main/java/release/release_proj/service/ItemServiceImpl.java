@@ -19,6 +19,8 @@ public class ItemServiceImpl implements ItemService {
         isItemNameDuplicate(item);
         return itemRepository.save(item);
     }
+    //!!!해당 seller가 실제로 존재하는 seller인지도 확인해봐야함!!!-외래키제약위배여부 확인(db에도 조건 추가)
+    //!!!cart에서 해당 item의 seller가 cart의 memberId랑 겹치지 않도록 해야함!!!
 
     @Override
     public void isItemNameDuplicate(Item item){
