@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import release.release_proj.domain.Item;
 import release.release_proj.repository.ItemRepository;
+import release.release_proj.repository.MemberDAO;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,13 +14,14 @@ import java.util.Optional;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
+    private final MemberDAO memberDAO;
 
     @Override
     public int saveItem(Item item){
+        validateSellerExistence(item.getSellerId()); //해당 seller가 실제로 존재하는 유저인지 확인
         isItemNameDuplicate(item);
         return itemRepository.save(item);
     }
-    //!!!해당 seller가 실제로 존재하는 seller인지도 확인해봐야함!!!-외래키제약위배여부 확인(db에도 조건 추가)
     //!!!cart에서 해당 item의 seller가 cart의 memberId랑 겹치지 않도록 해야함!!!
 
     @Override
@@ -28,6 +30,12 @@ public class ItemServiceImpl implements ItemService {
                 .ifPresent(i -> {
                     throw new IllegalStateException("이미 존재하는 상품 이름입니다. 이름을 변경해 주십시오.");
                 });
+    }
+
+    private void validateSellerExistence(String sellerId) {
+        if (memberDAO.isExistMemberId(sellerId)==0) {
+            throw new IllegalArgumentException("해당하는 item의 sellerId가 존재하지 않습니다.");
+        }
     }
 
     @Override
