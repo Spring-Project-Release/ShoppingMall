@@ -73,17 +73,6 @@ public class ItemController {
         }
     }
 
-    @GetMapping("/sellerName/{sellerName}")
-    public ResponseEntity<?> getItemBySellerName(@PathVariable(name = "sellerName") String sellerName) {
-        try {
-            List<Item> items = itemService.findItemsBySellerName(sellerName);
-            return ResponseEntity.ok(items);
-        } catch (IllegalArgumentException e) {
-            log.error(e.getMessage());
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @PostMapping
     public ResponseEntity<String> newItem(@RequestBody Item item) {
         try {

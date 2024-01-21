@@ -10,8 +10,8 @@
     </delete>
 
     <insert id="save" parameterType="release.release_proj.domain.Item" useGeneratedKeys="true" keyProperty="itemId">
-        INSERT INTO item (name, price, count, stock, category, text, is_soldout, picture, discount, origin, delivery_type, seller_id, seller_name, unit)
-        VALUES (#{name}, #{price}, #{count}, #{stock}, #{category}, #{text}, #{isSoldout}, #{picture}, #{discount}, #{origin}, #{deliveryType}, #{sellerId}, #{sellerName}, #{unit})
+        INSERT INTO item (name, price, count, stock, category, text, is_soldout, picture, discount, origin, delivery_type, seller_id, unit)
+        VALUES (#{name}, #{price}, #{count}, #{stock}, #{category}, #{text}, #{isSoldout}, #{picture}, #{discount}, #{origin}, #{deliveryType}, #{sellerId}, #{unit})
     </insert>
 
     <select id="findByItemId" parameterType="Long" resultType="release.release_proj.domain.Item">
@@ -24,10 +24,6 @@
 
     <select id="findBySellerId" parameterType="String" resultType="release.release_proj.domain.Item">
         SELECT * FROM item WHERE seller_id = #{sellerId}
-    </select>
-
-    <select id="findBySellerName" parameterType="String" resultType="release.release_proj.domain.Item">
-        SELECT * FROM item WHERE seller_name = #{sellerName}
     </select>
 
     <select id="findAll" resultType="release.release_proj.domain.Item">
@@ -44,7 +40,7 @@
 
     <update id="updateItem" parameterType="release.release_proj.domain.Item">
         UPDATE item
-        SET name = #{name}, price = #{price}, count = #{count}, stock = #{stock}, category = #{category}, text = #{text}, is_soldout = #{isSoldout}, picture = #{picture}, discount = #{discount}, origin = #{origin}, delivery_type = #{deliveryType}, seller_id = #{sellerId}, seller_name = #{sellerName}, unit = #{unit}
+        SET name = #{name}, price = #{price}, count = #{count}, stock = #{stock}, category = #{category}, text = #{text}, is_soldout = #{isSoldout}, picture = #{picture}, discount = #{discount}, origin = #{origin}, delivery_type = #{deliveryType}, seller_id = #{sellerId}, unit = #{unit}
         WHERE item_id = #{itemId}
     </update>
 

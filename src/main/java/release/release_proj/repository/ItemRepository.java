@@ -16,7 +16,6 @@ public interface ItemRepository {
     public Optional<List<Item>> findByIsSoldout(Boolean isSoldout); //품절이 안된 상품들만 가져오기
     public Optional<List<Item>> findByCategory(String category);
     public Optional<List<Item>> findBySellerId(String sellerId);
-    public Optional<List<Item>> findBySellerName(String sellerName);
     public int updateItem(Item item);
     public int updateIsSoldout(Long itemId);
     public int updateStock(Long itemId, int decreasingStock);

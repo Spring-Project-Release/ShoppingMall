@@ -53,7 +53,6 @@ public class OrderServiceIntegrationTest {
         item.setCount(0);
         item.setIsSoldout(false);
         item.setSellerId(member2.getMemberId());
-        item.setSellerName(member2.getMemberName());
         itemRepository.save(item);
 
         Order order = new Order();
@@ -179,7 +178,6 @@ public class OrderServiceIntegrationTest {
         item.setCount(0);
         item.setIsSoldout(false);
         item.setSellerId(member2.getMemberId());
-        item.setSellerName(member2.getMemberName());
         itemRepository.save(item);
 
         Order order = new Order();
@@ -222,7 +220,6 @@ public class OrderServiceIntegrationTest {
         item.setCount(0);
         item.setIsSoldout(false);
         item.setSellerId(member1.getMemberId());
-        item.setSellerName(member1.getMemberName());
         itemRepository.save(item);
 
         Order order = new Order();
@@ -281,7 +278,6 @@ public class OrderServiceIntegrationTest {
         item.setCount(0);
         item.setIsSoldout(false);
         item.setSellerId(member1.getMemberId());
-        item.setSellerName(member1.getMemberName());
         itemRepository.save(item);
 
         Order order = new Order();

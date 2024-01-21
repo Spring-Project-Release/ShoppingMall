@@ -76,17 +76,6 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> findItemsBySellerName(String sellerName) {
-        Optional<List<Item>> items = itemRepository.findBySellerName(sellerName);
-
-        if (items.isEmpty() || items.get().isEmpty()) {
-            throw new IllegalArgumentException("해당 sellerName을 가진 상품이 존재하지 않습니다.");
-        }
-
-        return items.get();
-    }
-
-    @Override
     public List<Item> findByIsSoldout(Boolean isSoldout) {
         Optional<List<Item>> items = itemRepository.findByIsSoldout(isSoldout);
 

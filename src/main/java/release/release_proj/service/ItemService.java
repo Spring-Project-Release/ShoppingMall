@@ -13,7 +13,6 @@ public interface ItemService {
     public Item findOne(Long itemId);
     public List<Item> readItems();
     public List<Item> findItemsBySellerId(String sellerId);
-    public List<Item> findItemsBySellerName(String sellerName);
     public int updateIsSoldout(Long itemId); //item에서 isSoldout만 반대값으로 update
     public int updateStock(Long itemId, int decreasingStock); //item에서 재고수만 감소
     public int updateCount(Long itemId, int increasingCount);

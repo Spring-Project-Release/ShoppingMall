@@ -27,7 +27,6 @@ public class ItemServiceIntegrationTest {
         item.setPrice(1);
         item.setIsSoldout(false);
         item.setSellerId("testSellerId");
-        item.setSellerName("testSellerName");
 
         //When
         int result = itemService.saveItem(item);
@@ -48,7 +47,6 @@ public class ItemServiceIntegrationTest {
         item1.setPrice(1);
         item1.setIsSoldout(false);
         item1.setSellerId("testSellerId");
-        item1.setSellerName("testSellerName");
 
         Item item2 = new Item();
         item2.setName("testItemId");
@@ -56,7 +54,6 @@ public class ItemServiceIntegrationTest {
         item2.setPrice(1);
         item2.setIsSoldout(false);
         item2.setSellerId("testSellerId");
-        item2.setSellerName("testSellerName");
 
         //When
         int result = itemService.saveItem(item1);
@@ -75,7 +72,6 @@ public class ItemServiceIntegrationTest {
         item.setPrice(1);
         item.setIsSoldout(false);
         item.setSellerId("testSellerId");
-        item.setSellerName("testSellerName");
         itemService.saveItem(item);
 
         Item updateItem = new Item();
@@ -85,7 +81,6 @@ public class ItemServiceIntegrationTest {
         updateItem.setPrice(2);
         updateItem.setIsSoldout(true);
         updateItem.setSellerId("testSellerId2");
-        updateItem.setSellerName("testSellerName2");
 
         //When
         int result = itemService.updateItem(updateItem);
@@ -109,7 +104,6 @@ public class ItemServiceIntegrationTest {
         item.setPrice(1);
         item.setIsSoldout(false);
         item.setSellerId("testSellerId");
-        item.setSellerName("testSellerName");
         itemService.saveItem(item);
 
         //When
@@ -131,7 +125,6 @@ public class ItemServiceIntegrationTest {
         item.setPrice(1);
         item.setIsSoldout(false);
         item.setSellerId("testSellerId");
-        item.setSellerName("testSellerName");
         itemService.saveItem(item);
 
         //When
@@ -156,7 +149,6 @@ public class ItemServiceIntegrationTest {
         item.setPrice(1);
         item.setIsSoldout(false);
         item.setSellerId("testSellerId");
-        item.setSellerName("testSellerName");
         itemService.saveItem(item);
 
         //When
