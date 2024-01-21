@@ -22,19 +22,18 @@ public class ItemServiceImpl implements ItemService {
         isItemNameDuplicate(item);
         return itemRepository.save(item);
     }
-    //!!!cart에서 해당 item의 seller가 cart의 memberId랑 겹치지 않도록 해야함!!!
 
     @Override
     public void isItemNameDuplicate(Item item){
         itemRepository.findByItemName(item.getName())
                 .ifPresent(i -> {
-                    throw new IllegalStateException("이미 존재하는 상품 이름입니다. 이름을 변경해 주십시오.");
+                    throw new IllegalArgumentException("이미 존재하는 상품 이름입니다. 이름을 변경해 주십시오.");
                 });
     }
 
     private void validateSellerExistence(String sellerId) {
         if (memberDAO.isExistMemberId(sellerId)==0) {
-            throw new IllegalArgumentException("해당하는 item의 sellerId가 존재하지 않습니다.");
+            throw new IllegalArgumentException("해당하는 상품의 sellerId가 유저 DB에 존재하지 않습니다.");
         }
     }
 

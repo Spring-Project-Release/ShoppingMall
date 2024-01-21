@@ -39,7 +39,22 @@ public class ItemServiceIntegrationTest {
     }
 
     @Test
-    public void 상품등록_예외_중복() throws Exception {
+    public void 상품등록_외래키_예외_판매자_없음() throws Exception {
+        //Given
+        Item item = new Item();
+        item.setName("testItemId");
+        item.setStock(1);
+        item.setPrice(1);
+        item.setIsSoldout(false);
+        item.setSellerId("testSellerId");
+
+        //Then
+        IllegalStateException e = assertThrows(IllegalStateException.class, ()->itemService.saveItem(item)); //예외가 발생해야 함
+        assertThat(e.getMessage()).isEqualTo("해당하는 상품의 sellerId가 유저 DB에 존재하지 않습니다.");
+    }
+
+    @Test
+    public void 상품등록_예외_상품이름_중복() throws Exception {
         //Given
         Item item1 = new Item();
         item1.setName("testItemId");
