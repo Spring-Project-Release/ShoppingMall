@@ -42,6 +42,7 @@
 : parameter로 Item을 받음
 : parameter로 받은 Item을 DB에 저장, 저장이 되면 "Item created successfully." 메세지와 200 status 반환, 아니면 INTERNAL_SERVER_ERROR status와 "Failed to create Item." 메세지 반환
 : IllegalStateException일때, 즉 parameter의 name이 기존의 DB에 있는 상품의 이름과 중복되었을 때 BAD_REQUEST status와 "이미 존재하는 상품 이름입니다. 이름을 변경해 주십시오." 메시지 반환
+: IllegalArgumentException일때, 즉 sellerId가 없는 memberId를 이용해서 외래키 제약 조건 위반일 때 BAD_REQUEST status와 "해당하는 상품의 sellerId가 유저 DB에 존재하지 않습니다." 메시지 반환
 
 8. update()
 : '/items/{itemId}' 경로
