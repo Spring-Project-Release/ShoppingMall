@@ -86,6 +86,9 @@ public class ItemController {
         } catch (IllegalStateException e) {
             // item 이름이 중복된 경우
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            //외래키 제약을 위배한 경우
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
