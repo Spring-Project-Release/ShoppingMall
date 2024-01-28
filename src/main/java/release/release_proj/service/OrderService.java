@@ -26,6 +26,11 @@ public class OrderService {
         if (currentStock < order.getCount()) {
             throw new IllegalStateException(order.getItemId()+" 상품의 재고가 부족합니다.");
         }
+
+        if (order.getBuyerId().equals(order.getSellerId())) {
+            throw new IllegalArgumentException("본인이 판매중인 상품을 구매할 수 없습니다.");
+        }
+
         orderRepository.save(order);
         itemService.updateStock(order.getItemId(), order.getCount()); //item 재고 감소
         itemService.updateCount(order.getItemId(), order.getCount()); //item 판매개수 상승

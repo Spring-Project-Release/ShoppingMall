@@ -5,9 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import release.release_proj.domain.MemberVO;
 import release.release_proj.domain.Order;
 import release.release_proj.service.OrderService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Slf4j //log 사용
@@ -19,10 +22,20 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<String> newOrder(@RequestBody Order order) {
+    public ResponseEntity<String> newOrder(@RequestBody Order order, HttpServletRequest request) {
         try {
-            orderService.save(order);
-            return ResponseEntity.ok("주문이 성공적으로 처리되었습니다.");
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                MemberVO userInfo = (MemberVO) session.getAttribute("userInfo");
+                if (userInfo != null) {
+                    orderService.save(order);
+                    return ResponseEntity.ok("주문이 성공적으로 처리되었습니다.");
+                } else {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 후 주문해주세요.");
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("세션이 존재하지 않습니다. 로그인 후 주문해주세요.");
+            }
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (IllegalStateException e) {
