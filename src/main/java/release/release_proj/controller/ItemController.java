@@ -51,10 +51,21 @@ public class ItemController {
         }
     }
 
-    @GetMapping("/{itemId}")
+    @GetMapping("/id/{itemId}")
     public ResponseEntity<Item> getItem(@PathVariable(name = "itemId") Long itemId) {
         try {
             Item item = itemService.findOne(itemId);
+            return ResponseEntity.ok(item);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<Item> getItem(@PathVariable(name = "name") String name) {
+        try {
+            Item item = itemService.findByItemName(name);
             return ResponseEntity.ok(item);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
@@ -112,7 +123,6 @@ public class ItemController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("존재하지 않는 itemId이거나 update 오류가 발생했습니다.");
         }
     }
-
 
     @DeleteMapping("/{itemId}")
     public ResponseEntity<String> deleteItem(@PathVariable(name = "itemId") Long itemId) {

@@ -11,6 +11,7 @@ public interface ItemService {
     public int updateItem(Item item);
     public int deleteItem(Long itemId);
     public Item findOne(Long itemId);
+    public Item findByItemName(String name);
     public List<Item> readItems();
     public List<Item> findItemsBySellerId(String sellerId);
     public int updateIsSoldout(Long itemId); //item에서 isSoldout만 반대값으로 update

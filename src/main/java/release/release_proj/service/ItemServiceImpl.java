@@ -54,6 +54,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public Item findByItemName(String name) {
+        return itemRepository.findByItemName(name)
+                .orElseThrow(() -> new IllegalArgumentException("해당 name을 가진 상품이 존재하지 않습니다."));
+    }
+
+    @Override
     public List<Item> readItems() {
         Optional<List<Item>> items =  itemRepository.findAll();
         if (items.isEmpty() || items.get().isEmpty()) {

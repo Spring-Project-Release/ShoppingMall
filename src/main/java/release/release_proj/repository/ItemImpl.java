@@ -42,7 +42,7 @@ public class ItemImpl implements ItemRepository {
 
     @Override
     public Optional<List<Item>> findBySellerId(String sellerId){
-        return Optional.ofNullable(sqlSession.selectList(NS + "findBySellerId"));
+        return Optional.ofNullable(sqlSession.selectList(NS + "findBySellerId", sellerId));
     }
 
     @Override

@@ -155,6 +155,7 @@ gradle-app.setting
 !gradle-wrapper.properties
 
 # ignore application.properties
+.src/main/resources/application.properties
 
 # Cache of project
 .gradletasknamecache
