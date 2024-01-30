@@ -42,6 +42,11 @@ public class CartServiceImpl implements CartService {
     @Override
     public int addCartItem(Cart cart) {
         try {
+            Item item = itemService.findOne(cart.getItemId());
+            if (cart.getMemberId().equals(item.getSellerId())) {
+                throw new IllegalArgumentException("본인이 판매중인 상품을 장바구니에 담을 수 없습니다.");
+            }
+
             Optional<Cart> isCartExist = cartRepository.findByMemberIdAndItemId(cart.getMemberId(), cart.getItemId());
             if (isCartExist.isPresent()){
                 Cart currentCart = isCartExist.get();

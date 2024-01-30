@@ -51,7 +51,7 @@ public class CartController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create cart.");
             }
         } catch (IllegalArgumentException e) {
-            // DataIntegrityViolationException이 IllegalArgumentException로 변환되었을 경우
+            // DataIntegrityViolationException이 IllegalArgumentException로 변환되었을 경우 또는 item의 판매자가 해당 상품을 장바구니에 담은 경우
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
