@@ -9,8 +9,6 @@ import release.release_proj.domain.MemberVO;
 import release.release_proj.domain.Order;
 import release.release_proj.service.OrderService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Slf4j //log 사용
@@ -22,9 +20,9 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<String> newOrder(@RequestBody Order order, HttpServletRequest request) {
+    public ResponseEntity<String> newOrder(@RequestBody Order order, @SessionAttribute(name="userInfo", required = false) MemberVO loginMember) {
         try {
-            HttpSession session = request.getSession(false);
+            /*HttpSession session = request.getSession(false);
             if (session != null) {
                 MemberVO userInfo = (MemberVO) session.getAttribute("userInfo");
                 if (userInfo != null) {
@@ -35,6 +33,14 @@ public class OrderController {
                 }
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("세션이 존재하지 않습니다. 로그인 후 주문해주세요.");
+            }*/
+            if (loginMember == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 후 주문해주세요.");
+            } else if (!order.getBuyerId().equals(loginMember.getMemberId())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("주문자와 로그인한 유저 정보가 일치하지 않는 오류가 발생했습니다. 로그아웃 후 다시 로그인해주십시오.");
+            } else {
+                orderService.save(order);
+                return ResponseEntity.ok("주문이 성공적으로 처리되었습니다.");
             }
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
