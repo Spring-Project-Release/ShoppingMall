@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import release.release_proj.domain.Cart;
+import release.release_proj.domain.MemberVO;
 import release.release_proj.service.CartService;
 
 import java.util.List;
@@ -41,8 +42,12 @@ public class CartController {
     }
 
     @PostMapping
-    public ResponseEntity<String> newCart(@RequestBody Cart cart) {
+    public ResponseEntity<String> newCart(@RequestBody Cart cart, @SessionAttribute(name = "userInfo", required = false) MemberVO userInfo) {
         try {
+            if (userInfo == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 후 장바구니에 상품을 추가해주세요.");
+            }
+
             int result = cartService.addCartItem(cart);
 
             if (result != 0) {

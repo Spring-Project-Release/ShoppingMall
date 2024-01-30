@@ -60,7 +60,6 @@ public class CartServiceImpl implements CartService {
             throw new IllegalArgumentException("Failed to create cart. 해당하는 itemId나 memberId가 존재하지 않습니다", e);
         }
     }
-    //!!!!!!!cart에서 해당 item의 seller가 cart의 memberId랑 겹치지 않도록 해야함!!!!!!
 
     @Override
     public int deleteCartItem(String memberId, Long itemId) {
