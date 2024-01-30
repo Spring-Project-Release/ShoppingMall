@@ -23,12 +23,12 @@ public class OrderService {
         validateMemberAndItemExistence(order.getBuyerId(), order.getItemId(), order.getSellerId());
         //item.stock과 order.count 비교: stock 수 < count 수이면 error 메시지 띄우기
         int currentStock = itemService.getStock(order.getItemId());
-        if (currentStock < order.getCount()) {
-            throw new IllegalStateException(order.getItemId()+" 상품의 재고가 부족합니다.");
-        }
 
         if (order.getBuyerId().equals(order.getSellerId())) {
             throw new IllegalArgumentException("본인이 판매중인 상품을 구매할 수 없습니다.");
+        }
+        if (currentStock < order.getCount()) {
+            throw new IllegalStateException(order.getItemId()+" 상품의 재고가 부족합니다.");
         }
 
         orderRepository.save(order);
