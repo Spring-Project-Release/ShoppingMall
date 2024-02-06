@@ -11,7 +11,6 @@ import release.release_proj.dto.CartResponseDTO;
 import release.release_proj.repository.ItemRepository;
 import release.release_proj.repository.MemberDAO;
 import release.release_proj.repository.OrderRepository;
-import release.release_proj.service.CartService;
 
 import java.util.ArrayList;
 import java.util.List;

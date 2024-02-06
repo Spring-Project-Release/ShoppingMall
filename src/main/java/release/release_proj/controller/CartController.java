@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import release.release_proj.domain.Cart;
 import release.release_proj.domain.MemberVO;
 import release.release_proj.dto.CartRequestDTO;
 import release.release_proj.dto.CartResponseDTO;
@@ -50,16 +49,14 @@ public class CartController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 후 장바구니에 상품을 추가해주세요.");
             }
 
-            int result = cartService.addCartItem(cartDTO);
+            cartService.addCartItem(cartDTO);
 
-            if (result != 0) {
-                return ResponseEntity.ok("Cart created or amount updated successfully.");
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create cart.");
-            }
+            return ResponseEntity.ok("Cart created or amount updated successfully.");
         } catch (IllegalArgumentException e) {
             // DataIntegrityViolationException이 IllegalArgumentException로 변환되었을 경우 또는 item의 판매자가 해당 상품을 장바구니에 담은 경우
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create cart.");
         }
     }
 
