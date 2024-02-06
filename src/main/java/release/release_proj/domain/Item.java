@@ -8,7 +8,6 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor //entity(domain)에는 생성자 작성해야 함
 @Getter
-@Setter //dto 적용 시 setter 생략하기
 public class Item {
 
     @Id

@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor //entity(domain)에는 생성자 작성해야 함
 @Getter
-@Setter //dto 적용 시 setter 생략하기
 @Entity
 @EntityListeners(AuditingEntityListener.class) //orderDate 자동생성 위함
 @Table(name = "orders") //order: 예약어 -> table 이름으로 사용 불가

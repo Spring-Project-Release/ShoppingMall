@@ -3,11 +3,14 @@ package release.release_proj.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import release.release_proj.domain.Item;
+import release.release_proj.dto.ItemRequestDTO;
+import release.release_proj.dto.ItemResponseDTO;
 import release.release_proj.repository.ItemRepository;
 import release.release_proj.repository.MemberDAO;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,15 +20,15 @@ public class ItemServiceImpl implements ItemService {
     private final MemberDAO memberDAO;
 
     @Override
-    public int saveItem(Item item){
-        validateSellerExistence(item.getSellerId()); //해당 seller가 실제로 존재하는 유저인지 확인
-        isItemNameDuplicate(item);
-        return itemRepository.save(item);
+    public int saveItem(ItemRequestDTO itemDTO){
+        validateSellerExistence(itemDTO.getSellerId()); //해당 seller가 실제로 존재하는 유저인지 확인
+        isItemNameDuplicate(itemDTO);
+        return itemRepository.save(itemDTO.toEntity());
     }
 
     @Override
-    public void isItemNameDuplicate(Item item){
-        itemRepository.findByItemName(item.getName())
+    public void isItemNameDuplicate(ItemRequestDTO itemDTO){
+        itemRepository.findByItemName(itemDTO.getName())
                 .ifPresent(i -> {
                     throw new IllegalStateException("이미 존재하는 상품 이름입니다. 이름을 변경해 주십시오.");
                 });
@@ -38,8 +41,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public int updateItem(Item item){
-        return itemRepository.updateItem(item);
+    public int updateItem(ItemRequestDTO itemDTO){
+        return itemRepository.updateItem(itemDTO.toEntity());
     }
 
     @Override
@@ -48,58 +51,62 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item findOne(Long itemId) {
-        return itemRepository.findByItemId(itemId)
+    public ItemResponseDTO findOne(Long itemId) {
+        Item item = itemRepository.findByItemId(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 itemId를 가진 상품이 존재하지 않습니다."));
+
+        return new ItemResponseDTO(item);
     }
 
     @Override
-    public Item findByItemName(String name) {
-        return itemRepository.findByItemName(name)
+    public ItemResponseDTO findByItemName(String name) {
+        Item item = itemRepository.findByItemName(name)
                 .orElseThrow(() -> new IllegalArgumentException("해당 name을 가진 상품이 존재하지 않습니다."));
+
+        return new ItemResponseDTO(item);
     }
 
     @Override
-    public List<Item> readItems() {
+    public List<ItemResponseDTO> readItems() {
         Optional<List<Item>> items =  itemRepository.findAll();
         if (items.isEmpty() || items.get().isEmpty()) {
             throw new IllegalArgumentException("상품이 존재하지 않습니다.");
         }
 
-        return items.get();
+        return items.get().stream().map(ItemResponseDTO::new).collect(Collectors.toList());
     }
 
     @Override
-    public List<Item> findItemsBySellerId(String sellerId) {
+    public List<ItemResponseDTO> findItemsBySellerId(String sellerId) {
         Optional<List<Item>> items = itemRepository.findBySellerId(sellerId);
 
         if (items.isEmpty() || items.get().isEmpty()) {
             throw new IllegalArgumentException("해당 sellerId를 가진 상품이 존재하지 않습니다.");
         }
 
-        return items.get();
+        return items.get().stream().map(ItemResponseDTO::new).collect(Collectors.toList());
     }
 
     @Override
-    public List<Item> findByIsSoldout(Boolean isSoldout) {
+    public List<ItemResponseDTO> findByIsSoldout(Boolean isSoldout) {
         Optional<List<Item>> items = itemRepository.findByIsSoldout(isSoldout);
 
         if (items.isEmpty() || items.get().isEmpty()) {
             throw new IllegalArgumentException("해당 품절여부 조건을 만족하는 상품이 존재하지 않습니다.");
         }
 
-        return items.get();
+        return items.get().stream().map(ItemResponseDTO::new).collect(Collectors.toList());
     }
 
     @Override
-    public List<Item> findByCategory(String category) {
+    public List<ItemResponseDTO> findByCategory(String category) {
         Optional<List<Item>> items = itemRepository.findByCategory(category);
 
         if (items.isEmpty() || items.get().isEmpty()) {
             throw new IllegalArgumentException("해당 카테고리를 가진 상품이 존재하지 않습니다.");
         }
 
-        return items.get();
+        return items.get().stream().map(ItemResponseDTO::new).collect(Collectors.toList());
     }
 
     @Override
