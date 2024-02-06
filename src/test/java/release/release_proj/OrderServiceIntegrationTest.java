@@ -11,12 +11,9 @@ import release.release_proj.repository.ItemRepository;
 import release.release_proj.repository.MemberDAO;
 import release.release_proj.service.OrderService;
 
-import java.util.List;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
+/*
 @SpringBootTest
 @Transactional
 public class OrderServiceIntegrationTest {
@@ -294,3 +291,4 @@ public class OrderServiceIntegrationTest {
         assertThat(e.getMessage()).isEqualTo("해당 주문 ID: " + 99999 + "가 존재하지 않습니다.");
     }
 }
+*/

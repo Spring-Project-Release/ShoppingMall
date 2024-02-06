@@ -62,12 +62,16 @@ public class JpaCartRepository implements CartRepository {
 
     @Override
     public Optional<Cart> findByMemberIdAndItemId(String memberId, Long itemId) {
-       Cart cart = em.createQuery("SELECT c FROM Cart c WHERE c.memberId = :memberId AND c.itemId = :itemId", Cart.class)
+       List<Cart> carts = em.createQuery("SELECT c FROM Cart c WHERE c.memberId = :memberId AND c.itemId = :itemId", Cart.class)
                     .setParameter("memberId", memberId)
                     .setParameter("itemId", itemId)
-                    .getSingleResult();
+                    .getResultList();
 
-      return Optional.ofNullable(cart);
+       if (carts.isEmpty()) {
+            return Optional.ofNullable(null);
+        } else {
+            return Optional.ofNullable(carts.get(0));
+        }
     }
 
     @Override

@@ -5,7 +5,6 @@ import release.release_proj.domain.Item;
 import java.util.List;
 import java.util.Optional;
 
-//@Repository
 public interface ItemRepository {
 
     public void deleteByItemId(Long itemId);

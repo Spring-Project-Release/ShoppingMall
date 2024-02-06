@@ -1,10 +1,10 @@
 package release.release_proj.repository;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import release.release_proj.domain.Item;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,11 +39,15 @@ public class JpaItemRepository implements ItemRepository {
 
     @Override
     public Optional<Item> findByItemName(String name) {
-        Item item = em.createQuery("SELECT i FROM Item i WHERE i.name = :name", Item.class)
+        List<Item> items = em.createQuery("SELECT i FROM Item i WHERE i.name = :name", Item.class)
                 .setParameter("name", name)
-                .getSingleResult();
+                .getResultList();
 
-        return Optional.ofNullable(item);
+        if (items.isEmpty()) {
+            return Optional.ofNullable(null);
+        } else {
+            return Optional.ofNullable(items.get(0));
+        }
     }
 
     @Override
@@ -80,52 +84,44 @@ public class JpaItemRepository implements ItemRepository {
     }
 
     @Override
+    @Transactional
     public void updateItem(Item item) {
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
         em.merge(item);
-        transaction.commit();
     }
 
     @Override
+    @Transactional
     public int updateIsSoldout(Long itemId){
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
         int result = em.createQuery("UPDATE Item i SET i.isSoldout = 1 - i.isSoldout WHERE i.itemId = :itemId")
                 .setParameter("itemId", itemId)
                 .executeUpdate();
-
-        transaction.commit();
 
         return result; //실행된 update query에 의해 영향을 받은 entity의 수
     }
 
     @Override
+    @Transactional
     public int updateStock(Long itemId, int decreasingStock){
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
 
         int result = em.createQuery("UPDATE Item i SET i.stock = i.stock - :decreasingStock WHERE i.itemId = :itemId")
                 .setParameter("decreasingStock", decreasingStock)
                 .setParameter("itemId", itemId)
                 .executeUpdate();
 
-        transaction.commit();
+        em.flush();
+        em.clear();
 
         return result;
     }
 
     @Override
+    @Transactional
     public int updateCount(Long itemId, int increasingCount) {
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
 
         int result = em.createQuery("UPDATE Item i SET i.count = i.count + :increasingCount WHERE i.itemId = :itemId")
                 .setParameter("increasingCount", increasingCount)
                 .setParameter("itemId", itemId)
                 .executeUpdate();
-
-        transaction.commit();
 
         return result;
     }
