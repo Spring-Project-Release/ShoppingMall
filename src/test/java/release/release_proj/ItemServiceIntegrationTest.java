@@ -4,14 +4,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import release.release_proj.domain.Item;
 import release.release_proj.domain.MemberVO;
+import release.release_proj.dto.ItemRequestDTO;
+import release.release_proj.dto.ItemResponseDTO;
 import release.release_proj.repository.ItemRepository;
 import release.release_proj.repository.MemberDAO;
 import release.release_proj.service.ItemService;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
@@ -33,35 +34,37 @@ public class ItemServiceIntegrationTest {
         member.setMemberEmail("testMemberEmail1");
         memberDAO.insertMember(member);
 
-        Item item = new Item();
-        item.setName("testItemId");
-        item.setStock(1);
-        item.setPrice(1);
-        item.setIsSoldout(false);
-        item.setSellerId(member.getMemberId());
+        ItemRequestDTO itemDTO = ItemRequestDTO.builder()
+                .name("testItemId")
+                .stock(1)
+                .price(1)
+                .isSoldout(false)
+                .sellerId(member.getMemberId())
+                .build();
 
         //When
-        int result = itemService.saveItem(item);
+        int result = itemService.saveItem(itemDTO);
 
         //Then
-        Item savedItem = itemService.findOne(item.getItemId());
-        assertThat(savedItem).isNotNull();
-        assertThat(item.getName()).isEqualTo(savedItem.getName());
+        ItemResponseDTO savedItemDTO = itemService.findOne(itemDTO.getItemId());
+        assertThat(savedItemDTO).isNotNull();
+        assertThat(itemDTO.getName()).isEqualTo(savedItemDTO.getName());
         assertThat(result).isGreaterThan(0);
     }
 
     @Test
     public void 상품등록_외래키_예외_판매자_없음() throws Exception {
         //Given
-        Item item = new Item();
-        item.setName("testItemId");
-        item.setStock(1);
-        item.setPrice(1);
-        item.setIsSoldout(false);
-        item.setSellerId("testSellerId");
+        ItemRequestDTO itemDTO = ItemRequestDTO.builder()
+                .name("testItemId")
+                .stock(1)
+                .price(1)
+                .isSoldout(false)
+                .sellerId("testSellerId")
+                .build();
 
         //Then
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, ()->itemService.saveItem(item)); //예외가 발생해야 함
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> itemService.saveItem(itemDTO)); //예외가 발생해야 함
         assertThat(e.getMessage()).isEqualTo("해당하는 상품의 sellerId가 유저 DB에 존재하지 않습니다.");
     }
 
@@ -77,25 +80,27 @@ public class ItemServiceIntegrationTest {
         member.setMemberEmail("testMemberEmail1");
         memberDAO.insertMember(member);
 
-        Item item1 = new Item();
-        item1.setName("testItemId");
-        item1.setStock(1);
-        item1.setPrice(1);
-        item1.setIsSoldout(false);
-        item1.setSellerId(member.getMemberId());
+        ItemRequestDTO itemDTO1 = ItemRequestDTO.builder()
+                .name("testItemId")
+                .stock(1)
+                .price(1)
+                .isSoldout(false)
+                .sellerId(member.getMemberId())
+                .build();
 
-        Item item2 = new Item();
-        item2.setName("testItemId");
-        item2.setStock(1);
-        item2.setPrice(1);
-        item2.setIsSoldout(false);
-        item2.setSellerId(member.getMemberId());
+        ItemRequestDTO itemDTO2 = ItemRequestDTO.builder()
+                .name("testItemId")
+                .stock(1)
+                .price(1)
+                .isSoldout(false)
+                .sellerId(member.getMemberId())
+                .build();
 
         //When
-        int result = itemService.saveItem(item1);
+        int result = itemService.saveItem(itemDTO1);
 
         //Then
-        IllegalStateException e = assertThrows(IllegalStateException.class, ()->itemService.saveItem(item2)); //예외가 발생해야 함
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> itemService.saveItem(itemDTO2)); //예외가 발생해야 함
         assertThat(e.getMessage()).isEqualTo("이미 존재하는 상품 이름입니다. 이름을 변경해 주십시오.");
     }
 
@@ -111,32 +116,34 @@ public class ItemServiceIntegrationTest {
         member.setMemberEmail("testMemberEmail1");
         memberDAO.insertMember(member);
 
-        Item item = new Item();
-        item.setName("testItemId");
-        item.setStock(1);
-        item.setPrice(1);
-        item.setIsSoldout(false);
-        item.setSellerId(member.getMemberId());
-        itemService.saveItem(item);
+        ItemRequestDTO itemDTO = ItemRequestDTO.builder()
+                .name("testItemId")
+                .stock(1)
+                .price(1)
+                .isSoldout(false)
+                .sellerId(member.getMemberId())
+                .build();
+        itemService.saveItem(itemDTO);
 
-        Item updateItem = new Item();
-        updateItem.setItemId(item.getItemId());
-        updateItem.setName("updatedItemId");
-        updateItem.setStock(0);
-        updateItem.setPrice(2);
-        updateItem.setIsSoldout(true);
-        updateItem.setSellerId(member.getMemberId());
+        ItemRequestDTO updateItemDTO = ItemRequestDTO.builder()
+                .itemId(itemDTO.getItemId())
+                .name("updatedItemId")
+                .stock(0)
+                .price(2)
+                .isSoldout(true)
+                .sellerId(member.getMemberId())
+                .build();
 
         //When
-        int result = itemService.updateItem(updateItem);
+        int result = itemService.updateItem(updateItemDTO);
 
         //Then
-        Item savedItem = itemService.findOne(item.getItemId());
-        assertThat(savedItem).isNotNull();
-        assertThat(savedItem.getName()).isEqualTo("updatedItemId");
-        assertThat(savedItem.getStock()).isZero();
-        assertThat(savedItem.getPrice()).isEqualTo(2);
-        assertThat(savedItem.getIsSoldout()).isTrue();
+        ItemResponseDTO savedItemDTO = itemService.findOne(itemDTO.getItemId());
+        assertThat(savedItemDTO).isNotNull();
+        assertThat(savedItemDTO.getName()).isEqualTo("updatedItemId");
+        assertThat(savedItemDTO.getStock()).isZero();
+        assertThat(savedItemDTO.getPrice()).isEqualTo(2);
+        assertThat(savedItemDTO.getIsSoldout()).isTrue();
         assertThat(result).isGreaterThan(0);
     }
 
@@ -152,21 +159,22 @@ public class ItemServiceIntegrationTest {
         member.setMemberEmail("testMemberEmail1");
         memberDAO.insertMember(member);
 
-        Item item = new Item();
-        item.setName("testItemId");
-        item.setStock(1);
-        item.setPrice(1);
-        item.setIsSoldout(false);
-        item.setSellerId(member.getMemberId());
-        itemService.saveItem(item);
+        ItemRequestDTO itemDTO = ItemRequestDTO.builder()
+                .name("testItemId")
+                .stock(1)
+                .price(1)
+                .isSoldout(false)
+                .sellerId(member.getMemberId())
+                .build();
+        itemService.saveItem(itemDTO);
 
         //When
-        int result = itemService.updateIsSoldout(item.getItemId());
+        int result = itemService.updateIsSoldout(itemDTO.getItemId());
 
         //Then
-        Item savedItem = itemService.findOne(item.getItemId());
-        assertThat(savedItem).isNotNull();
-        assertThat(savedItem.getName()).isEqualTo(item.getName());
+        ItemResponseDTO savedItemDTO = itemService.findOne(itemDTO.getItemId());
+        assertThat(savedItemDTO).isNotNull();
+        assertThat(savedItemDTO.getName()).isEqualTo(itemDTO.getName());
         assertThat(result).isGreaterThan(0);
     }
 
@@ -182,23 +190,24 @@ public class ItemServiceIntegrationTest {
         member.setMemberEmail("testMemberEmail1");
         memberDAO.insertMember(member);
 
-        Item item = new Item();
-        item.setName("testItemId");
-        item.setStock(3);
-        item.setPrice(1);
-        item.setIsSoldout(false);
-        item.setSellerId(member.getMemberId());
-        itemService.saveItem(item);
+        ItemRequestDTO itemDTO = ItemRequestDTO.builder()
+                .name("testItemId")
+                .stock(3)
+                .price(1)
+                .isSoldout(false)
+                .sellerId(member.getMemberId())
+                .build();
+        itemService.saveItem(itemDTO);
 
         //When
-        int result1 = itemService.updateStock(item.getItemId(), 2);
-        int result2 = itemService.updateCount(item.getItemId(), 1);
+        int result1 = itemService.updateStock(itemDTO.getItemId(), 2);
+        int result2 = itemService.updateCount(itemDTO.getItemId(), 1);
 
         //Then
-        Item savedItem = itemService.findOne(item.getItemId());
-        assertThat(savedItem).isNotNull();
-        assertThat(savedItem.getStock()).isEqualTo(1);
-        assertThat(savedItem.getCount()).isEqualTo(1);
+        ItemResponseDTO savedItemDTO = itemService.findOne(itemDTO.getItemId());
+        assertThat(savedItemDTO).isNotNull();
+        assertThat(savedItemDTO.getStock()).isEqualTo(1);
+        assertThat(savedItemDTO.getCount()).isEqualTo(1);
         assertThat(result1).isGreaterThan(0);
         assertThat(result2).isGreaterThan(0);
     }
@@ -215,20 +224,21 @@ public class ItemServiceIntegrationTest {
         member.setMemberEmail("testMemberEmail1");
         memberDAO.insertMember(member);
 
-        Item item = new Item();
-        item.setName("testItemId");
-        item.setStock(3);
-        item.setPrice(1);
-        item.setIsSoldout(false);
-        item.setSellerId(member.getMemberId());
-        itemService.saveItem(item);
+        ItemRequestDTO itemDTO = ItemRequestDTO.builder()
+                .name("testItemId")
+                .stock(3)
+                .price(1)
+                .isSoldout(false)
+                .sellerId(member.getMemberId())
+                .build();
+        itemService.saveItem(itemDTO);
 
         //When
-        int result = itemService.deleteItem(item.getItemId());
+        int result = itemService.deleteItem(itemDTO.getItemId());
 
         //Then
         assertThat(result).isGreaterThan(0);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, ()->itemService.findOne(item.getItemId()));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, ()->itemService.findOne(itemDTO.getItemId()));
         assertThat(e.getMessage()).isEqualTo("해당 itemId를 가진 상품이 존재하지 않습니다.");
     }
 }
