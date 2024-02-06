@@ -4,9 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import release.release_proj.domain.Cart;
 import release.release_proj.domain.Item;
 import release.release_proj.domain.MemberVO;
+import release.release_proj.dto.CartRequestDTO;
+import release.release_proj.dto.CartResponseDTO;
 import release.release_proj.repository.ItemRepository;
 import release.release_proj.repository.MemberDAO;
 import release.release_proj.repository.OrderRepository;
@@ -14,6 +15,7 @@ import release.release_proj.service.CartService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,18 +50,19 @@ public class CartServiceIntegrationTest {
         item.setSellerId(member.getMemberId());
         itemRepository.save(item);
 
-        Cart cart = new Cart();
-        cart.setMemberId(member.getMemberId());
-        cart.setItemId(item.getItemId());
-        cart.setAmount(2);
+        CartRequestDTO cartDTO = CartRequestDTO.builder()
+                .memberId(member.getMemberId())
+                .itemId(item.getItemId())
+                .amount(2)
+                .build();
 
         // When
-        int result = cartService.addCartItem(cart);
+        int result = cartService.addCartItem(cartDTO);
 
         // Then
-        Cart savedCart = cartService.readMemberCartItems(member.getMemberId(), item.getItemId());
-        assertThat(savedCart).isNotNull();
-        assertEquals(cart.getCartId(), savedCart.getCartId());
+        CartResponseDTO savedCartDTO = cartService.readMemberCartItems(member.getMemberId(), item.getItemId());
+        assertThat(savedCartDTO).isNotNull();
+        assertEquals(cartDTO.getCartId(), savedCartDTO.getCartId());
     }
 
     @Test
@@ -82,35 +85,38 @@ public class CartServiceIntegrationTest {
         item.setSellerId(member.getMemberId());
         itemRepository.save(item);
 
-        Cart cart = new Cart();
-        cart.setMemberId(member.getMemberId());
-        cart.setItemId(item.getItemId());
-        cart.setAmount(2);
+        CartRequestDTO cartDTO1 = CartRequestDTO.builder()
+                .memberId(member.getMemberId())
+                .itemId(item.getItemId())
+                .amount(2)
+                .build();
 
-        Cart newCart = new Cart();
-        newCart.setMemberId(member.getMemberId());
-        newCart.setItemId(item.getItemId());
-        newCart.setAmount(1);
+        CartRequestDTO cartDTO2 = CartRequestDTO.builder()
+                .memberId(member.getMemberId())
+                .itemId(item.getItemId())
+                .amount(2)
+                .build();
 
         // When
-        int result1 = cartService.addCartItem(cart);
-        int result2 = cartService.addCartItem(newCart);
+        int result1 = cartService.addCartItem(cartDTO1);
+        int result2 = cartService.addCartItem(cartDTO2);
 
         // Then
-        Cart savedCart = cartService.readMemberCartItems(member.getMemberId(), item.getItemId());
-        assertThat(savedCart).isNotNull();
-        assertThat(savedCart.getAmount()).isEqualTo(3);
-        assertEquals(cart.getCartId(), savedCart.getCartId());
+        CartResponseDTO savedCartDTO = cartService.readMemberCartItems(member.getMemberId(), item.getItemId());
+        assertThat(savedCartDTO).isNotNull();
+        assertThat(savedCartDTO.getAmount()).isEqualTo(3);
+        assertEquals(cartDTO1.getCartId(), savedCartDTO.getCartId());
     }
 
     @Test
     public void 장바구니추가_외래키_예외() throws Exception {
-        Cart cart = new Cart();
-        cart.setMemberId("testMemberId");
-        cart.setItemId(99999L);
-        cart.setAmount(2);
+        CartRequestDTO cartDTO = CartRequestDTO.builder()
+                .memberId("testMemberId")
+                .itemId(99999L)
+                .amount(2)
+                .build();
 
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.addCartItem(cart));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.addCartItem(cartDTO));
         assertThat(e.getMessage()).isEqualTo("Failed to create cart. 해당하는 itemId나 memberId가 존재하지 않습니다");
     }
 
@@ -134,12 +140,13 @@ public class CartServiceIntegrationTest {
         item.setSellerId(member.getMemberId());
         itemRepository.save(item);
 
-        Cart cart = new Cart();
-        cart.setMemberId(member.getMemberId());
-        cart.setItemId(item.getItemId());
-        cart.setAmount(2);
+        CartRequestDTO cartDTO = CartRequestDTO.builder()
+                .memberId(member.getMemberId())
+                .itemId(item.getItemId())
+                .amount(2)
+                .build();
 
-        cartService.addCartItem(cart);
+        cartService.addCartItem(cartDTO);
 
         // When
         int result = cartService.deleteCart(member.getMemberId());
@@ -199,18 +206,20 @@ public class CartServiceIntegrationTest {
         item2.setSellerId(member.getMemberId());
         itemRepository.save(item2);
 
-        Cart cart1 = new Cart();
-        cart1.setMemberId(member.getMemberId());
-        cart1.setItemId(item1.getItemId());
-        cart1.setAmount(2);
+        CartRequestDTO cartDTO1 = CartRequestDTO.builder()
+                .memberId(member.getMemberId())
+                .itemId(item1.getItemId())
+                .amount(2)
+                .build();
 
-        Cart cart2 = new Cart();
-        cart2.setMemberId(member.getMemberId());
-        cart2.setItemId(item2.getItemId());
-        cart2.setAmount(1);
+        CartRequestDTO cartDTO2 = CartRequestDTO.builder()
+                .memberId(member.getMemberId())
+                .itemId(item2.getItemId())
+                .amount(2)
+                .build();
 
-        cartService.addCartItem(cart1);
-        cartService.addCartItem(cart2);
+        cartService.addCartItem(cartDTO1);
+        cartService.addCartItem(cartDTO2);
 
         // When
         int result = cartService.deleteCartItem(member.getMemberId(), item1.getItemId());
@@ -272,23 +281,23 @@ public class CartServiceIntegrationTest {
         item.setSellerId(member.getMemberId());
         itemRepository.save(item);
 
-        Cart cart = new Cart();
-        cart.setMemberId(member.getMemberId());
-        cart.setItemId(item.getItemId());
-        cart.setAmount(2);
-        cartService.addCartItem(cart);
+        CartRequestDTO cartDTO = CartRequestDTO.builder()
+                .memberId(member.getMemberId())
+                .itemId(item.getItemId())
+                .amount(2)
+                .build();
 
         Long itemId = item.getItemId();
         String memberId = member.getMemberId();
 
         // When
-        cartService.decreaseCartItem(cart.getCartId());
-        Cart savedCart1 = cartService.readMemberCartItems(memberId, itemId);
-        cartService.decreaseCartItem(cart.getCartId());
+        cartService.decreaseCartItem(cartDTO.getCartId());
+        CartResponseDTO savedCartDTO = cartService.readMemberCartItems(memberId, itemId);
+        cartService.decreaseCartItem(savedCartDTO.getCartId());
 
         // Then
-        assertThat(savedCart1).isNotNull();
-        assertThat(savedCart1.getAmount()).isEqualTo(1);;
+        assertThat(savedCartDTO).isNotNull();
+        assertThat(savedCartDTO.getAmount()).isEqualTo(1);;
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.readMemberCartItems(memberId, itemId));
         assertThat(e.getMessage()).isEqualTo("해당 memberId와 itemId를 가지는 장바구니가 존재하지 않습니다.");
     }
@@ -313,19 +322,21 @@ public class CartServiceIntegrationTest {
         item.setSellerId(member.getMemberId());
         itemRepository.save(item);
 
-        Cart cart = new Cart();
-        cart.setMemberId(member.getMemberId());
-        cart.setItemId(item.getItemId());
-        cart.setAmount(2);
-        cartService.addCartItem(cart);
+        CartRequestDTO cartDTO = CartRequestDTO.builder()
+                .memberId(member.getMemberId())
+                .itemId(item.getItemId())
+                .amount(2)
+                .build();
+
+        cartService.addCartItem(cartDTO);
 
         // When
-        cartService.increaseCartItem(cart.getCartId(), 2);
-        Cart savedCart1 = cartService.readMemberCartItems(member.getMemberId(), item.getItemId());
+        cartService.increaseCartItem(cartDTO.getCartId(), 2);
+        CartResponseDTO savedCartDTO = cartService.readMemberCartItems(member.getMemberId(), item.getItemId());
 
         // Then
-        assertThat(savedCart1).isNotNull();
-        assertThat(savedCart1.getAmount()).isEqualTo(4);
+        assertThat(savedCartDTO).isNotNull();
+        assertThat(savedCartDTO.getAmount()).isEqualTo(4);
     }
 
     @Test
@@ -366,18 +377,20 @@ public class CartServiceIntegrationTest {
         itemRepository.save(item2);
 
         String memberId = member1.getMemberId();
-        Cart cart1 = new Cart();
-        cart1.setMemberId(memberId);
-        cart1.setItemId(item1.getItemId());
-        cart1.setAmount(1);
+        CartRequestDTO cartDTO1 = CartRequestDTO.builder()
+                .memberId(memberId)
+                .itemId(item1.getItemId())
+                .amount(2)
+                .build();
 
-        Cart cart2 = new Cart();
-        cart2.setMemberId(memberId);
-        cart2.setItemId(item2.getItemId());
-        cart2.setAmount(1);
+        CartRequestDTO cartDTO2 = CartRequestDTO.builder()
+                .memberId(memberId)
+                .itemId(item2.getItemId())
+                .amount(2)
+                .build();
 
-        cartService.addCartItem(cart1);
-        cartService.addCartItem(cart2);
+        cartService.addCartItem(cartDTO1);
+        cartService.addCartItem(cartDTO2;
 
         // When
         cartService.payAllCart(memberId, "전체결제");
@@ -456,18 +469,20 @@ public class CartServiceIntegrationTest {
         itemRepository.save(item2);
 
         String memberId = member1.getMemberId();
-        Cart cart1 = new Cart();
-        cart1.setMemberId(memberId);
-        cart1.setItemId(item1.getItemId());
-        cart1.setAmount(1);
+        CartRequestDTO cartDTO1 = CartRequestDTO.builder()
+                .memberId(memberId)
+                .itemId(item1.getItemId())
+                .amount(2)
+                .build();
 
-        Cart cart2 = new Cart();
-        cart2.setMemberId(memberId);
-        cart2.setItemId(item2.getItemId());
-        cart2.setAmount(1);
+        CartRequestDTO cartDTO2 = CartRequestDTO.builder()
+                .memberId(memberId)
+                .itemId(item2.getItemId())
+                .amount(2)
+                .build();
 
-        cartService.addCartItem(cart1);
-        cartService.addCartItem(cart2);
+        cartService.addCartItem(cartDTO1);
+        cartService.addCartItem(cartDTO2);
 
         // When
         List<Long> tempList = new ArrayList<>();
@@ -540,5 +555,21 @@ public class CartServiceIntegrationTest {
         // Then
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.paySomeCart("testMemberId", tempList, "일부결제"));
         assertThat(e.getMessage()).isEqualTo("해당하는 itemId: " + item.getItemId() + "와 memberId: " + member.getMemberId() + "를 갖는 cart가 존재하지 않습니다.");
+    }
+
+    private Item createItem(String name, int stock, int price, Boolean isSoldout, String sellerId) {
+        Item item = new Item();
+        item.builder()
+                .name(name)
+                .stock(stock)
+                .price(price)
+                .isSoldout(isSoldout)
+                .sellerId(sellerId)
+                .build();
+
+        itemRepository.save(item);
+        Optional<Item> savedItem = itemRepository.findByItemName(item.getName());
+        return savedItem.get();
+
     }
 }

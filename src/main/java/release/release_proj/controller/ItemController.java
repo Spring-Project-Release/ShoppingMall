@@ -88,29 +88,27 @@ public class ItemController {
     @PostMapping
     public ResponseEntity<String> newItem(@RequestBody ItemRequestDTO itemDTO) {
         try {
-            int result = itemService.saveItem(itemDTO);
-
-            if (result != 0) {
-                return ResponseEntity.ok("Item created successfully.");
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create Item.");
-            }
+            itemService.saveItem(itemDTO);
+            return ResponseEntity.ok("Item created successfully.");
         } catch (IllegalStateException e) {
             // item 이름이 중복된 경우
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (IllegalArgumentException e) {
-            //외래키 제약을 위배한 경우
+            // 외래키 제약을 위배한 경우
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            // 그 외의 예외 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create Item.");
         }
     }
 
     @PutMapping("/{itemId}")
     public ResponseEntity<String> update(@PathVariable(name = "itemId") Long itemId, @RequestBody ItemRequestDTO itemDTO) {
-        itemDTO.setItemId(itemId); //item에 id를 set하지 않아도 url의 id를 가진 item을 update하도록 함
-        int result = itemService.updateItem(itemDTO);
-        if (result != 0){
+        itemDTO.setItemId(itemId); // item에 id를 set하지 않아도 url의 id를 가진 item을 update하도록 함
+        try {
+            itemService.updateItem(itemDTO);
             return ResponseEntity.ok("Item updated successfully.");
-        } else {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("존재하지 않는 itemId입니다.");
         }
     }
@@ -127,11 +125,10 @@ public class ItemController {
 
     @DeleteMapping("/{itemId}")
     public ResponseEntity<String> deleteItem(@PathVariable(name = "itemId") Long itemId) {
-        int result = itemService.deleteItem(itemId);
-        if (result != 0){
+        try {
+            itemService.deleteItem(itemId);
             return ResponseEntity.ok("Item deleted successfully.");
-        }
-        else { //해당 itemId가 존재하지 않아 삭제 동작이 필요하지 않았던 경우
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("존재하지 않는 itemId입니다.");
         }
     }

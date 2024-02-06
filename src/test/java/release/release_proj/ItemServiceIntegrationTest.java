@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import release.release_proj.domain.MemberVO;
 import release.release_proj.dto.ItemRequestDTO;
 import release.release_proj.dto.ItemResponseDTO;
-import release.release_proj.repository.ItemRepository;
 import release.release_proj.repository.MemberDAO;
 import release.release_proj.service.ItemService;
 
@@ -18,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Transactional
 public class ItemServiceIntegrationTest {
 
-    @Autowired ItemRepository itemRepository;
-    @Autowired ItemService itemService;
+    @Autowired
+    ItemService itemService;
     @Autowired MemberDAO memberDAO;
 
     @Test
