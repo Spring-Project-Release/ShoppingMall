@@ -1,18 +1,17 @@
 package release.release_proj.dto;
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
+import release.release_proj.domain.Order;
 
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
 public class OrderResponseDTO {
 
     @NotNull
-    Long OrderId;
+    private Long orderId;
     @NotNull
     private String buyerId;
     @NotNull
@@ -26,4 +25,15 @@ public class OrderResponseDTO {
     @NotNull
     private int count;
     private String memo;
+
+    public OrderResponseDTO(Order order) {
+        this.orderId = order.getOrderId();
+        this.buyerId = order.getBuyerId();
+        this.sellerId = order.getSellerId();
+        this.itemId = order.getItemId();
+        this.orderDate = order.getOrderDate();
+        this.price = order.getPrice();
+        this.count = order.getCount();
+        this.memo = order.getMemo();
+    }
 }
