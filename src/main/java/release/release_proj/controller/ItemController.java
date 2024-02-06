@@ -5,7 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import release.release_proj.domain.Item;
+import release.release_proj.dto.ItemRequestDTO;
+import release.release_proj.dto.ItemResponseDTO;
 import release.release_proj.service.ItemService;
 
 import java.util.List;
@@ -19,10 +20,10 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public ResponseEntity<List<Item>> itemList() {
+    public ResponseEntity<List<ItemResponseDTO>> itemList() {
         try {
-            List<Item> items = itemService.readItems();
-            return ResponseEntity.ok(items);
+            List<ItemResponseDTO> itemDTOs = itemService.readItems();
+            return ResponseEntity.ok(itemDTOs);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
             return ResponseEntity.notFound().build();
@@ -30,10 +31,10 @@ public class ItemController {
     }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<List<Item>> getItemByCategory(@PathVariable(name="category") String category) {
+    public ResponseEntity<List<ItemResponseDTO>> getItemByCategory(@PathVariable(name="category") String category) {
         try {
-            List<Item> items = itemService.findByCategory(category);
-            return ResponseEntity.ok(items);
+            List<ItemResponseDTO> itemDTOs = itemService.findByCategory(category);
+            return ResponseEntity.ok(itemDTOs);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
             return ResponseEntity.notFound().build();
@@ -41,10 +42,10 @@ public class ItemController {
     }
 
     @GetMapping("/isSoldout/{isSoldout}")
-    public ResponseEntity<List<Item>> getItemByIsSoldout(@PathVariable(name="isSoldout") Boolean isSoldout) {
+    public ResponseEntity<List<ItemResponseDTO>> getItemByIsSoldout(@PathVariable(name="isSoldout") Boolean isSoldout) {
         try {
-            List<Item> items = itemService.findByIsSoldout(isSoldout);
-            return ResponseEntity.ok(items);
+            List<ItemResponseDTO> itemDTOs = itemService.findByIsSoldout(isSoldout);
+            return ResponseEntity.ok(itemDTOs);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
             return ResponseEntity.notFound().build();
@@ -52,10 +53,10 @@ public class ItemController {
     }
 
     @GetMapping("/id/{itemId}")
-    public ResponseEntity<Item> getItem(@PathVariable(name = "itemId") Long itemId) {
+    public ResponseEntity<ItemResponseDTO> getItem(@PathVariable(name = "itemId") Long itemId) {
         try {
-            Item item = itemService.findOne(itemId);
-            return ResponseEntity.ok(item);
+            ItemResponseDTO itemDTO = itemService.findOne(itemId);
+            return ResponseEntity.ok(itemDTO);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
             return ResponseEntity.notFound().build();
@@ -63,10 +64,10 @@ public class ItemController {
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<Item> getItem(@PathVariable(name = "name") String name) {
+    public ResponseEntity<ItemResponseDTO> getItem(@PathVariable(name = "name") String name) {
         try {
-            Item item = itemService.findByItemName(name);
-            return ResponseEntity.ok(item);
+            ItemResponseDTO itemDTO= itemService.findByItemName(name);
+            return ResponseEntity.ok(itemDTO);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
             return ResponseEntity.notFound().build();
@@ -74,10 +75,10 @@ public class ItemController {
     }
 
     @GetMapping("/sellerId/{sellerId}")
-    public ResponseEntity<List<Item>> getItemBySellerId(@PathVariable(name = "sellerId") String sellerId) {
+    public ResponseEntity<List<ItemResponseDTO>> getItemBySellerId(@PathVariable(name = "sellerId") String sellerId) {
         try {
-            List<Item> items = itemService.findItemsBySellerId(sellerId);
-            return ResponseEntity.ok(items);
+            List<ItemResponseDTO> itemDTOs = itemService.findItemsBySellerId(sellerId);
+            return ResponseEntity.ok(itemDTOs);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
             return ResponseEntity.notFound().build();
@@ -85,9 +86,9 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<String> newItem(@RequestBody Item item) {
+    public ResponseEntity<String> newItem(@RequestBody ItemRequestDTO itemDTO) {
         try {
-            int result = itemService.saveItem(item);
+            int result = itemService.saveItem(itemDTO);
 
             if (result != 0) {
                 return ResponseEntity.ok("Item created successfully.");
@@ -104,9 +105,9 @@ public class ItemController {
     }
 
     @PutMapping("/{itemId}")
-    public ResponseEntity<String> update(@PathVariable(name = "itemId") Long itemId, @RequestBody Item item) {
-        item.setItemId(itemId); //item에 id를 set하지 않아도 url의 id를 가진 item을 update하도록 함
-        int result = itemService.updateItem(item);
+    public ResponseEntity<String> update(@PathVariable(name = "itemId") Long itemId, @RequestBody ItemRequestDTO itemDTO) {
+        itemDTO.setItemId(itemId); //item에 id를 set하지 않아도 url의 id를 가진 item을 update하도록 함
+        int result = itemService.updateItem(itemDTO);
         if (result != 0){
             return ResponseEntity.ok("Item updated successfully.");
         } else {
@@ -135,5 +136,3 @@ public class ItemController {
         }
     }
 }
-
-//item의 id가 null이면 안됨 => @Valid를 contorller에, @NotNull을 dto에 넣어주기!!!

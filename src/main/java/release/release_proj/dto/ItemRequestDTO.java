@@ -9,6 +9,7 @@ import release.release_proj.domain.Item;
 @Builder
 public class ItemRequestDTO {
 
+    private Long itemId;
     @NotNull
     private String name;
     @NotNull
@@ -30,6 +31,7 @@ public class ItemRequestDTO {
 
     public Item toEntity() {
         return Item.builder()
+                .itemId(itemId)
                 .name(name)
                 .price(price)
                 .count(count)
