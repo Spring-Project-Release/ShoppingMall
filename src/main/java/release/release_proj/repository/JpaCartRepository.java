@@ -27,6 +27,8 @@ public class JpaCartRepository implements CartRepository {
                 .executeUpdate();
 
         transaction.commit();
+
+        return result;
     }
 
     @Override
@@ -40,6 +42,8 @@ public class JpaCartRepository implements CartRepository {
                 .executeUpdate();
 
         transaction.commit();
+
+        return result;
     }
 
     @Override
@@ -61,7 +65,7 @@ public class JpaCartRepository implements CartRepository {
        Cart cart = em.createQuery("SELECT c FROM Cart c WHERE c.memberId = :memberId AND c.itemId = :itemId", Cart.class)
                     .setParameter("memberId", memberId)
                     .setParameter("itemId", itemId)
-                    .getSingleResult());
+                    .getSingleResult();
 
       return Optional.ofNullable(cart);
     }

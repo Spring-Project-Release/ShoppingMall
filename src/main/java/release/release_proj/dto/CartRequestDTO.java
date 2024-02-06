@@ -9,6 +9,7 @@ import release.release_proj.domain.Cart;
 @Builder
 public class CartRequestDTO {
 
+    private Long cartId;
     @NotNull
     private String memberId;
     @NotNull
@@ -18,6 +19,7 @@ public class CartRequestDTO {
 
     public Cart toEntity() {
         return Cart.builder()
+                .cartId(cartId)
                 .memberId(memberId)
                 .itemId(itemId)
                 .amount(amount)

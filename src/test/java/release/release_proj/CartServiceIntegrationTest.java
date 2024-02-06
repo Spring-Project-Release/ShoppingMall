@@ -11,10 +11,12 @@ import release.release_proj.dto.CartResponseDTO;
 import release.release_proj.repository.ItemRepository;
 import release.release_proj.repository.MemberDAO;
 import release.release_proj.repository.OrderRepository;
+import release.release_proj.service.CartService;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 @Transactional
 public class CartServiceIntegrationTest {
+
+    @PersistenceContext private EntityManager em;
 
     @Autowired CartService cartService;
     @Autowired ItemRepository itemRepository;
@@ -41,13 +45,7 @@ public class CartServiceIntegrationTest {
         member.setMemberEmail("testMemberEmail");
         memberDAO.insertMember(member);
 
-        Item item = new Item();
-        item.setName("testItemName");
-        item.setStock(1);
-        item.setPrice(1);
-        item.setIsSoldout(false);
-        item.setSellerId(member.getMemberId());
-        itemRepository.save(item);
+        Item item = createItem("testItemName", 1, 1, false, member.getMemberId());
 
         CartRequestDTO cartDTO = CartRequestDTO.builder()
                 .memberId(member.getMemberId())
@@ -56,7 +54,7 @@ public class CartServiceIntegrationTest {
                 .build();
 
         // When
-        int result = cartService.addCartItem(cartDTO);
+        cartService.addCartItem(cartDTO);
 
         // Then
         CartResponseDTO savedCartDTO = cartService.readMemberCartItems(member.getMemberId(), item.getItemId());
@@ -76,13 +74,7 @@ public class CartServiceIntegrationTest {
         member.setMemberEmail("testMemberEmail");
         memberDAO.insertMember(member);
 
-        Item item = new Item();
-        item.setName("testItemName");
-        item.setStock(1);
-        item.setPrice(1);
-        item.setIsSoldout(false);
-        item.setSellerId(member.getMemberId());
-        itemRepository.save(item);
+        Item item = createItem("testItemName", 1, 1, false, member.getMemberId());
 
         CartRequestDTO cartDTO1 = CartRequestDTO.builder()
                 .memberId(member.getMemberId())
@@ -97,8 +89,8 @@ public class CartServiceIntegrationTest {
                 .build();
 
         // When
-        int result1 = cartService.addCartItem(cartDTO1);
-        int result2 = cartService.addCartItem(cartDTO2);
+        cartService.addCartItem(cartDTO1);
+        cartService.addCartItem(cartDTO2);
 
         // Then
         CartResponseDTO savedCartDTO = cartService.readMemberCartItems(member.getMemberId(), item.getItemId());
@@ -131,13 +123,7 @@ public class CartServiceIntegrationTest {
         member.setMemberEmail("testMemberEmail");
         memberDAO.insertMember(member);
 
-        Item item = new Item();
-        item.setName("testItemName");
-        item.setStock(1);
-        item.setPrice(1);
-        item.setIsSoldout(false);
-        item.setSellerId(member.getMemberId());
-        itemRepository.save(item);
+        Item item = createItem("testItemName", 1, 1, false, member.getMemberId());
 
         CartRequestDTO cartDTO = CartRequestDTO.builder()
                 .memberId(member.getMemberId())
@@ -189,21 +175,9 @@ public class CartServiceIntegrationTest {
         member.setMemberEmail("testMemberEmail");
         memberDAO.insertMember(member);
 
-        Item item1 = new Item();
-        item1.setName("testItemName");
-        item1.setStock(1);
-        item1.setPrice(1);
-        item1.setIsSoldout(false);
-        item1.setSellerId(member.getMemberId());
-        itemRepository.save(item1);
+        Item item1 = createItem("testItemName", 1, 1, false, member.getMemberId());
 
-        Item item2 = new Item();
-        item2.setName("testItemName");
-        item2.setStock(1);
-        item2.setPrice(1);
-        item2.setIsSoldout(false);
-        item2.setSellerId(member.getMemberId());
-        itemRepository.save(item2);
+        Item item2 = createItem("testItemName", 1, 1, false, member.getMemberId());
 
         CartRequestDTO cartDTO1 = CartRequestDTO.builder()
                 .memberId(member.getMemberId())
@@ -243,13 +217,7 @@ public class CartServiceIntegrationTest {
         member.setMemberEmail("testMemberEmail");
         memberDAO.insertMember(member);
 
-        Item item = new Item();
-        item.setName("testItemName");
-        item.setStock(1);
-        item.setPrice(1);
-        item.setIsSoldout(false);
-        item.setSellerId(member.getMemberId());
-        itemRepository.save(item);
+        Item item = createItem("testItemName", 1, 1, false, member.getMemberId());
 
         // When
         int result = cartService.deleteCartItem(member.getMemberId(), item.getItemId()); //존재하지 않는 장바구니 물품 삭제
@@ -272,13 +240,7 @@ public class CartServiceIntegrationTest {
         member.setMemberEmail("testMemberEmail");
         memberDAO.insertMember(member);
 
-        Item item = new Item();
-        item.setName("testItemName");
-        item.setStock(1);
-        item.setPrice(1);
-        item.setIsSoldout(false);
-        item.setSellerId(member.getMemberId());
-        itemRepository.save(item);
+        Item item = createItem("testItemName", 1, 1, false, member.getMemberId());
 
         CartRequestDTO cartDTO = CartRequestDTO.builder()
                 .memberId(member.getMemberId())
@@ -286,17 +248,22 @@ public class CartServiceIntegrationTest {
                 .amount(2)
                 .build();
 
+        cartService.addCartItem(cartDTO);
+
         Long itemId = item.getItemId();
         String memberId = member.getMemberId();
 
         // When
-        cartService.decreaseCartItem(cartDTO.getCartId());
-        CartResponseDTO savedCartDTO = cartService.readMemberCartItems(memberId, itemId);
-        cartService.decreaseCartItem(savedCartDTO.getCartId());
+        CartResponseDTO savedCartDTO1 = cartService.readMemberCartItems(memberId, itemId);
+        cartService.decreaseCartItem(savedCartDTO1.getCartId());
+        CartResponseDTO savedCartDTO2 = cartService.readMemberCartItems(memberId, itemId);
+        cartService.decreaseCartItem(savedCartDTO2.getCartId());
 
         // Then
-        assertThat(savedCartDTO).isNotNull();
-        assertThat(savedCartDTO.getAmount()).isEqualTo(1);;
+        assertThat(savedCartDTO1).isNotNull();
+        assertThat(savedCartDTO2).isNotNull();
+        assertThat(savedCartDTO1.getAmount()).isEqualTo(2);;
+        assertThat(savedCartDTO2.getAmount()).isEqualTo(1);;
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.readMemberCartItems(memberId, itemId));
         assertThat(e.getMessage()).isEqualTo("해당 memberId와 itemId를 가지는 장바구니가 존재하지 않습니다.");
     }
@@ -313,13 +280,7 @@ public class CartServiceIntegrationTest {
         member.setMemberEmail("testMemberEmail");
         memberDAO.insertMember(member);
 
-        Item item = new Item();
-        item.setName("testItemName");
-        item.setStock(1);
-        item.setPrice(1);
-        item.setIsSoldout(false);
-        item.setSellerId(member.getMemberId());
-        itemRepository.save(item);
+        Item item = createItem("testItemName", 1, 1, false, member.getMemberId());
 
         CartRequestDTO cartDTO = CartRequestDTO.builder()
                 .memberId(member.getMemberId())
@@ -330,12 +291,15 @@ public class CartServiceIntegrationTest {
         cartService.addCartItem(cartDTO);
 
         // When
-        cartService.increaseCartItem(cartDTO.getCartId(), 2);
-        CartResponseDTO savedCartDTO = cartService.readMemberCartItems(member.getMemberId(), item.getItemId());
+        CartResponseDTO savedCartDTO1 = cartService.readMemberCartItems(member.getMemberId(), item.getItemId());
+        cartService.increaseCartItem(savedCartDTO1.getCartId(), 2);
+        CartResponseDTO savedCartDTO2 = cartService.readMemberCartItems(member.getMemberId(), item.getItemId());
 
         // Then
-        assertThat(savedCartDTO).isNotNull();
-        assertThat(savedCartDTO.getAmount()).isEqualTo(4);
+        assertThat(savedCartDTO1).isNotNull();
+        assertThat(savedCartDTO2).isNotNull();
+        assertThat(savedCartDTO1.getAmount()).isEqualTo(2);
+        assertThat(savedCartDTO2.getAmount()).isEqualTo(4);
     }
 
     @Test
@@ -359,21 +323,8 @@ public class CartServiceIntegrationTest {
         member2.setMemberEmail("testMemberEmail2");
         memberDAO.insertMember(member2);
 
-        Item item1 = new Item();
-        item1.setName("testItemName");
-        item1.setStock(1);
-        item1.setPrice(1);
-        item1.setIsSoldout(false);
-        item1.setSellerId(member2.getMemberId());
-        itemRepository.save(item1);
-
-        Item item2 = new Item();
-        item2.setName("testItemName2");
-        item2.setStock(1);
-        item2.setPrice(1);
-        item2.setIsSoldout(false);
-        item2.setSellerId(member2.getMemberId());
-        itemRepository.save(item2);
+        Item item1 = createItem("testItemName", 1, 1, false, member2.getMemberId());
+        Item item2 = createItem("testItemName", 1, 1, false, member2.getMemberId());
 
         String memberId = member1.getMemberId();
         CartRequestDTO cartDTO1 = CartRequestDTO.builder()
@@ -389,7 +340,7 @@ public class CartServiceIntegrationTest {
                 .build();
 
         cartService.addCartItem(cartDTO1);
-        cartService.addCartItem(cartDTO2;
+        cartService.addCartItem(cartDTO2);
 
         // When
         cartService.payAllCart(memberId, "전체결제");
@@ -451,21 +402,8 @@ public class CartServiceIntegrationTest {
         member2.setMemberEmail("testMemberEmail2");
         memberDAO.insertMember(member2);
 
-        Item item1 = new Item();
-        item1.setName("testItemName");
-        item1.setStock(1);
-        item1.setPrice(1);
-        item1.setIsSoldout(false);
-        item1.setSellerId(member2.getMemberId());
-        itemRepository.save(item1);
-
-        Item item2 = new Item();
-        item2.setName("testItemName2");
-        item2.setStock(1);
-        item2.setPrice(1);
-        item2.setIsSoldout(false);
-        item2.setSellerId(member2.getMemberId());
-        itemRepository.save(item2);
+        Item item1 = createItem("testItemName", 1, 1, false, member2.getMemberId());
+        Item item2 = createItem("testItemName", 1, 1, false, member2.getMemberId());
 
         String memberId = member1.getMemberId();
         CartRequestDTO cartDTO1 = CartRequestDTO.builder()
@@ -540,13 +478,7 @@ public class CartServiceIntegrationTest {
         member.setMemberEmail("testMemberEmail");
         memberDAO.insertMember(member);
 
-        Item item = new Item();
-        item.setName("testItemName");
-        item.setStock(1);
-        item.setPrice(1);
-        item.setIsSoldout(false);
-        item.setSellerId(member.getMemberId());
-        itemRepository.save(item);
+        Item item = createItem("testItemName", 1, 1, false, member.getMemberId());
 
         List<Long> tempList = new ArrayList<>();
         tempList.add(item.getItemId());
@@ -557,8 +489,7 @@ public class CartServiceIntegrationTest {
     }
 
     private Item createItem(String name, int stock, int price, Boolean isSoldout, String sellerId) {
-        Item item = new Item();
-        item.builder()
+        Item item = Item.builder()
                 .name(name)
                 .stock(stock)
                 .price(price)
@@ -566,9 +497,7 @@ public class CartServiceIntegrationTest {
                 .sellerId(sellerId)
                 .build();
 
-        itemRepository.save(item);
-        Optional<Item> savedItem = itemRepository.findByItemName(item.getName());
-        return savedItem.get();
-
+        em.persist(item);
+        return item;
     }
 }
