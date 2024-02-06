@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Transactional
 public class ItemServiceIntegrationTest {
 
-    @Autowired
-    ItemService itemService;
+
+    @Autowired ItemService itemService;
     @Autowired MemberDAO memberDAO;
 
     @Test
@@ -42,13 +42,12 @@ public class ItemServiceIntegrationTest {
                 .build();
 
         //When
-        int result = itemService.saveItem(itemDTO);
+        itemService.saveItem(itemDTO);
 
         //Then
         ItemResponseDTO savedItemDTO = itemService.findOne(itemDTO.getItemId());
         assertThat(savedItemDTO).isNotNull();
         assertThat(itemDTO.getName()).isEqualTo(savedItemDTO.getName());
-        assertThat(result).isGreaterThan(0);
     }
 
     @Test
@@ -96,7 +95,7 @@ public class ItemServiceIntegrationTest {
                 .build();
 
         //When
-        int result = itemService.saveItem(itemDTO1);
+        itemService.saveItem(itemDTO1);
 
         //Then
         IllegalStateException e = assertThrows(IllegalStateException.class, () -> itemService.saveItem(itemDTO2)); //예외가 발생해야 함
@@ -134,7 +133,7 @@ public class ItemServiceIntegrationTest {
                 .build();
 
         //When
-        int result = itemService.updateItem(updateItemDTO);
+        itemService.updateItem(updateItemDTO);
 
         //Then
         ItemResponseDTO savedItemDTO = itemService.findOne(itemDTO.getItemId());
@@ -143,7 +142,6 @@ public class ItemServiceIntegrationTest {
         assertThat(savedItemDTO.getStock()).isZero();
         assertThat(savedItemDTO.getPrice()).isEqualTo(2);
         assertThat(savedItemDTO.getIsSoldout()).isTrue();
-        assertThat(result).isGreaterThan(0);
     }
 
     @Test
@@ -233,11 +231,11 @@ public class ItemServiceIntegrationTest {
         itemService.saveItem(itemDTO);
 
         //When
-        int result = itemService.deleteItem(itemDTO.getItemId());
+        itemService.deleteItem(itemDTO.getItemId());
 
         //Then
-        assertThat(result).isGreaterThan(0);
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, ()->itemService.findOne(itemDTO.getItemId()));
         assertThat(e.getMessage()).isEqualTo("해당 itemId를 가진 상품이 존재하지 않습니다.");
     }
+
 }
