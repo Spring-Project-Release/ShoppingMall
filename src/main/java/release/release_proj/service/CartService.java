@@ -88,33 +88,23 @@ public class CartService {
 */
 package release.release_proj.service;
 
-import release.release_proj.domain.Cart;
+import release.release_proj.dto.CartRequestDTO;
+import release.release_proj.dto.CartResponseDTO;
 
 import java.util.List;
 
 public interface CartService {
 
-    public List<Cart> readMemberCarts(String memberId); //특정 member의 장바구니 전체 조회
-    public Cart readMemberCartItems(String memberId, Long itemId); //특정 member의 특정 item 조회
+    public List<CartResponseDTO> readMemberCarts(String memberId); //특정 member의 장바구니 전체 조회
+    public CartResponseDTO readMemberCartItems(String memberId, Long itemId); //특정 member의 특정 item 조회
     //public void addCartItem(MemberVO member, Item item, int amount); //특정 member에 장바구니 상품 추가
-    public int addCartItem(Cart cart); //특정 member에 장바구니 상품 추가
+    public int addCartItem(CartRequestDTO cartDTO); //특정 member에 장바구니 상품 추가
     public int deleteCartItem(String memberId, Long itemId); //특정 member의 장바구니에서 특정 item 삭제
     public int deleteCart(String memberId); //특정 member의 장바구니 전체 삭제
     //public int decreaseCartItem(String memberId, Long itemId); //특정 member의 장바구니에서 특정 item의 개수 감소
     //public int increaseCartItem(String memberId, Long itemId, int amount); //특정 member의 장바구니에서 특정 item의 개수 증가
     public int decreaseCartItem(Long cartId);
     public int increaseCartItem(Long cartId, int amount);
-
-    //장바구니 결제 함수
-    /* 해당 유저의 장바구니 전체 결제
-       1. 해당 유저의 장바구니 주문들 찾기
-       2. 결제 후 해당 유저의 장바구니 삭제
-     */
-    
-    /* 해당 유저의 장바구니 일부 결제
-       1. 해당 유저의 장바구니 주문들 중 해당 item 주문들 찾기
-       2. 결제 후 해당 유저의 해당 item에 대한 장바구니 삭제
-     */
     public void payAllCart(String memberId, String memo);
     public void paySomeCart(String memberId, List<Long> itemsId, String memo);
 }

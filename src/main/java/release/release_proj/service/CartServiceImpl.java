@@ -5,14 +5,17 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import release.release_proj.domain.Cart;
-import release.release_proj.domain.Item;
-import release.release_proj.domain.Order;
+import release.release_proj.dto.CartRequestDTO;
+import release.release_proj.dto.CartResponseDTO;
+import release.release_proj.dto.ItemResponseDTO;
+import release.release_proj.dto.OrderRequestDTO;
 import release.release_proj.repository.CartRepository;
 import release.release_proj.repository.MemberDAO;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor //생성자 주입을 대신 해줌
@@ -24,36 +27,38 @@ public class CartServiceImpl implements CartService {
     private final MemberDAO memberDAO;
 
     @Override
-    public List<Cart> readMemberCarts(String memberId) {
+    public List<CartResponseDTO> readMemberCarts(String memberId) {
         Optional<List<Cart>> cartListOptional = cartRepository.findByMemberId(memberId);
         if (cartListOptional.isEmpty() || cartListOptional.get().isEmpty()) {
             throw new IllegalArgumentException("해당 memberId를 가지는 장바구니가 존재하지 않습니다.");
         }
 
-        return cartListOptional.get();
+        return cartListOptional.get().stream().map(CartResponseDTO::new).collect(Collectors.toList());
     }
 
     @Override
-    public Cart readMemberCartItems(String memberId, Long itemId) {
-        return cartRepository.findByMemberIdAndItemId(memberId, itemId)
+    public CartResponseDTO readMemberCartItems(String memberId, Long itemId) {
+        Cart cart = cartRepository.findByMemberIdAndItemId(memberId, itemId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 memberId와 itemId를 가지는 장바구니가 존재하지 않습니다."));
+
+        return new CartResponseDTO(cart);
     }
 
     @Override
-    public int addCartItem(Cart cart) {
+    public int addCartItem(CartRequestDTO cartDTO) {
         try {
-            Item item = itemService.findOne(cart.getItemId());
-            if (cart.getMemberId().equals(item.getSellerId())) {
+            ItemResponseDTO itemDTO = itemService.findOne(cartDTO.getItemId());
+            if (cartDTO.getMemberId().equals(itemDTO.getSellerId())) {
                 throw new IllegalArgumentException("본인이 판매중인 상품을 장바구니에 담을 수 없습니다.");
             }
 
-            Optional<Cart> isCartExist = cartRepository.findByMemberIdAndItemId(cart.getMemberId(), cart.getItemId());
+            Optional<Cart> isCartExist = cartRepository.findByMemberIdAndItemId(cartDTO.getMemberId(), cartDTO.getItemId());
             if (isCartExist.isPresent()){
                 Cart currentCart = isCartExist.get();
-                return cartRepository.updateCartAmount(currentCart.getCartId(), cart.getAmount());
+                return cartRepository.updateCartAmount(currentCart.getCartId(), cartDTO.getAmount());
             }
             else {
-                return cartRepository.save(cart);
+                return cartRepository.save(cartDTO.toEntity());
             }
         } catch (DataIntegrityViolationException e) {
             // 외래 키 제약 조건 위배로 인한 예외 처리
@@ -74,7 +79,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public int deleteCart(String memberId) {
-        //String memberId = member.getMemberId();
         Optional<List<Cart>> memberCarts = cartRepository.findByMemberId(memberId);
 
         if (memberCarts.isPresent()) {
@@ -106,21 +110,26 @@ public class CartServiceImpl implements CartService {
             throw new IllegalArgumentException("Invalid memberId: " + memberId);
         }
 
-        Optional<List<Cart>> carts = cartRepository.findByMemberId(memberId);
-        if (carts.get().equals(Collections.emptyList())) { //빈 리스트인 경우
-            throw new IllegalArgumentException("해당하는 memberId: "+memberId+"를 갖는 cart가 존재하지 않습니다.");
+        List<Cart> carts = cartRepository.findByMemberId(memberId).orElse(Collections.emptyList());
+
+        // 장바구니가 비어있는지 확인
+        if (carts.isEmpty()) {
+            throw new IllegalArgumentException("해당하는 memberId: " + memberId + "를 갖는 cart가 존재하지 않습니다.");
         } else { //해당 memberId 자체는 존재하지만 cart DB에 존재하지 않는 경우
-            for (Cart cart : carts.get()) {
+            for (Cart cart : carts) {
                 //order 기록 저장- 구매내역으로 무언가를 할 경우(user의 등급을 매길 경우 user에 paymentPrice 항목도 추가를 해야하나?)
-                Order order = new Order();
-                order.setBuyerId(cart.getMemberId());
-                order.setItemId(cart.getItemId());
-                Item item = itemService.findOne(cart.getItemId());
-                order.setSellerId(item.getSellerId());
-                order.setCount(cart.getAmount());
-                order.setPrice(cart.getAmount() * itemService.getPrice(cart.getItemId()));
-                order.setMemo(memo != null ? memo : ""); //controller에서 memo를 받아와서 order에 set해줌
-                orderService.save(order);
+                ItemResponseDTO itemDTO = itemService.findOne(cart.getItemId());
+
+                OrderRequestDTO orderDTO = OrderRequestDTO.builder()
+                        .buyerId(cart.getMemberId())
+                        .itemId(cart.getItemId())
+                        .sellerId(itemDTO.getSellerId())
+                        .count(cart.getAmount())
+                        .price(cart.getAmount() * itemService.getPrice(cart.getItemId()))
+                        .memo(memo != null ? memo : "") //controller에서 memo를 받아와서 order에 set해줌
+                        .build();
+
+                orderService.save(orderDTO);
                 cartRepository.deleteByMemberIdAndItemId(memberId, cart.getItemId());
             }
         }
@@ -138,22 +147,23 @@ public class CartServiceImpl implements CartService {
                 throw new IllegalArgumentException("Invalid itemId: " + itemId);
             }
 
-            Optional<Cart> cart = cartRepository.findByMemberIdAndItemId(memberId, itemId);
-            if (cart.isPresent()) {
-                Cart existCart = cart.get();
-                Order order = new Order();
-                order.setBuyerId(existCart.getMemberId());
-                order.setItemId(existCart.getItemId());
-                Item item = itemService.findOne(existCart.getItemId());
-                order.setSellerId(item.getSellerId());
-                order.setCount(existCart.getAmount());
-                order.setPrice(existCart.getAmount() * itemService.getPrice(existCart.getItemId()));
-                order.setMemo(memo != null ? memo : ""); //controller에서 memo를 받아와서 order에 set해줌
-                orderService.save(order);
-                cartRepository.deleteByMemberIdAndItemId(memberId, itemId);
-            } else { //해당 itemId와 memberId 자체는 존재하지만 cart DB에 존재하지 않는 경우
-                throw new IllegalArgumentException("해당하는 itemId: "+itemId+"와 memberId: "+memberId+"를 갖는 cart가 존재하지 않습니다.");
-            }
+            Cart cart = cartRepository.findByMemberIdAndItemId(memberId, itemId).orElseThrow(() ->
+                    new IllegalArgumentException("해당하는 itemId: " + itemId + "와 memberId: " + memberId + "를 갖는 cart가 존재하지 않습니다.")
+            );  //해당 itemId와 memberId 자체는 존재하지만 cart DB에 존재하지 않는 경우
+
+            ItemResponseDTO itemDTO = itemService.findOne(cart.getItemId());
+            // 주문 생성
+            OrderRequestDTO orderDTO = OrderRequestDTO.builder()
+                    .buyerId(cart.getMemberId())
+                    .itemId(cart.getItemId())
+                    .sellerId(itemDTO.getSellerId())
+                    .count(cart.getAmount())
+                    .price(cart.getAmount() * itemService.getPrice(cart.getItemId()))
+                    .memo(memo != null ? memo : "")
+                    .build();
+
+            orderService.save(orderDTO);
+            cartRepository.deleteByMemberIdAndItemId(memberId, itemId);
         }
     }
 }

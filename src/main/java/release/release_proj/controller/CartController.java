@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import release.release_proj.domain.Cart;
 import release.release_proj.domain.MemberVO;
+import release.release_proj.dto.CartRequestDTO;
+import release.release_proj.dto.CartResponseDTO;
 import release.release_proj.service.CartService;
 
 import java.util.List;
@@ -20,10 +22,10 @@ public class CartController {
     private final CartService cartService;
 
     @GetMapping("/user/{memberId}")
-    public ResponseEntity<List<Cart>> memberCartList(@PathVariable(name="memberId") String memberId) {
+    public ResponseEntity<List<CartResponseDTO>> memberCartList(@PathVariable(name="memberId") String memberId) {
         try {
-            List<Cart> carts = cartService.readMemberCarts(memberId);
-            return ResponseEntity.ok(carts);
+            List<CartResponseDTO> cartDTOs = cartService.readMemberCarts(memberId);
+            return ResponseEntity.ok(cartDTOs);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
             return ResponseEntity.notFound().build();
@@ -31,10 +33,10 @@ public class CartController {
     }
 
     @GetMapping("/user/{memberId}/item/{itemId}")
-    public ResponseEntity<Cart> memberCartItemList(@PathVariable(name="memberId") String memberId, @PathVariable(name="itemId") Long itemId) {
+    public ResponseEntity<CartResponseDTO> memberCartItemList(@PathVariable(name="memberId") String memberId, @PathVariable(name="itemId") Long itemId) {
         try {
-            Cart cart = cartService.readMemberCartItems(memberId, itemId);
-            return ResponseEntity.ok(cart);
+            CartResponseDTO cartDTO = cartService.readMemberCartItems(memberId, itemId);
+            return ResponseEntity.ok(cartDTO);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
             return ResponseEntity.notFound().build();
@@ -42,13 +44,13 @@ public class CartController {
     }
 
     @PostMapping
-    public ResponseEntity<String> newCart(@RequestBody Cart cart, @SessionAttribute(name = "userInfo", required = false) MemberVO userInfo) {
+    public ResponseEntity<String> newCart(@RequestBody CartRequestDTO cartDTO, @SessionAttribute(name = "userInfo", required = false) MemberVO userInfo) {
         try {
             if (userInfo == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 후 장바구니에 상품을 추가해주세요.");
             }
 
-            int result = cartService.addCartItem(cart);
+            int result = cartService.addCartItem(cartDTO);
 
             if (result != 0) {
                 return ResponseEntity.ok("Cart created or amount updated successfully.");
