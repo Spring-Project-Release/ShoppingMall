@@ -143,6 +143,40 @@ public class CartServiceIntegrationTest {
     }
 
     @Test
+    public void 장바구니추가_판매자가_본인_예외() throws Exception {
+        // Given
+        MemberVO member1 = new MemberVO();
+        member1.setMemberId("testMemberId1");
+        member1.setMemberName("testMemberName1");
+        member1.setMemberPassword("testMemberPassword1");
+        member1.setMemberPhone("testMemberPhone1");
+        member1.setMemberAddress("testMemberAddress1");
+        member1.setMemberEmail("testMemberEmail1");
+        memberDAO.insertMember(member1);
+
+        MemberVO member2 = new MemberVO();
+        member2.setMemberId("testMemberId2");
+        member2.setMemberName("testMemberName2");
+        member2.setMemberPassword("testMemberPassword2");
+        member2.setMemberPhone("testMemberPhone2");
+        member2.setMemberAddress("testMemberAddress2");
+        member2.setMemberEmail("testMemberEmail2");
+        memberDAO.insertMember(member2);
+
+        Item item = createItem("testItemName", 10, 1, false, member1.getMemberId());
+
+        CartRequestDTO cartDTO = CartRequestDTO.builder()
+                .memberId(member1.getMemberId())
+                .itemId(item.getItemId())
+                .amount(2)
+                .build();
+
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.addCartItem(cartDTO));
+        assertThat(e.getMessage()).isEqualTo("본인이 판매중인 상품을 장바구니에 담을 수 없습니다.");
+    }
+
+    @Test
     public void 유저_장바구니_삭제() throws Exception {
         // Given
         MemberVO member1 = new MemberVO();
