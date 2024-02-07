@@ -6,17 +6,25 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import release.release_proj.domain.Item;
 import release.release_proj.domain.MemberVO;
-import release.release_proj.domain.Order;
+import release.release_proj.dto.OrderRequestDTO;
+import release.release_proj.dto.OrderResponseDTO;
 import release.release_proj.repository.ItemRepository;
 import release.release_proj.repository.MemberDAO;
 import release.release_proj.service.OrderService;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-/*
+
 @SpringBootTest
 @Transactional
 public class OrderServiceIntegrationTest {
+
+    @PersistenceContext private EntityManager em;
 
     @Autowired OrderService orderService;
     @Autowired MemberDAO memberDAO;
@@ -43,33 +51,30 @@ public class OrderServiceIntegrationTest {
         member2.setMemberEmail("testMemberEmail2");
         memberDAO.insertMember(member2);
 
-        Item item = new Item();
-        item.setName("testItemName");
-        item.setPrice(1);
-        item.setStock(1);
-        item.setCount(0);
-        item.setIsSoldout(false);
-        item.setSellerId(member2.getMemberId());
+        Item item = createItem("testItemName", 1, 1, 0, false, member2.getMemberId());
         itemRepository.save(item);
 
-        Order order = new Order();
-        order.setBuyerId(member1.getMemberId());
-        order.setItemId(item.getItemId());
-        order.setSellerId(item.getSellerId());
-        order.setCount(1);
-        order.setPrice(order.getCount()*item.getPrice());
+        OrderRequestDTO orderDTO = OrderRequestDTO.builder()
+                .buyerId(member1.getMemberId())
+                .itemId(item.getItemId())
+                .sellerId(item.getSellerId())
+                .count(1)
+                .price(item.getPrice()*1)
+                .build();
 
         // When
-        orderService.save(order);
+        orderService.save(orderDTO);
+        em.flush();
+        em.clear();
 
         // Then
-        List<Order> savedOrder1 = orderService.findByBuyerId(member1.getMemberId());
-        List<Order> savedOrder2 = orderService.findBySellerId(item.getSellerId());
+        List<OrderResponseDTO> savedOrderDTO1 = orderService.findByBuyerId(member1.getMemberId());
+        List<OrderResponseDTO> savedOrderDTO2 = orderService.findBySellerId(item.getSellerId());
         Item savedItem = itemRepository.findByItemId(item.getItemId()).get();
-        assertThat(savedOrder1).isNotNull();
-        assertThat(savedOrder2).isNotNull();
-        assertEquals(savedOrder1.get(0), savedOrder2.get(0));
-        assertEquals(order.getOrderId(),savedOrder1.get(0).getOrderId());
+        assertThat(savedOrderDTO1).isNotNull();
+        assertThat(savedOrderDTO2).isNotNull();
+        assertEquals(savedOrderDTO1.get(0), savedOrderDTO2.get(0));
+        assertEquals(savedOrderDTO1.get(0).getOrderId(),savedOrderDTO2.get(0).getOrderId());
         assertThat(savedItem.getStock()).isEqualTo(0);
         assertThat(savedItem.getIsSoldout()).isEqualTo(true);
         assertThat(savedItem.getCount()).isEqualTo(1);
@@ -78,15 +83,16 @@ public class OrderServiceIntegrationTest {
     @Test
     public void 상품결제_외래키_예외_상품_또는_셀러_또는_구매자_없음() throws Exception {
         //Given
-        Order order = new Order();
-        order.setBuyerId("testMemberId1");
-        order.setSellerId("testMemberId2");
-        order.setItemId(99999L);
-        order.setCount(1);
-        order.setPrice(1);
+        OrderRequestDTO orderDTO = OrderRequestDTO.builder()
+                .buyerId("testMemberId1")
+                .itemId(99999L)
+                .sellerId("testMemberId2")
+                .count(1)
+                .price(1)
+                .build();
 
         //Then
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> orderService.save(order));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> orderService.save(orderDTO));
         assertThat(e.getMessage()).isEqualTo("결제 처리에 실패했습니다. 해당하는 buyerId가 존재하지 않습니다.");
     }
 
@@ -102,15 +108,16 @@ public class OrderServiceIntegrationTest {
         member1.setMemberEmail("testMemberEmail1");
         memberDAO.insertMember(member1);
 
-        Order order = new Order();
-        order.setItemId(999999L);
-        order.setBuyerId(member1.getMemberId());
-        order.setSellerId("testMemberId2");
-        order.setCount(1);
-        order.setPrice(1);
+        OrderRequestDTO orderDTO = OrderRequestDTO.builder()
+                .buyerId(member1.getMemberId())
+                .itemId(99999L)
+                .sellerId("testMemberId2")
+                .count(1)
+                .price(1)
+                .build();
 
         //Then
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> orderService.save(order));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> orderService.save(orderDTO));
         assertThat(e.getMessage()).isEqualTo("결제 처리에 실패했습니다. 해당하는 sellerId가 존재하지 않습니다.");
     }
 
@@ -135,15 +142,16 @@ public class OrderServiceIntegrationTest {
         member2.setMemberEmail("testMemberEmail2");
         memberDAO.insertMember(member2);
 
-        Order order = new Order();
-        order.setBuyerId(member1.getMemberId());
-        order.setSellerId(member2.getMemberId());
-        order.setItemId(999999L);
-        order.setCount(1);
-        order.setPrice(1);
+        OrderRequestDTO orderDTO = OrderRequestDTO.builder()
+                .buyerId(member1.getMemberId())
+                .itemId(99999L)
+                .sellerId(member2.getMemberId())
+                .count(1)
+                .price(1)
+                .build();
 
         //Then
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> orderService.save(order));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> orderService.save(orderDTO));
         assertThat(e.getMessage()).isEqualTo("결제 처리에 실패했습니다. 해당하는 itemId가 존재하지 않습니다.");
     }
 
@@ -168,25 +176,20 @@ public class OrderServiceIntegrationTest {
         member2.setMemberEmail("testMemberEmail2");
         memberDAO.insertMember(member2);
 
-        Item item = new Item();
-        item.setName("testItemName");
-        item.setPrice(1);
-        item.setStock(1);
-        item.setCount(0);
-        item.setIsSoldout(false);
-        item.setSellerId(member2.getMemberId());
+        Item item = createItem("testItemName", 1, 1, 0, false, member2.getMemberId());
         itemRepository.save(item);
 
-        Order order = new Order();
-        order.setBuyerId(member1.getMemberId());
-        order.setSellerId(item.getSellerId());
-        order.setItemId(item.getItemId());
-        order.setCount(2);
-        order.setPrice(order.getCount()*item.getPrice());
+        OrderRequestDTO orderDTO = OrderRequestDTO.builder()
+                .buyerId(member1.getMemberId())
+                .itemId(item.getItemId())
+                .sellerId(item.getSellerId())
+                .count(2)
+                .price(item.getPrice() * 2)
+                .build();
 
         // Then
-        IllegalStateException e = assertThrows(IllegalStateException.class, () -> orderService.save(order));
-        assertThat(e.getMessage()).isEqualTo(order.getItemId()+" 상품의 재고가 부족합니다.");
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> orderService.save(orderDTO));
+        assertThat(e.getMessage()).isEqualTo(orderDTO.getItemId()+" 상품의 재고가 부족합니다.");
     }
 
     @Test
@@ -210,32 +213,28 @@ public class OrderServiceIntegrationTest {
         member2.setMemberEmail("testMemberEmail2");
         memberDAO.insertMember(member2);
 
-        Item item = new Item();
-        item.setName("testItemName");
-        item.setPrice(1);
-        item.setStock(1);
-        item.setCount(0);
-        item.setIsSoldout(false);
-        item.setSellerId(member1.getMemberId());
+        Item item = createItem("testItemName", 1, 1, 0, false, member1.getMemberId());
         itemRepository.save(item);
 
-        Order order = new Order();
-        order.setBuyerId(member2.getMemberId());
-        order.setSellerId(member1.getMemberId());
-        order.setItemId(item.getItemId());
-        order.setCount(1);
-        order.setPrice(order.getCount()*item.getPrice());
+        OrderRequestDTO orderDTO = OrderRequestDTO.builder()
+                .buyerId(member2.getMemberId())
+                .itemId(item.getItemId())
+                .sellerId(member1.getMemberId())
+                .count(1)
+                .price(item.getPrice() * 1)
+                .build();
 
-        orderService.save(order);
+        orderService.save(orderDTO);
 
         //When
-        orderService.deleteOrder(order.getOrderId());
+        OrderResponseDTO savedOrderDTO = orderService.findByBuyerId(orderDTO.getBuyerId()).get(0);
+        orderService.deleteOrder(savedOrderDTO.getOrderId());
 
         // Then
         Item savedItem = itemRepository.findByItemId(item.getItemId()).get();
         MemberVO savedMember1 = memberDAO.findMemberById(member1.getMemberId());
         MemberVO savedMember2 = memberDAO.findMemberById(member2.getMemberId());
-        ////////////////////////
+
         IllegalArgumentException e1 = assertThrows(IllegalArgumentException.class, () -> orderService.findByBuyerId(savedMember2.getMemberId()));
         assertThat(e1.getMessage()).isEqualTo("해당 buyerId를 가지는 구매내역이 존재하지 않습니다.");
         IllegalArgumentException e2 = assertThrows(IllegalArgumentException.class, () -> orderService.findBySellerId(savedMember1.getMemberId()));
@@ -268,27 +267,35 @@ public class OrderServiceIntegrationTest {
         member2.setMemberEmail("testMemberEmail2");
         memberDAO.insertMember(member2);
 
-        Item item = new Item();
-        item.setName("testItemName");
-        item.setPrice(1);
-        item.setStock(1);
-        item.setCount(0);
-        item.setIsSoldout(false);
-        item.setSellerId(member1.getMemberId());
+        Item item = createItem("testItemName", 1, 1, 0, false, member1.getMemberId());
         itemRepository.save(item);
 
-        Order order = new Order();
-        order.setBuyerId(member2.getMemberId());
-        order.setSellerId(member1.getMemberId());
-        order.setItemId(item.getItemId());
-        order.setCount(1);
-        order.setPrice(order.getCount()*item.getPrice());
+        OrderRequestDTO orderDTO = OrderRequestDTO.builder()
+                .buyerId(member2.getMemberId())
+                .itemId(item.getItemId())
+                .sellerId(member1.getMemberId())
+                .count(1)
+                .price(item.getPrice() * 1)
+                .build();
 
-        orderService.save(order);
+        orderService.save(orderDTO);
 
         // Then
         IllegalStateException e = assertThrows(IllegalStateException.class, () -> orderService.deleteOrder(99999L));
         assertThat(e.getMessage()).isEqualTo("해당 주문 ID: " + 99999 + "가 존재하지 않습니다.");
     }
+
+    private Item createItem(String name, int stock, int price, int count, Boolean isSoldout, String sellerId) {
+        Item item = Item.builder()
+                .name(name)
+                .stock(stock)
+                .price(price)
+                .count(count)
+                .isSoldout(isSoldout)
+                .sellerId(sellerId)
+                .build();
+
+        em.persist(item);
+        return item;
+    }
 }
-*/

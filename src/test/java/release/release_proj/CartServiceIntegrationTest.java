@@ -8,7 +8,6 @@ import release.release_proj.domain.Item;
 import release.release_proj.domain.MemberVO;
 import release.release_proj.dto.CartRequestDTO;
 import release.release_proj.dto.CartResponseDTO;
-import release.release_proj.repository.CartRepository;
 import release.release_proj.repository.MemberDAO;
 import release.release_proj.repository.OrderRepository;
 import release.release_proj.service.CartService;
@@ -31,7 +30,6 @@ public class CartServiceIntegrationTest {
     @Autowired CartService cartService;
     @Autowired OrderRepository orderRepository;
     @Autowired MemberDAO memberDAO;
-    @Autowired CartRepository cartRepository;
 
     @Test
     public void 장바구니추가_이전에_존재하지않음() throws Exception {
