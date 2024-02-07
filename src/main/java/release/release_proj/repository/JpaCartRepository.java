@@ -1,10 +1,10 @@
 package release.release_proj.repository;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import release.release_proj.domain.Cart;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,30 +18,24 @@ public class JpaCartRepository implements CartRepository {
     };
 
     @Override
+    @Transactional
     public int deleteByMemberId(String memberId) {
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
 
         int result = em.createQuery("DELETE FROM Cart c WHERE c.memberId = :memberId")
                 .setParameter("memberId", memberId)
                 .executeUpdate();
 
-        transaction.commit();
-
         return result;
     }
 
     @Override
+    @Transactional
     public int deleteByMemberIdAndItemId(String memberId, Long itemId) {
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
 
         int result = em.createQuery("DELETE FROM Cart c WHERE c.memberId = :memberId AND c.itemId = :itemId")
                 .setParameter("memberId", memberId)
                 .setParameter("itemId", itemId)
                 .executeUpdate();
-
-        transaction.commit();
 
         return result;
     }
@@ -75,30 +69,24 @@ public class JpaCartRepository implements CartRepository {
     }
 
     @Override
+    @Transactional
     public int updateCartAmount(Long cartId, int amount) {
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
 
-        int result = em.createQuery("UPDATE Cart c SET c.amount = :amount WHERE c.cartId = :cartId")
+        int result = em.createQuery("UPDATE Cart c SET c.amount = c.amount + :amount WHERE c.cartId = :cartId")
             .setParameter("amount", amount)
             .setParameter("cartId", cartId)
             .executeUpdate();
-
-       transaction.commit();
 
         return result;
     }
 
     @Override
+    @Transactional
     public int deleteCartIfAmountIsZero(Long cartId){
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
 
         int result = em.createQuery("DELETE FROM Cart c WHERE c.cartId = :cartId AND c.amount = 0")
             .setParameter("cartId", cartId)
             .executeUpdate();
-
-        transaction.commit();
 
         return result;
     }

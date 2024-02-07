@@ -2,16 +2,14 @@ package release.release_proj.domain;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor //entity(domain)에는 생성자 작성해야 함
 @Getter
+@Entity
 public class Cart {
 
     /*

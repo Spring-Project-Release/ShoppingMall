@@ -108,9 +108,6 @@ public class JpaItemRepository implements ItemRepository {
                 .setParameter("itemId", itemId)
                 .executeUpdate();
 
-        em.flush();
-        em.clear();
-
         return result;
     }
 

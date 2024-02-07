@@ -10,6 +10,9 @@ import release.release_proj.dto.ItemResponseDTO;
 import release.release_proj.repository.MemberDAO;
 import release.release_proj.service.ItemService;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -17,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Transactional
 public class ItemServiceIntegrationTest {
 
+    @PersistenceContext private EntityManager em;
 
     @Autowired ItemService itemService;
     @Autowired MemberDAO memberDAO;
@@ -204,6 +208,8 @@ public class ItemServiceIntegrationTest {
 
         //When
         int result1 = itemService.updateStock(savedItemDTO.getItemId(), 2);
+        em.flush();
+        em.clear();
         int result2 = itemService.updateCount(savedItemDTO.getItemId(), 1);
 
         //Then
