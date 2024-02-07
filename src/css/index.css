@@ -10,3 +10,21 @@
 .nav-button-styles:hover {
   border-bottom: 3px solid rgb(163 230 53 / var(--tw-text-opacity));
 }
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  /* 애니메이션 종료 지점을 전체 시간의 약간의 비율로 설정 */
+  50% {
+    /* 2초 동안 회전하고 나머지 3초는 대기하기 위해 */
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.rotate-infinite {
+  animation: spin 2s linear infinite;
+}

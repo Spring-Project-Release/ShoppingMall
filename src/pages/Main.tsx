@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { addRecent } from "../utils/addRecent";
 import Container from "../components/Container";
 import ItemListBox from "../components/Main/ItemListBox";
+import TimerListBox from "../components/Main/TimerListBox";
 
 export default function Main() {
   const reset = useScrollReset();
@@ -53,23 +54,41 @@ export default function Main() {
 
       {/* BODY */}
       <ItemListBox onMove={onMove}>
-        <h1 className="text-2xl font-bold">이 물품은 어떠세요?</h1>
+        <div className="flex flex-col justify-center items-center">
+          <h1 className="text-2xl font-bold mt-2 text-slate-800">
+            마감 임박! 설 선물 랭킹 🔥
+          </h1>
+          <p className="text-base mt-2 font-slate-800 font-light text-slate-500">
+            지금 주목해야 할 상품 최대 60% 할인
+          </p>
+        </div>
       </ItemListBox>
 
-      <ItemListBox onMove={onMove}>
-        <h1 className="text-2xl">놓치기 쉬운</h1>
-        <h1 className="text-2xl font-bold">알뜰 물품</h1>
-      </ItemListBox>
+      <div className="mx-32">
+        <div className="bg-lime-100 px-12 py-8">
+          <h2 className="text-2xl text-slate-800 font-bold">
+            [선물세트] 아직이라면 구매하세요!
+          </h2>
+          <p className="text-base text-slate-800">
+            품절 임박 설 인기선물 최대 60%
+          </p>
+        </div>
+      </div>
 
       <ItemListBox onMove={onMove}>
-        <h1 className="text-2xl">지금 가장 많이 이용하는</h1>
-        <h1 className="text-2xl font-bold">인기 물품</h1>
+        <div className="flex flex-col justify-center items-center">
+          <h1 className="text-2xl font-bold mt-2 text-slate-800">
+            놓치기 쉬운 알뜰 물품 🎁
+          </h1>
+          <p className="text-base mt-2 font-slate-800 font-light text-slate-500">
+            지금이 마지막 찬스!
+          </p>
+        </div>
       </ItemListBox>
 
-      <ItemListBox onMove={onMove}>
-        <p className="text-2xl">푸르넷의 가치를 담은</p>
-        <h1 className="text-2xl font-bold">브랜드 관</h1>
-      </ItemListBox>
+      <TimerListBox onMove={onMove}>
+        <h2 />
+      </TimerListBox>
     </Container>
   );
 }

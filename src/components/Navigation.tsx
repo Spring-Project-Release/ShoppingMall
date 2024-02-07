@@ -14,7 +14,7 @@ export default function Navigation() {
       <div
         onClick={onMove}
         id="home"
-        className="h-full w-1/5 ml-3 flex flex-col justify-center items-center text-green-300 cursor-pointer"
+        className="h-full w-1/5 ml-3 flex flex-col justify-center items-center text-lime-500 cursor-pointer"
       >
         <img className="h-auto w-3/5" src="../Frunet-icon.png" />
       </div>
@@ -23,33 +23,33 @@ export default function Navigation() {
         <div
           onClick={onMove}
           id={`sale`}
-          className="flex flex-col justify-center items-center h-11 w-1/4 text-lime-400 cursor-pointer mt-2 nav-button-styles"
+          className="flex flex-col justify-center items-center h-11 w-1/4 text-lime-500 cursor-pointer mt-2 nav-button-styles"
         >
-          <h2 className="font-bold text-2xl">세 일</h2>
+          <h2 className="font-bold text-base">세 일</h2>
         </div>
 
         <div
           onClick={onMove}
           id={`special`}
-          className="flex flex-col justify-center items-center h-11 w-1/4 text-lime-400 cursor-pointer mt-2 nav-button-styles"
+          className="flex flex-col justify-center items-center h-11 w-1/4 text-lime-500 cursor-pointer mt-2 nav-button-styles"
         >
-          <h2 className="font-bold text-2xl">스페셜</h2>
+          <h2 className="font-bold text-base">스 페 셜</h2>
         </div>
 
         <div
           onClick={onMove}
           id={`ranking`}
-          className="flex flex-col justify-center items-center h-11 w-1/4 text-lime-400 cursor-pointer mt-2 nav-button-styles"
+          className="flex flex-col justify-center items-center h-11 w-1/4 text-lime-500 cursor-pointer mt-2 nav-button-styles"
         >
-          <h2 className="font-bold text-2xl">랭킹</h2>
+          <h2 className="font-bold text-base">랭 킹</h2>
         </div>
 
         <div
           onClick={onMove}
           id={`recommand`}
-          className="flex flex-col justify-center items-center h-11 w-1/4 text-lime-400 cursor-pointer mt-2 nav-button-styles"
+          className="flex flex-col justify-center items-center h-11 w-1/4 text-lime-500 cursor-pointer mt-2 nav-button-styles"
         >
-          <h2 className="font-bold text-2xl">추천</h2>
+          <h2 className="font-bold text-base">추 천</h2>
         </div>
       </div>
     </div>

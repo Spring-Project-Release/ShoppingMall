@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import { AiTwotoneHeart } from "react-icons/ai";
+import Review from "./Review/Review";
 
 interface IProductProps {
   productId: string;
@@ -185,7 +186,7 @@ export default function ProductDetail({ productId }: IProductProps) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col w-4/5 h-[200vh]">
+      <div className="flex flex-col w-4/5 h-auto">
         {/* INFO */}
         {/* INFO NAV */}
         <div className="w-full h-12 border border-gray-300 bg-white flex flex-row justify-between items-center sticky top-[6vh] z-50">
@@ -196,6 +197,10 @@ export default function ProductDetail({ productId }: IProductProps) {
             </div>
           ))}
         </div>
+        <div className="bg-red-500 h-[100vh] w-full" />
+
+        {/* 후 기 */}
+        <Review />
       </div>
     </div>
   );

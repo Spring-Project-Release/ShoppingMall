@@ -36,13 +36,13 @@ export default function DetailBar() {
   }, []);
 
   return (
-    <div className="w-full h-10 border-b border-gray-200 sticky top-0 z-50 flex flex-row justify-start items-center bg-white">
+    <div className="w-full h-10 border-b bg-white border-slate-200 sticky top-0 z-50 flex flex-row justify-start items-center">
       <div className="w-10/12 h-3/5 flex flex-row justify-start items-center">
         {isLogin ? (
           <div
             onClick={onLogout}
             id={"logout"}
-            className="cursor-pointer h-full w-2/12 flex flex-col justify-center items-center border-r border-gray-200"
+            className="text-sm text-slate-700 cursor-pointer h-full w-2/12 flex flex-col justify-center items-center border-r border-slate-200"
           >
             <p>로그 아웃</p>
           </div>
@@ -50,7 +50,7 @@ export default function DetailBar() {
           <div
             onClick={onMove}
             id={"login"}
-            className="cursor-pointer h-full w-2/12 flex flex-col justify-center items-center border-r border-gray-200"
+            className="text-sm text-slate-700 cursor-pointer h-full w-2/12 flex flex-col justify-center items-center border-r border-slate-200"
           >
             <p>로 그 인</p>
           </div>
@@ -58,28 +58,28 @@ export default function DetailBar() {
         <div
           onClick={onMove}
           id={"mypage"}
-          className="h-full w-2/12 flex flex-col justify-center items-center border-r border-gray-200"
+          className="text-sm text-slate-700 h-full w-2/12 flex flex-col justify-center items-center border-r border-slate-200"
         >
           마이 페이지
         </div>
         <div
           onClick={onMove}
           id={"recent"}
-          className="h-full w-2/12 flex flex-col justify-center items-center border-r border-gray-200"
+          className="text-sm text-slate-700 h-full w-2/12 flex flex-col justify-center items-center border-r border-slate-200"
         >
           최근 본 상품
         </div>
         <div
           onClick={onMove}
           id={"cart"}
-          className="h-full w-2/12 flex flex-col justify-center items-center border-r border-gray-200"
+          className="text-sm text-slate-700 h-full w-2/12 flex flex-col justify-center items-center border-r border-slate-200"
         >
           장바구니
         </div>
         <div
           onClick={onMove}
           id={"cs"}
-          className="h-full w-2/12 flex flex-col justify-center items-center border-r border-gray-200 border-none"
+          className="text-sm text-slate-700 h-full w-2/12 flex flex-col justify-center items-center border-r border-slate-200 border-none"
         >
           고객센터
         </div>
