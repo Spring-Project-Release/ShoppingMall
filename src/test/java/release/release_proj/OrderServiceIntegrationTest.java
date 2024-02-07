@@ -193,6 +193,44 @@ public class OrderServiceIntegrationTest {
     }
 
     @Test
+    public void 상품결제_예외_본인이_판매자_예외() throws Exception {
+        // Given
+        MemberVO member1 = new MemberVO();
+        member1.setMemberId("testMemberId1");
+        member1.setMemberName("testMemberName1");
+        member1.setMemberPassword("testMemberPassword1");
+        member1.setMemberPhone("testMemberPhone1");
+        member1.setMemberAddress("testMemberAddress1");
+        member1.setMemberEmail("testMemberEmail1");
+        memberDAO.insertMember(member1);
+
+        MemberVO member2 = new MemberVO();
+        member2.setMemberId("testMemberId2");
+        member2.setMemberName("testMemberName2");
+        member2.setMemberPassword("testMemberPassword2");
+        member2.setMemberPhone("testMemberPhone2");
+        member2.setMemberAddress("testMemberAddress2");
+        member2.setMemberEmail("testMemberEmail2");
+        memberDAO.insertMember(member2);
+
+        Item item = createItem("testItemName", 1, 1, 0, false, member1.getMemberId());
+        itemRepository.save(item);
+
+        OrderRequestDTO orderDTO = OrderRequestDTO.builder()
+                .buyerId(member1.getMemberId())
+                .itemId(item.getItemId())
+                .sellerId(item.getSellerId())
+                .count(2)
+                .price(item.getPrice() * 2)
+                .build();
+
+        // Then
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> orderService.save(orderDTO));
+        assertThat(e.getMessage()).isEqualTo("본인이 판매중인 상품을 구매할 수 없습니다.");
+    }
+
+
+    @Test
     public void 주문삭제() throws Exception { //재고가 품절되었는데 주문삭제로 품절취소되는 경우까지 테스트
         // Given
         MemberVO member1 = new MemberVO();
