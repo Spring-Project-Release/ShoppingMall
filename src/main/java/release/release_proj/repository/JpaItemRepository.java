@@ -52,19 +52,35 @@ public class JpaItemRepository implements ItemRepository {
 
     @Override
     public Optional<List<Item>> findBySellerId(String sellerId){
-        List<Item> item = em.createQuery("select i from Item i where i.sellerId = :sellerId", Item.class)
+        List<Item> items = em.createQuery("select i from Item i where i.sellerId = :sellerId", Item.class)
                 .setParameter("sellerId", sellerId)
                 .getResultList();
 
-        return Optional.ofNullable(item);
+        return Optional.ofNullable(items);
     }
 
     @Override
     public Optional<List<Item>> findAll() {
-       List<Item> item = em.createQuery("select i from Item i", Item.class)
+       List<Item> items = em.createQuery("select i from Item i", Item.class)
                 .getResultList();
 
-        return Optional.ofNullable(item);
+        return Optional.ofNullable(items);
+    }
+
+    @Override
+    public Optional<List<Item>> findAllOrderByCreatedAtDesc() { //최근 item 등록 순으로 정렬
+        List<Item> items = em.createQuery("SELECT e FROM Item i ORDER BY i.createdAt DESC", Item.class)
+                .getResultList();
+
+        return Optional.ofNullable(items);
+    }
+
+    @Override
+    public Optional<List<Item>> findAllOrderByCountDesc() { //count 개수, 즉 판매량이 많은 item 순으로 정렬
+        List<Item> items = em.createQuery("SELECT i FROM Item i ORDER BY i.count DESC", Item.class)
+                .getResultList();
+
+        return Optional.ofNullable(items);
     }
 
     @Override

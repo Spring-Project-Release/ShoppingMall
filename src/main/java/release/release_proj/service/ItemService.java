@@ -69,6 +69,24 @@ public class ItemService {
         return items.get().stream().map(ItemResponseDTO::new).collect(Collectors.toList());
     }
 
+    public List<ItemResponseDTO> readOrderByCreatedAtDesc() {
+        Optional<List<Item>> items =  itemRepository.findAllOrderByCreatedAtDesc();
+        if (items.isEmpty() || items.get().isEmpty()) {
+            throw new IllegalArgumentException("상품이 존재하지 않습니다.");
+        }
+
+        return items.get().stream().map(ItemResponseDTO::new).collect(Collectors.toList());
+    }
+
+    public List<ItemResponseDTO> readOrderByCountDesc() {
+        Optional<List<Item>> items =  itemRepository.findAllOrderByCountDesc();
+        if (items.isEmpty() || items.get().isEmpty()) {
+            throw new IllegalArgumentException("상품이 존재하지 않습니다.");
+        }
+
+        return items.get().stream().map(ItemResponseDTO::new).collect(Collectors.toList());
+    }
+
     public List<ItemResponseDTO> findItemsBySellerId(String sellerId) {
         Optional<List<Item>> items = itemRepository.findBySellerId(sellerId);
 

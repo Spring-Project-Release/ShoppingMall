@@ -30,6 +30,29 @@ public class ItemController {
         }
     }
 
+    @GetMapping("/createdAt")
+    public ResponseEntity<List<ItemResponseDTO>> itemListByCreatedAt() {
+        try {
+            List<ItemResponseDTO> itemDTOs = itemService.readOrderByCreatedAtDesc();
+            return ResponseEntity.ok(itemDTOs);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<List<ItemResponseDTO>> itemListByCount() {
+        try {
+            List<ItemResponseDTO> itemDTOs = itemService.readOrderByCountDesc();
+            return ResponseEntity.ok(itemDTOs);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
     @GetMapping("/category/{category}")
     public ResponseEntity<List<ItemResponseDTO>> getItemByCategory(@PathVariable(name="category") String category) {
         try {
