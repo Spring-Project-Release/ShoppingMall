@@ -26,32 +26,40 @@ public class JpaOrderRepository implements OrderRepository {
         return Optional.ofNullable(order);
     };
 
-    public Optional<List<Order>> findByBuyerId(String buyerId){
+    public Optional<List<Order>> findByBuyerId(String buyerId, int offset, int limit){
         List<Order> order = em.createQuery("select i from Order i where i.buyerId = :buyerId", Order.class)
                 .setParameter("buyerId", buyerId)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
                 .getResultList();
 
         return Optional.ofNullable(order);
     };
 
-    public Optional<List<Order>> findBySellerId(String sellerId){
+    public Optional<List<Order>> findBySellerId(String sellerId, int offset, int limit){
         List<Order> order = em.createQuery("select i from Order i where i.sellerId = :sellerId", Order.class)
                 .setParameter("sellerId", sellerId)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
                 .getResultList();
 
         return Optional.ofNullable(order);
     };
 
-    public Optional<List<Order>> findByItemId(Long itemId){
+    public Optional<List<Order>> findByItemId(Long itemId, int offset, int limit){
         List<Order> order = em.createQuery("select i from Order i where i.itemId = :itemId", Order.class)
                 .setParameter("itemId", itemId)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
                 .getResultList();
 
         return Optional.ofNullable(order);
     };
 
-    public Optional<List<Order>> findAll(){
+    public Optional<List<Order>> findAll(int offset, int limit){
         List<Order> order = em.createQuery("select i from Order i", Order.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
                 .getResultList();
 
         return Optional.ofNullable(order);

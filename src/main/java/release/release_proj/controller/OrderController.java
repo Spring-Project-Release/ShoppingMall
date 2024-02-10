@@ -41,9 +41,9 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponseDTO>> orderList() {
+    public ResponseEntity<List<OrderResponseDTO>> orderList(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
         try {
-            List<OrderResponseDTO> orderDTOs = orderService.findAll();
+            List<OrderResponseDTO> orderDTOs = orderService.findAll(page, size);
             return ResponseEntity.ok(orderDTOs);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
@@ -52,9 +52,9 @@ public class OrderController {
     }
 
     @GetMapping("/buyer/{buyerId}")
-    public ResponseEntity<List<OrderResponseDTO>> memberPurchaseList(@PathVariable(name = "buyerId") String buyerId) {
+    public ResponseEntity<List<OrderResponseDTO>> memberPurchaseList(@PathVariable(name = "buyerId") String buyerId, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
         try {
-            List<OrderResponseDTO> orderDTOs = orderService.findByBuyerId(buyerId);
+            List<OrderResponseDTO> orderDTOs = orderService.findByBuyerId(buyerId, page, size);
             return ResponseEntity.ok(orderDTOs);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
@@ -63,9 +63,9 @@ public class OrderController {
     }
 
     @GetMapping("/seller/{sellerId}")
-    public ResponseEntity<List<OrderResponseDTO>> memberSaleList(@PathVariable(name = "sellerId") String sellerId) {
+    public ResponseEntity<List<OrderResponseDTO>> memberSaleList(@PathVariable(name = "sellerId") String sellerId, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
         try {
-            List<OrderResponseDTO> orderDTOs = orderService.findBySellerId(sellerId);
+            List<OrderResponseDTO> orderDTOs = orderService.findBySellerId(sellerId, page, size);
             return ResponseEntity.ok(orderDTOs);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
@@ -74,9 +74,9 @@ public class OrderController {
     }
 
     @GetMapping("/item/{itemId}")
-    public ResponseEntity<List<OrderResponseDTO>> itemOrderList(@PathVariable(name = "itemId") Long itemId) {
+    public ResponseEntity<List<OrderResponseDTO>> itemOrderList(@PathVariable(name = "itemId") Long itemId, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
         try {
-            List<OrderResponseDTO> orderDTOs = orderService.findByItemId(itemId);
+            List<OrderResponseDTO> orderDTOs = orderService.findByItemId(itemId, page, size);
             return ResponseEntity.ok(orderDTOs);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
