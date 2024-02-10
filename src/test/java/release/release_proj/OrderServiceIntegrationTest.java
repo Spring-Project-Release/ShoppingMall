@@ -68,8 +68,8 @@ public class OrderServiceIntegrationTest {
         em.clear();
 
         // Then
-        List<OrderResponseDTO> savedOrderDTO1 = orderService.findByBuyerId(member1.getMemberId());
-        List<OrderResponseDTO> savedOrderDTO2 = orderService.findBySellerId(item.getSellerId());
+        List<OrderResponseDTO> savedOrderDTO1 = orderService.findByBuyerId(member1.getMemberId(), 1, 20);
+        List<OrderResponseDTO> savedOrderDTO2 = orderService.findBySellerId(item.getSellerId(), 1, 20);
         Item savedItem = itemRepository.findByItemId(item.getItemId()).get();
         assertThat(savedOrderDTO1).isNotNull();
         assertThat(savedOrderDTO2).isNotNull();
@@ -265,7 +265,7 @@ public class OrderServiceIntegrationTest {
         orderService.save(orderDTO);
 
         //When
-        OrderResponseDTO savedOrderDTO = orderService.findByBuyerId(orderDTO.getBuyerId()).get(0);
+        OrderResponseDTO savedOrderDTO = orderService.findByBuyerId(orderDTO.getBuyerId(), 1, 20).get(0);
         orderService.deleteOrder(savedOrderDTO.getOrderId());
 
         // Then
@@ -273,11 +273,11 @@ public class OrderServiceIntegrationTest {
         MemberVO savedMember1 = memberDAO.findMemberById(member1.getMemberId());
         MemberVO savedMember2 = memberDAO.findMemberById(member2.getMemberId());
 
-        IllegalArgumentException e1 = assertThrows(IllegalArgumentException.class, () -> orderService.findByBuyerId(savedMember2.getMemberId()));
+        IllegalArgumentException e1 = assertThrows(IllegalArgumentException.class, () -> orderService.findByBuyerId(savedMember2.getMemberId(), 1, 20));
         assertThat(e1.getMessage()).isEqualTo("해당 buyerId를 가지는 구매내역이 존재하지 않습니다.");
-        IllegalArgumentException e2 = assertThrows(IllegalArgumentException.class, () -> orderService.findBySellerId(savedMember1.getMemberId()));
+        IllegalArgumentException e2 = assertThrows(IllegalArgumentException.class, () -> orderService.findBySellerId(savedMember1.getMemberId(), 1, 20));
         assertThat(e2.getMessage()).isEqualTo("해당 sellerId를 가지는 판매내역이 존재하지 않습니다.");
-        IllegalArgumentException e3 = assertThrows(IllegalArgumentException.class, () -> orderService.findByItemId(savedItem.getItemId()));
+        IllegalArgumentException e3 = assertThrows(IllegalArgumentException.class, () -> orderService.findByItemId(savedItem.getItemId(), 1, 20));
         assertThat(e3.getMessage()).isEqualTo("해당 itemId를 가지는 주문내역이 존재하지 않습니다.");
         assertThat(savedItem.getStock()).isEqualTo(1);
         assertThat(savedItem.getIsSoldout()).isEqualTo(false);

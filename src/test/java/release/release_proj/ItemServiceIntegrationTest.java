@@ -141,7 +141,7 @@ public class ItemServiceIntegrationTest {
         ItemResponseDTO savedItemDTO1 = itemService.findByItemName(itemDTO1.getName());
         ItemResponseDTO savedItemDTO2 = itemService.findByItemName(itemDTO2.getName());
 
-        List<ItemResponseDTO> itemList = itemService.readOrderByCreatedAtDesc();
+        List<ItemResponseDTO> itemList = itemService.readOrderByCreatedAtDesc(1, 20);
         assertThat(itemList.get(0).getItemId()).isEqualTo(savedItemDTO1.getItemId());
         assertThat(itemList.get(1).getItemId()).isEqualTo(savedItemDTO2.getItemId());
     }
@@ -181,7 +181,7 @@ public class ItemServiceIntegrationTest {
         ItemResponseDTO savedItemDTO1 = itemService.findByItemName(itemDTO1.getName());
         ItemResponseDTO savedItemDTO2 = itemService.findByItemName(itemDTO2.getName());
 
-        List<ItemResponseDTO> itemList = itemService.readOrderByCountDesc();
+        List<ItemResponseDTO> itemList = itemService.readOrderByCountDesc(1, 20);
         List<ItemResponseDTO> filteredItemList = itemList.stream() //test에서 저장된 item들만 filetering
                 .filter(item -> item.getItemId() == savedItemDTO1.getItemId() || item.getItemId() == savedItemDTO2.getItemId())
                 .collect(Collectors.toList());
