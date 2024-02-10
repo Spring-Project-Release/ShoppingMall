@@ -60,8 +60,8 @@ public class ItemService {
         return new ItemResponseDTO(item);
     }
 
-    public List<ItemResponseDTO> readItems() {
-        Optional<List<Item>> items =  itemRepository.findAll();
+    public List<ItemResponseDTO> readItems(int page, int size) {
+        Optional<List<Item>> items =  itemRepository.findAll((page-1)*size, size);
         if (items.isEmpty() || items.get().isEmpty()) {
             throw new IllegalArgumentException("상품이 존재하지 않습니다.");
         }
@@ -69,8 +69,8 @@ public class ItemService {
         return items.get().stream().map(ItemResponseDTO::new).collect(Collectors.toList());
     }
 
-    public List<ItemResponseDTO> readOrderByCreatedAtDesc() {
-        Optional<List<Item>> items =  itemRepository.findAllOrderByCreatedAtDesc();
+    public List<ItemResponseDTO> readOrderByCreatedAtDesc(int page, int size) {
+        Optional<List<Item>> items =  itemRepository.findAllOrderByCreatedAtDesc((page-1)*size, size);
         if (items.isEmpty() || items.get().isEmpty()) {
             throw new IllegalArgumentException("상품이 존재하지 않습니다.");
         }
@@ -78,8 +78,8 @@ public class ItemService {
         return items.get().stream().map(ItemResponseDTO::new).collect(Collectors.toList());
     }
 
-    public List<ItemResponseDTO> readOrderByCountDesc() {
-        Optional<List<Item>> items =  itemRepository.findAllOrderByCountDesc();
+    public List<ItemResponseDTO> readOrderByCountDesc(int page, int size) {
+        Optional<List<Item>> items =  itemRepository.findAllOrderByCountDesc((page-1)*size, size);
         if (items.isEmpty() || items.get().isEmpty()) {
             throw new IllegalArgumentException("상품이 존재하지 않습니다.");
         }
@@ -87,8 +87,8 @@ public class ItemService {
         return items.get().stream().map(ItemResponseDTO::new).collect(Collectors.toList());
     }
 
-    public List<ItemResponseDTO> findItemsBySellerId(String sellerId) {
-        Optional<List<Item>> items = itemRepository.findBySellerId(sellerId);
+    public List<ItemResponseDTO> findItemsBySellerId(String sellerId, int page, int size) {
+        Optional<List<Item>> items = itemRepository.findBySellerId(sellerId, (page-1)*size, size);
 
         if (items.isEmpty() || items.get().isEmpty()) {
             throw new IllegalArgumentException("해당 sellerId를 가진 상품이 존재하지 않습니다.");
@@ -97,8 +97,8 @@ public class ItemService {
         return items.get().stream().map(ItemResponseDTO::new).collect(Collectors.toList());
     }
 
-    public List<ItemResponseDTO> findByIsSoldout(Boolean isSoldout) {
-        Optional<List<Item>> items = itemRepository.findByIsSoldout(isSoldout);
+    public List<ItemResponseDTO> findByIsSoldout(Boolean isSoldout, int page, int size) {
+        Optional<List<Item>> items = itemRepository.findByIsSoldout(isSoldout, (page-1)*size, size);
 
         if (items.isEmpty() || items.get().isEmpty()) {
             throw new IllegalArgumentException("해당 품절여부 조건을 만족하는 상품이 존재하지 않습니다.");
@@ -107,8 +107,8 @@ public class ItemService {
         return items.get().stream().map(ItemResponseDTO::new).collect(Collectors.toList());
     }
 
-    public List<ItemResponseDTO> findByCategory(String category) {
-        Optional<List<Item>> items = itemRepository.findByCategory(category);
+    public List<ItemResponseDTO> findByCategory(String category, int page, int size) {
+        Optional<List<Item>> items = itemRepository.findByCategory(category, (page-1)*size, size);
 
         if (items.isEmpty() || items.get().isEmpty()) {
             throw new IllegalArgumentException("해당 카테고리를 가진 상품이 존재하지 않습니다.");

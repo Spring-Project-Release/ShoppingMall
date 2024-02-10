@@ -20,9 +20,9 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public ResponseEntity<List<ItemResponseDTO>> itemList() {
+    public ResponseEntity<List<ItemResponseDTO>> itemList(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
         try {
-            List<ItemResponseDTO> itemDTOs = itemService.readItems();
+            List<ItemResponseDTO> itemDTOs = itemService.readItems(page, size);
             return ResponseEntity.ok(itemDTOs);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
@@ -31,9 +31,9 @@ public class ItemController {
     }
 
     @GetMapping("/createdAt")
-    public ResponseEntity<List<ItemResponseDTO>> itemListByCreatedAt() {
+    public ResponseEntity<List<ItemResponseDTO>> itemListByCreatedAt(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
         try {
-            List<ItemResponseDTO> itemDTOs = itemService.readOrderByCreatedAtDesc();
+            List<ItemResponseDTO> itemDTOs = itemService.readOrderByCreatedAtDesc(page, size);
             return ResponseEntity.ok(itemDTOs);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
@@ -42,9 +42,9 @@ public class ItemController {
     }
 
     @GetMapping("/count")
-    public ResponseEntity<List<ItemResponseDTO>> itemListByCount() {
+    public ResponseEntity<List<ItemResponseDTO>> itemListByCount(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
         try {
-            List<ItemResponseDTO> itemDTOs = itemService.readOrderByCountDesc();
+            List<ItemResponseDTO> itemDTOs = itemService.readOrderByCountDesc(page, size);
             return ResponseEntity.ok(itemDTOs);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
@@ -54,9 +54,9 @@ public class ItemController {
 
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<List<ItemResponseDTO>> getItemByCategory(@PathVariable(name="category") String category) {
+    public ResponseEntity<List<ItemResponseDTO>> getItemByCategory(@PathVariable(name="category") String category, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
         try {
-            List<ItemResponseDTO> itemDTOs = itemService.findByCategory(category);
+            List<ItemResponseDTO> itemDTOs = itemService.findByCategory(category, page, size);
             return ResponseEntity.ok(itemDTOs);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
@@ -65,9 +65,9 @@ public class ItemController {
     }
 
     @GetMapping("/isSoldout/{isSoldout}")
-    public ResponseEntity<List<ItemResponseDTO>> getItemByIsSoldout(@PathVariable(name="isSoldout") Boolean isSoldout) {
+    public ResponseEntity<List<ItemResponseDTO>> getItemByIsSoldout(@PathVariable(name="isSoldout") Boolean isSoldout, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
         try {
-            List<ItemResponseDTO> itemDTOs = itemService.findByIsSoldout(isSoldout);
+            List<ItemResponseDTO> itemDTOs = itemService.findByIsSoldout(isSoldout, page, size);
             return ResponseEntity.ok(itemDTOs);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
@@ -98,9 +98,9 @@ public class ItemController {
     }
 
     @GetMapping("/sellerId/{sellerId}")
-    public ResponseEntity<List<ItemResponseDTO>> getItemBySellerId(@PathVariable(name = "sellerId") String sellerId) {
+    public ResponseEntity<List<ItemResponseDTO>> getItemBySellerId(@PathVariable(name = "sellerId") String sellerId, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
         try {
-            List<ItemResponseDTO> itemDTOs = itemService.findItemsBySellerId(sellerId);
+            List<ItemResponseDTO> itemDTOs = itemService.findItemsBySellerId(sellerId, page, size);
             return ResponseEntity.ok(itemDTOs);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());

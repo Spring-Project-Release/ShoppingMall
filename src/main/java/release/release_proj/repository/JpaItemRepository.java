@@ -51,51 +51,65 @@ public class JpaItemRepository implements ItemRepository {
     }
 
     @Override
-    public Optional<List<Item>> findBySellerId(String sellerId){
+    public Optional<List<Item>> findBySellerId(String sellerId, int offset, int limit){
         List<Item> items = em.createQuery("select i from Item i where i.sellerId = :sellerId", Item.class)
                 .setParameter("sellerId", sellerId)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
                 .getResultList();
 
         return Optional.ofNullable(items);
     }
 
     @Override
-    public Optional<List<Item>> findAll() {
+    public Optional<List<Item>> findAll(int offset, int limit) {
        List<Item> items = em.createQuery("select i from Item i", Item.class)
-                .getResultList();
+               .setFirstResult(offset)
+               .setMaxResults(limit)
+               .getResultList();
 
         return Optional.ofNullable(items);
     }
 
     @Override
-    public Optional<List<Item>> findAllOrderByCreatedAtDesc() { //최근 item 등록 순으로 정렬
+    public Optional<List<Item>> findAllOrderByCreatedAtDesc(int offset, int limit) { //최근 item 등록 순으로 정렬
         List<Item> items = em.createQuery("SELECT i FROM Item i ORDER BY i.createdAt DESC", Item.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
                 .getResultList();
 
         return Optional.ofNullable(items);
     }
 
     @Override
-    public Optional<List<Item>> findAllOrderByCountDesc() { //count 개수, 즉 판매량이 많은 item 순으로 정렬
+    public Optional<List<Item>> findAllOrderByCountDesc(int offset, int limit) { //count 개수, 즉 판매량이 많은 item 순으로 정렬
         List<Item> items = em.createQuery("SELECT i FROM Item i ORDER BY i.count DESC", Item.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
                 .getResultList();
 
         return Optional.ofNullable(items);
     }
 
     @Override
-    public Optional<List<Item>> findByIsSoldout(Boolean isSoldout) {
+    public Optional<List<Item>> findByIsSoldout(Boolean isSoldout, int offset, int limit) {
          List<Item> items = em.createQuery("SELECT i FROM Item i WHERE i.isSoldout = :isSoldout", Item.class)
                 .setParameter("isSoldout", isSoldout)
+                 .setFirstResult(offset)
+                 .setMaxResults(limit)
                 .getResultList();
+
         return Optional.ofNullable(items);
     }
 
     @Override
-    public Optional<List<Item>> findByCategory(String category) {
+    public Optional<List<Item>> findByCategory(String category, int offset, int limit) {
         List<Item> items = em.createQuery("SELECT i FROM Item i WHERE i.category = :category", Item.class)
                 .setParameter("category", category)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
                 .getResultList();
+
         return Optional.ofNullable(items);
     }
 
