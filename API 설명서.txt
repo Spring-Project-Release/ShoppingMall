@@ -40,7 +40,7 @@
 : '/items' 경로
 : post 요청
 : parameter로 Item을 받음
-: parameter로 받은 Item을 DB에 저장, 저장이 되면 "Item created successfully." 메세지와 200 status 반환, 아니면 INTERNAL_SERVER_ERROR status와 "Failed to create Item." 메세지 반환
+: parameter로 받은 Item을 DB에 저장, 저장이 되면 "Item created successfully." 메세지와 200 status 반환, 실패하여 예외가 발생하면 INTERNAL_SERVER_ERROR status와 "Failed to create Item." 메세지 반환
 : IllegalStateException일때, 즉 parameter의 name이 기존의 DB에 있는 상품의 이름과 중복되었을 때 BAD_REQUEST status와 "이미 존재하는 상품 이름입니다. 이름을 변경해 주십시오." 메시지 반환
 : IllegalArgumentException일때, 즉 sellerId가 없는 memberId를 이용해서 외래키 제약 조건 위반일 때 BAD_REQUEST status와 "해당하는 상품의 sellerId가 유저 DB에 존재하지 않습니다." 메시지 반환
 
@@ -48,7 +48,7 @@
 : '/items/{itemId}' 경로
 : put 요청
 : parameter로 Item을 받음(ItemId 있는 것 없는 것 상관 없음)
-: parameter로 받은 Item의 내용으로 url의 itemId를 가지는 상품의 내용을 업데이트하는데, 업데이트에 성공하면 "Item updated successfully." 메시지와 200 status 반환, 실패하면 INTERNAL_SERVER_ERROR status와 "존재하지 않는 itemId입니다." 메시지 반환
+: parameter로 받은 Item의 내용으로 url의 itemId를 가지는 상품의 내용을 업데이트하는데, 업데이트에 성공하면 "Item updated successfully." 메시지와 200 status 반환, 실패하여 예외가 발생하면 INTERNAL_SERVER_ERROR status와 "존재하지 않는 itemId입니다." 메시지 반환
 
 9. updateIsSoldout()
 : '/items/{itemId}/isSoldout' 경로
@@ -74,12 +74,16 @@
 : 해당 memberId를 가지는 장바구니 중 해당 itemId를 가지는 장바구니와 status 200 반환(존재한다면 하나만 존재), 없으면 404 status 반환
 : 404 status 반환 시 로그에 "해당 memberId와 itemId를 가지는 장바구니가 존재하지 않습니다."라는 메시지 출력
 
-3. newCart()
+3. newCart() (변경 및 추가!!!)
 : '/carts' 경로
 : post 요청
 : parameter로 Cart를 받음
-: parameter로 받은 Cart를 DB에 저장, 저장이 되면 "Cart created or amount updated successfully." 메세지와 200 status 반환, 아니면 INTERNAL_SERVER_ERROR status와 "Failed to create cart." 메세지 반환
+: 로그인되어있는지 확인, 로그인이 되어있지 않다면 UNAUTHORIZED status와 "로그인 후 장바구니에 상품을 추가해주세요." 메시지 반환
+: 로그인되어 있다면 parameter로 받은 Cart를 DB에 저장, 저장이 되면 "Cart created or amount updated successfully." 메세지와 200 status 반환, 실패하여 예외가 발생하면 INTERNAL_SERVER_ERROR status와 "Failed to create cart." 메세지 반환
+
 : IllegalArgumentException일때, 즉 외래 키 제약 조건 위배- 존재하지 않는 itemId나 memberId를 가질 때 -할때 BAD_REQUEST status와 "Failed to create cart. 해당하는 itemId나 memberId가 존재하지 않습니다" 메시지 반환
+: 본인이 판매중인 상품을 장바구니에 담을 때에도 BAD_REQUEST status와 IllegalArgumentException 발생, "본인이 판매중인 상품을 장바구니에 담을 수 없습니다."메시지 반환
+
 
 4. deleteCart()
 : '/carts/user/{memberId}' 경로
@@ -128,15 +132,18 @@
 
 *OrderController API
 
-1. newOrder()
+1. newOrder() (변경 및 추가!!!)
 : '/orders' 경로
 : post 요청
 : parameter로 Order를 받음
-: parameter로 받은 Order가 DB에 저장되면 status 200과 "주문이 성공적으로 처리되었습니다." 메시지 반환
+: 먼저 로그인되어 있는지 확인, 로그인되어있지 않으면 UNAUTHORIZED status와 "로그인 후 주문해주세요." 메시지 반환
+: 구매자 id(buyerId)와 로그인 유저 정보가 일치하지 않는다면 UNAUTHORIZED status와 "주문자와 로그인한 유저 정보가 일치하지 않는 오류가 발생했습니다. 로그아웃 후 다시 로그인해주십시오." 메시지 반환
+: 그렇지 않다면 parameter로 받은 Order를 DB에 저장하고 status 200과 "주문이 성공적으로 처리되었습니다." 메시지 반환
 
 : parameter로 받은 Order에 해당하는 memberId나 itemId 중 하나라도 없을 경우, IllegalArgumentException이 발생하며 각 경우에 따라 "결제 처리에 실패했습니다. 해당하는 memberId와 itemId가 존재하지 않습니다." 메시지, "결제 처리에 실패했습니다. 해당하는 memberId가 존재하지 않습니다." 메시지, "결제 처리에 실패했습니다. 해당하는 itemId가 존재하지 않습니다." 메시지 중 하나와 BAD_REQUEST status 반환
 
 : parameter로 받은 Order의 count보다 item의 재고가 적은 경우 BAD_REQUEST status와 그 주문의 상품의 itemId, 즉 "{itemId}의 재고가 부족합니다." 메시지 반환
+
 : 기타 예외 사항의 경우 INTERNAL_SERVER_ERROR status와 "주문 처리 중 오류가 발생했습니다." 메시지 반환
 
 2. orderList()
@@ -145,11 +152,24 @@
 : 전체 주문 리스트와 status 200 반환, 주문이 아예 없으면 404 status 반환
 : 404 status 반환 시 로그에 "주문내역이 존재하지 않습니다."라는 메시지 출력
 
-3. memberOrderList()
+3. memberOrderList()  (삭제!!!)
 : '/orders/user/{memberId}' 경로
 : get 요청
 : 해당 유저의 주문 리스트와 status 200을 반환, 해당 유저가 주문한 기록이 아예 없으면 404 status 반환
 : 404 status 반환 시 로그에 "해당 memberId를 가지는 주문내역이 존재하지 않습니다."라는 메시지 출력
+
+3. memberPurchaseList() (추가!!!)
+: '/orders/buyer/{buyerId}' 경로
+: get 요청
+: 해당 buyerId를 가지는 주문 리스트와 status 200을 반환, 해당 buyer가 주문한 기록이 아예 없으면 404 status 반환
+: 404 status 반환 시 로그에 "해당 buyerId를 가지는 구매내역이 존재하지 않습니다."라는 메시지 출력
+
+4. memberSaleList() (추가!!!)
+: '/orders/seller/{sellerId}' 경로
+: get 요청
+: 해당 sellerId를 가지는 주문 리스트와 status 200을 반환, 해당 seller가 주문한 기록이 아예 없으면 404 status 반환
+: 404 status 반환 시 로그에 "해당 sellerId를 가지는 판매내역이 존재하지 않습니다."라는 메시지 출력
+
 
 4. itemOrderList()
 : '/orders/item/{itemId}' 경로
