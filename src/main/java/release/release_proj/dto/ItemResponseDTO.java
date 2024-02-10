@@ -2,7 +2,10 @@ package release.release_proj.dto;
 
 import com.sun.istack.NotNull;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 import release.release_proj.domain.Item;
+
+import java.time.LocalDateTime;
 
 @Data
 public class ItemResponseDTO {
@@ -15,6 +18,7 @@ public class ItemResponseDTO {
     private int price;
     @NotNull
     private int count;
+    @NotNull
     private int stock;
     private String category;
     private String text;
@@ -27,6 +31,8 @@ public class ItemResponseDTO {
     @NotNull
     private String sellerId;
     private String unit;
+    @CreatedDate
+    private LocalDateTime createdAt;
 
     public ItemResponseDTO(Item item) {
         this.itemId = item.getItemId();
@@ -43,5 +49,6 @@ public class ItemResponseDTO {
         this.deliveryType = item.getDeliveryType();
         this.sellerId = item.getSellerId();
         this.unit = item.getUnit();
+        this.createdAt = item.getCreatedAt();
     }
 }
