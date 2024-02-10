@@ -69,7 +69,7 @@ public class JpaItemRepository implements ItemRepository {
 
     @Override
     public Optional<List<Item>> findAllOrderByCreatedAtDesc() { //최근 item 등록 순으로 정렬
-        List<Item> items = em.createQuery("SELECT e FROM Item i ORDER BY i.createdAt DESC", Item.class)
+        List<Item> items = em.createQuery("SELECT i FROM Item i ORDER BY i.createdAt DESC", Item.class)
                 .getResultList();
 
         return Optional.ofNullable(items);
