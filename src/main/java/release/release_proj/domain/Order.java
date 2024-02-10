@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor //entity(domain)에는 생성자 작성해야 함
@@ -27,22 +28,9 @@ public class Order {
     @Column(name = "item_id")
     private Long itemId;
     @CreatedDate
+    @Column(name = "order_date")
     private LocalDateTime orderDate;
     private int price; //총 가격
     private int count; //구매 개수
     private String memo;
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "orderId=" + orderId + '\'' +
-                ", buyerId='" + buyerId + '\'' +
-                ", sellerId='" + sellerId + '\'' +
-                ", itemId=" + itemId + '\'' +
-                ", orderDate=" + orderDate + '\'' +
-                ", price=" + price + '\'' +
-                ", count=" + count + '\'' +
-                ", memo='" + memo + '\'' +
-                '}';
-    }
 }

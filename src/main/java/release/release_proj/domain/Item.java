@@ -1,8 +1,11 @@
 package release.release_proj.domain;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @ToString
 @Builder
@@ -10,6 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor //entity(domain)에는 생성자 작성해야 함
 @Getter
 @Entity
+@EntityListeners(AuditingEntityListener.class) //Date 자동생성 위함
 public class Item {
 
     @Id
@@ -32,4 +36,7 @@ public class Item {
     @Column(name = "seller_id")
     private String sellerId; //판매자 유저 아이디
     private String unit; //판매단위
+    @CreatedDate
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 }
