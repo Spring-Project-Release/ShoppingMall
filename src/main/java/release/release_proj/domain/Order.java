@@ -18,9 +18,13 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto increment
+    @Column(name = "order_id")
     private Long orderId;
+    @Column(name = "buyer_id")
     private String buyerId;  //ManyTonOne Mapping 등 이용할건지 생각해보기(그러면 db 자동생성해서 외래키 예외처리할 필요x, itemService.getAmount, getPrice 함수 만들 필요 x)
+    @Column(name = "seller_id")
     private String sellerId;
+    @Column(name = "item_id")
     private Long itemId;
     @CreatedDate
     private LocalDateTime orderDate;
