@@ -112,7 +112,7 @@ public class CartController {
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("장바구니 결제 처리 중 오류가 발생했습니다."+e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("장바구니 결제 처리 중 오류가 발생했습니다.");
         }
     }
 
@@ -126,7 +126,7 @@ public class CartController {
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("장바구니 결제 처리 중 오류가 발생했습니다."+e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("장바구니 결제 처리 중 오류가 발생했습니다.");
         }
     }
 }
