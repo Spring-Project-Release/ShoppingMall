@@ -450,12 +450,12 @@ public class CartServiceIntegrationTest {
         cartService.payAllCart(memberId, "전체결제");
 
         // Then
-        assertThat(orderRepository.findByBuyerId(memberId)).isPresent();
-        assertEquals(orderRepository.findByBuyerId(memberId).get().size(), 2);
-        assertThat(orderRepository.findByBuyerId(memberId).get().get(0).getItemId()).isEqualTo(item1.getItemId());
-        assertThat(orderRepository.findByBuyerId(memberId).get().get(1).getItemId()).isEqualTo(item2.getItemId());
-        assertThat(orderRepository.findByBuyerId(memberId).get().get(0).getMemo()).isEqualTo("전체결제");
-        assertThat(orderRepository.findByBuyerId(memberId).get().get(1).getMemo()).isEqualTo("전체결제");
+        assertThat(orderRepository.findByBuyerId(memberId, 0, 20)).isPresent();
+        assertEquals(orderRepository.findByBuyerId(memberId, 0, 20).get().size(), 2);
+        assertThat(orderRepository.findByBuyerId(memberId, 0, 20).get().get(0).getItemId()).isEqualTo(item1.getItemId());
+        assertThat(orderRepository.findByBuyerId(memberId, 0, 20).get().get(1).getItemId()).isEqualTo(item2.getItemId());
+        assertThat(orderRepository.findByBuyerId(memberId, 0, 20).get().get(0).getMemo()).isEqualTo("전체결제");
+        assertThat(orderRepository.findByBuyerId(memberId, 0, 20).get().get(1).getMemo()).isEqualTo("전체결제");
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.readMemberCarts(memberId));
         assertThat(e.getMessage()).isEqualTo("해당 memberId를 가지는 장바구니가 존재하지 않습니다."); //유저의 장바구니 전체가 삭제됨
     }
@@ -531,10 +531,10 @@ public class CartServiceIntegrationTest {
         cartService.paySomeCart(memberId, tempList, "일부결제");
 
         // Then
-        assertThat(orderRepository.findByBuyerId(memberId)).isPresent();
-        assertEquals(orderRepository.findByBuyerId(memberId).get().size(), 1);
-        assertThat(orderRepository.findByBuyerId(memberId).get().get(0).getItemId()).isEqualTo(item1.getItemId());
-        assertThat(orderRepository.findByBuyerId(memberId).get().get(0).getMemo()).isEqualTo("일부결제");
+        assertThat(orderRepository.findByBuyerId(memberId, 0, 20)).isPresent();
+        assertEquals(orderRepository.findByBuyerId(memberId, 0, 20).get().size(), 1);
+        assertThat(orderRepository.findByBuyerId(memberId, 0, 20).get().get(0).getItemId()).isEqualTo(item1.getItemId());
+        assertThat(orderRepository.findByBuyerId(memberId, 0, 20).get().get(0).getMemo()).isEqualTo("일부결제");
         assertThat(cartService.readMemberCarts(memberId).size()).isEqualTo(1);
         assertThat(cartService.readMemberCarts(memberId).get(0).getItemId()).isEqualTo(item2.getItemId());
     }
