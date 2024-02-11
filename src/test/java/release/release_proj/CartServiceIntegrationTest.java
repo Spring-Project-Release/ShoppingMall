@@ -114,7 +114,7 @@ public class CartServiceIntegrationTest {
         CartResponseDTO savedCartDTO = cartService.readMemberCartItems(member1.getMemberId(), item.getItemId());
         System.out.println("savedCartDTO = " + savedCartDTO);
         assertThat(savedCartDTO).isNotNull();
-        assertEquals(cartService.readMemberCarts(member1.getMemberId()).size(), 1);
+        assertEquals(cartService.readMemberCarts(member1.getMemberId(), 1, 20).size(), 1);
         assertThat(savedCartDTO.getAmount()).isEqualTo(4);
     }
 
@@ -208,11 +208,11 @@ public class CartServiceIntegrationTest {
         cartService.addCartItem(cartDTO);
 
         // When
-        int result = cartService.deleteCart(member1.getMemberId());
+        int result = cartService.deleteCart(member1.getMemberId(), 1, 20);
 
         // Then
         assertThat(result).isGreaterThan(0);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.readMemberCarts(member1.getMemberId()));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.readMemberCarts(member1.getMemberId(), 1, 20));
         assertThat(e.getMessage()).isEqualTo("해당 memberId를 가지는 장바구니가 존재하지 않습니다.");
     }
 
@@ -229,11 +229,11 @@ public class CartServiceIntegrationTest {
         memberDAO.insertMember(member);
 
         // When
-        int result = cartService.deleteCart(member.getMemberId());
+        int result = cartService.deleteCart(member.getMemberId(), 1, 20);
 
         // Then
         assertThat(result).isEqualTo(0);
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.readMemberCarts(member.getMemberId()));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.readMemberCarts(member.getMemberId(), 1, 20));
         assertThat(e.getMessage()).isEqualTo("해당 memberId를 가지는 장바구니가 존재하지 않습니다.");
     }
 
@@ -282,7 +282,7 @@ public class CartServiceIntegrationTest {
         // Then
         assertThat(result).isGreaterThan(0);
         assertThat(cartService.readMemberCartItems(member1.getMemberId(), item2.getItemId())).isNotNull();
-        assertThat(cartService.readMemberCarts(member1.getMemberId())).isNotNull();
+        assertThat(cartService.readMemberCarts(member1.getMemberId(), 1, 20)).isNotNull();
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.readMemberCartItems(member1.getMemberId(), item1.getItemId()));
         assertThat(e.getMessage()).isEqualTo("해당 memberId와 itemId를 가지는 장바구니가 존재하지 않습니다.");
     }
@@ -447,7 +447,7 @@ public class CartServiceIntegrationTest {
         cartService.addCartItem(cartDTO2);
 
         // When
-        cartService.payAllCart(memberId, "전체결제");
+        cartService.payAllCart(memberId, 1, 20, "전체결제");
 
         // Then
         assertThat(orderRepository.findByBuyerId(memberId, 0, 20)).isPresent();
@@ -456,7 +456,7 @@ public class CartServiceIntegrationTest {
         assertThat(orderRepository.findByBuyerId(memberId, 0, 20).get().get(1).getItemId()).isEqualTo(item2.getItemId());
         assertThat(orderRepository.findByBuyerId(memberId, 0, 20).get().get(0).getMemo()).isEqualTo("전체결제");
         assertThat(orderRepository.findByBuyerId(memberId, 0, 20).get().get(1).getMemo()).isEqualTo("전체결제");
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.readMemberCarts(memberId));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.readMemberCarts(memberId, 1, 20));
         assertThat(e.getMessage()).isEqualTo("해당 memberId를 가지는 장바구니가 존재하지 않습니다."); //유저의 장바구니 전체가 삭제됨
     }
 
@@ -464,7 +464,7 @@ public class CartServiceIntegrationTest {
     public void 유저_장바구니_전체_결제_예외_유저존재하지않음() throws Exception {
 
         // Then
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.payAllCart("testMemberId", "전체결제"));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.payAllCart("testMemberId",  1, 20,"전체결제"));
         assertThat(e.getMessage()).isEqualTo("Invalid memberId: " + "testMemberId");
     }
 
@@ -481,7 +481,7 @@ public class CartServiceIntegrationTest {
         memberDAO.insertMember(member);
 
         // Then
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.payAllCart(member.getMemberId(), "전체결제"));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> cartService.payAllCart(member.getMemberId(),  1, 20,"전체결제"));
         assertThat(e.getMessage()).isEqualTo("해당하는 memberId: "+member.getMemberId()+"를 갖는 cart가 존재하지 않습니다.");
     }
 
@@ -535,8 +535,8 @@ public class CartServiceIntegrationTest {
         assertEquals(orderRepository.findByBuyerId(memberId, 0, 20).get().size(), 1);
         assertThat(orderRepository.findByBuyerId(memberId, 0, 20).get().get(0).getItemId()).isEqualTo(item1.getItemId());
         assertThat(orderRepository.findByBuyerId(memberId, 0, 20).get().get(0).getMemo()).isEqualTo("일부결제");
-        assertThat(cartService.readMemberCarts(memberId).size()).isEqualTo(1);
-        assertThat(cartService.readMemberCarts(memberId).get(0).getItemId()).isEqualTo(item2.getItemId());
+        assertThat(cartService.readMemberCarts(memberId, 1, 20).size()).isEqualTo(1);
+        assertThat(cartService.readMemberCarts(memberId, 1, 20).get(0).getItemId()).isEqualTo(item2.getItemId());
     }
 
     @Test

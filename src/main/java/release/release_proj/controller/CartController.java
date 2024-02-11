@@ -21,9 +21,9 @@ public class CartController {
     private final CartService cartService;
 
     @GetMapping("/user/{memberId}")
-    public ResponseEntity<List<CartResponseDTO>> memberCartList(@PathVariable(name="memberId") String memberId) {
+    public ResponseEntity<List<CartResponseDTO>> memberCartList(@PathVariable(name="memberId") String memberId, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
         try {
-            List<CartResponseDTO> cartDTOs = cartService.readMemberCarts(memberId);
+            List<CartResponseDTO> cartDTOs = cartService.readMemberCarts(memberId, page, size);
             return ResponseEntity.ok(cartDTOs);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
@@ -61,12 +61,12 @@ public class CartController {
     }
 
     @DeleteMapping("/user/{memberId}")
-    public ResponseEntity<String> deleteCart(@PathVariable(name = "memberId") String memberId) {
-        int result = cartService.deleteCart(memberId);
+    public ResponseEntity<String> deleteCart(@PathVariable(name = "memberId") String memberId, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
+        int result = cartService.deleteCart(memberId, page, size);
         if (result != 0){
             return ResponseEntity.ok("User's cart deleted successfully.");
         } else { //해당하는 cart들이 존재하지 않아 삭제 동작이 필요하지 않았던 경우
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당하는 cart들이 존재하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당하는 memberId를 가지는 cart가 존재하지 않습니다.");
         }
     }
 
@@ -76,7 +76,7 @@ public class CartController {
         if (result != 0){
             return ResponseEntity.ok("User's cartItem deleted successfully.");
         } else { //해당하는 cart가 존재하지 않아 삭제 동작이 필요하지 않았던 경우
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당하는 cart가 존재하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당하는 memberId와 itemId를 가지는 cart가 존재하지 않습니다.");
         }
     }
 
@@ -103,9 +103,9 @@ public class CartController {
     }
 
     @PostMapping("/order/user/{memberId}")
-    public ResponseEntity<String> payAllCart(@PathVariable(name="memberId") String memberId, @RequestBody(required = false) String memo) {
+    public ResponseEntity<String> payAllCart(@PathVariable(name="memberId") String memberId, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size, @RequestBody(required = false) String memo) {
         try {
-            cartService.payAllCart(memberId, memo);
+            cartService.payAllCart(memberId, page, size, memo);
             return ResponseEntity.ok("장바구니 결제가 성공적으로 처리되었습니다.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

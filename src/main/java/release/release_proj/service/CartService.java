@@ -26,8 +26,8 @@ public class CartService {
     private final OrderService orderService;
     private final MemberDAO memberDAO;
 
-    public List<CartResponseDTO> readMemberCarts(String memberId) {
-        Optional<List<Cart>> cartListOptional = cartRepository.findByMemberId(memberId);
+    public List<CartResponseDTO> readMemberCarts(String memberId, int page, int size) {
+        Optional<List<Cart>> cartListOptional = cartRepository.findByMemberId(memberId, (page-1)*size, size);
         if (cartListOptional.isEmpty() || cartListOptional.get().isEmpty()) {
             throw new IllegalArgumentException("해당 memberId를 가지는 장바구니가 존재하지 않습니다.");
         }
@@ -73,10 +73,10 @@ public class CartService {
         }
     }
 
-    public int deleteCart(String memberId) {
-        Optional<List<Cart>> memberCarts = cartRepository.findByMemberId(memberId);
+    public int deleteCart(String memberId, int page, int size) {
+        Optional<List<Cart>> memberCarts = cartRepository.findByMemberId(memberId, (page-1)*size, size);
 
-        if (memberCarts.isPresent()) {
+        if (!memberCarts.isEmpty() && !memberCarts.get().isEmpty()) {
             return cartRepository.deleteByMemberId(memberId);
         } else {
             return 0;
@@ -97,17 +97,16 @@ public class CartService {
     }
 
     @Transactional //하나라도 실행되지 않으면 롤백
-    public void payAllCart(String memberId, String memo) {
+    public void payAllCart(String memberId, int page, int size, String memo) {
         if (memberDAO.isExistMemberId(memberId) == 0) { //memberId 자체가 member db에 존재하지 않는 경우
             throw new IllegalArgumentException("Invalid memberId: " + memberId);
         }
 
-        List<Cart> carts = cartRepository.findByMemberId(memberId).orElse(Collections.emptyList());
-
+        List<Cart> carts = cartRepository.findByMemberId(memberId, (page-1)*size, size).orElse(Collections.emptyList());
         // 장바구니가 비어있는지 확인
-        if (carts.isEmpty()) {
+        if (carts.isEmpty()) { //해당 memberId 자체는 존재하지만 cart DB에 존재하지 않는 경우
             throw new IllegalArgumentException("해당하는 memberId: " + memberId + "를 갖는 cart가 존재하지 않습니다.");
-        } else { //해당 memberId 자체는 존재하지만 cart DB에 존재하지 않는 경우
+        } else {
             for (Cart cart : carts) {
                 //order 기록 저장- 구매내역으로 무언가를 할 경우(user의 등급을 매길 경우 user에 paymentPrice 항목도 추가를 해야하나?)
                 ItemResponseDTO itemDTO = itemService.findOne(cart.getItemId());
