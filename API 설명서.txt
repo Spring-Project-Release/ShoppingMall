@@ -190,3 +190,14 @@
 : 주문한 상품의 재고나 품절상태 등 상품의 상태도 복구함
 : 해당 orderId를 가지는 주문이 orders DB에 존재하지 않으면, 즉 IllegalStateException인 경우 BAD_REQUEST status와 "해당 주문 ID: {orderId}가 존재하지 않습니다." 메시지 반환
 : 기타 예외의 경우 INTERNAL_SERVER_ERROR status와 "주문 삭제 중 오류가 발생했습니다." 메세지 반환
+
+-----------------------------------------------
+!!!!수정!!!!
+Item, Cart, Order 관련 controller API들에서 List를 반환하는 함수들은 모두 페이징을 적용하였음
+: default값은 page와 size가 각각 1, 20이고, 반환하는 리스트의 개수가 20개보다 작거나 해당 값이 없다는 예외처리(각 함수의 예외문구)가 나올때까지 paging 차례대로 호출할 것
+
+*CartController
+: deleteCart 함수에서도 페이징을 사용함: 예외 문구가 나올 때까지 paging 차례대로 호출할 것
+: payAllCart 함수에서도 페이징을 사용함: 인자의 순서가 memberId, page, size, memo 순으로 변경되었음
+=> "해당하는 memberId: {memberId}를 갖는 cart가 존재하지 않습니다." 메시지를 반환하는 IllegalArgumentException이 호출될 때까지 paging할것
+
