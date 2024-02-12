@@ -63,39 +63,39 @@ public class OrderService {
     }
 
     public List<OrderResponseDTO> findByBuyerId(String buyerId, int page, int size) {
-        Optional<List<Order>> orders = orderRepository.findByBuyerId(buyerId, (page-1)*size, size);
-        if (orders.isEmpty() || orders.get().isEmpty()){
+        List<Order> orders = orderRepository.findByBuyerId(buyerId, (page-1)*size, size);
+        if (orders.isEmpty()){
             throw new IllegalArgumentException("해당 buyerId를 가지는 구매내역이 존재하지 않습니다.");
         }
 
-        return orders.get().stream().map(OrderResponseDTO::new).collect(Collectors.toList());
+        return orders.stream().map(OrderResponseDTO::new).collect(Collectors.toList());
     }
 
     public List<OrderResponseDTO> findBySellerId(String sellerId, int page, int size) {
-        Optional<List<Order>> orders = orderRepository.findBySellerId(sellerId, (page-1)*size, size);
-        if (orders.isEmpty() || orders.get().isEmpty()){
+        List<Order> orders = orderRepository.findBySellerId(sellerId, (page-1)*size, size);
+        if (orders.isEmpty()){
             throw new IllegalArgumentException("해당 sellerId를 가지는 판매내역이 존재하지 않습니다.");
         }
 
-        return orders.get().stream().map(OrderResponseDTO::new).collect(Collectors.toList());
+        return orders.stream().map(OrderResponseDTO::new).collect(Collectors.toList());
     }
 
     public List<OrderResponseDTO> findByItemId(Long itemId, int page, int size) {
-        Optional<List<Order>> orders = orderRepository.findByItemId(itemId, (page-1)*size, size);
-        if (orders.isEmpty() || orders.get().isEmpty()){
+        List<Order> orders = orderRepository.findByItemId(itemId, (page-1)*size, size);
+        if (orders.isEmpty()){
             throw new IllegalArgumentException("해당 itemId를 가지는 주문내역이 존재하지 않습니다.");
         }
 
-        return orders.get().stream().map(OrderResponseDTO::new).collect(Collectors.toList());
+        return orders.stream().map(OrderResponseDTO::new).collect(Collectors.toList());
     }
 
     public List<OrderResponseDTO> findAll(int page, int size) {
-        Optional<List<Order>> orders = orderRepository.findAll((page-1)*size, size);
-        if (orders.isEmpty() || orders.get().isEmpty()){
+        List<Order> orders = orderRepository.findAll((page-1)*size, size);
+        if (orders.isEmpty()){
             throw new IllegalArgumentException("주문내역이 존재하지 않습니다.");
         }
 
-        return orders.get().stream().map(OrderResponseDTO::new).collect(Collectors.toList());
+        return orders.stream().map(OrderResponseDTO::new).collect(Collectors.toList());
     }
 
     public void deleteOrder(Long orderId) {
