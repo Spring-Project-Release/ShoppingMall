@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor //생성자 주입을 대신 해줌
+@Transactional
 public class CartService {
 
     private final CartRepository cartRepository;

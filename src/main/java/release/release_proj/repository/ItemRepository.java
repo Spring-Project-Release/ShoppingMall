@@ -11,12 +11,12 @@ public interface ItemRepository {
     public void save(Item item);
     public Optional<Item> findByItemId(Long itemId);
     public Optional<Item> findByItemName(String name);
-    public Optional<List<Item>> findAll(int offset, int limit);
-    public Optional<List<Item>> findAllOrderByCreatedAtDesc(int offset, int limit);
-    public Optional<List<Item>> findAllOrderByCountDesc(int offset, int limit);
-    public Optional<List<Item>> findByIsSoldout(Boolean isSoldout, int offset, int limit); //품절이 안된 상품들만 가져오기
-    public Optional<List<Item>> findByCategory(String category, int offset, int limit);
-    public Optional<List<Item>> findBySellerId(String sellerId, int offset, int limit);
+    public List<Item> findAll(int offset, int limit);
+    public List<Item> findAllOrderByCreatedAtDesc(int offset, int limit);
+    public List<Item> findAllOrderByCountDesc(int offset, int limit);
+    public List<Item> findByIsSoldout(Boolean isSoldout, int offset, int limit); //품절이 안된 상품들만 가져오기
+    public List<Item> findByCategory(String category, int offset, int limit);
+    public List<Item> findBySellerId(String sellerId, int offset, int limit);
     public void updateItem(Item item);
     public int updateIsSoldout(Long itemId);
     public int updateStock(Long itemId, int decreasingStock);
