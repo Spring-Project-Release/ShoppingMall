@@ -28,7 +28,9 @@ public class ItemService {
 
     public void isItemNameDuplicate(ItemRequestDTO itemDTO){
         itemRepository.findByItemName(itemDTO.getName())
-                .orElseThrow(() -> new IllegalStateException("이미 존재하는 상품 이름입니다. 이름을 변경해 주십시오."));
+                .ifPresent(i -> {
+                    throw new IllegalStateException("이미 존재하는 상품 이름입니다. 이름을 변경해 주십시오.");
+                });
     }
 
     private void validateSellerExistence(String sellerId) {

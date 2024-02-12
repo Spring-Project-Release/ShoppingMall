@@ -96,7 +96,6 @@ public class CartService {
         return cartRepository.updateCartAmount(cartId, amount);
     }
 
-    @Transactional //하나라도 실행되지 않으면 롤백
     public void payAllCart(String memberId, int page, int size, String memo) {
         if (memberDAO.isExistMemberId(memberId) == 0) { //memberId 자체가 member db에 존재하지 않는 경우
             throw new IllegalArgumentException("Invalid memberId: " + memberId);
@@ -126,7 +125,6 @@ public class CartService {
         }
     }
 
-    @Transactional //하나라도 실행되지 않으면 롤백
     public void paySomeCart(String memberId, List<Long> itemsId, String memo) {
         if (memberDAO.isExistMemberId(memberId) == 0) { //memberId 자체가 member db에 존재하지 않는 경우
             throw new IllegalArgumentException("Invalid memberId: " + memberId);
