@@ -46,14 +46,12 @@ public class JpaCartRepository implements CartRepository {
     }
 
     @Override
-    public Optional<List<Cart>> findByMemberId(String memberId, int offset, int limit) {
-        List<Cart> carts = em.createQuery("SELECT c FROM Cart c WHERE c.memberId = :memberId", Cart.class)
+    public List<Cart> findByMemberId(String memberId, int offset, int limit) {
+        return em.createQuery("SELECT c FROM Cart c WHERE c.memberId = :memberId", Cart.class)
                 .setParameter("memberId", memberId)
                 .setFirstResult(offset)
                 .setMaxResults(limit)
                 .getResultList();
-
-        return Optional.ofNullable(carts);
     }
 
     @Override
@@ -63,11 +61,7 @@ public class JpaCartRepository implements CartRepository {
                     .setParameter("itemId", itemId)
                     .getResultList();
 
-       if (carts.isEmpty()) {
-            return Optional.ofNullable(null);
-        } else {
-            return Optional.ofNullable(carts.get(0));
-        }
+        return carts.stream().findFirst();
     }
 
     @Override

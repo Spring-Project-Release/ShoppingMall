@@ -12,7 +12,6 @@ import release.release_proj.dto.OrderRequestDTO;
 import release.release_proj.repository.CartRepository;
 import release.release_proj.repository.MemberDAO;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,12 +27,12 @@ public class CartService {
     private final MemberDAO memberDAO;
 
     public List<CartResponseDTO> readMemberCarts(String memberId, int page, int size) {
-        Optional<List<Cart>> cartListOptional = cartRepository.findByMemberId(memberId, (page-1)*size, size);
-        if (cartListOptional.isEmpty() || cartListOptional.get().isEmpty()) {
+        List<Cart> cartList = cartRepository.findByMemberId(memberId, (page-1)*size, size);
+        if (cartList.isEmpty()) {
             throw new IllegalArgumentException("해당 memberId를 가지는 장바구니가 존재하지 않습니다.");
         }
 
-        return cartListOptional.get().stream().map(CartResponseDTO::new).collect(Collectors.toList());
+        return cartList.stream().map(CartResponseDTO::new).collect(Collectors.toList());
     }
 
     public CartResponseDTO readMemberCartItems(String memberId, Long itemId) {
@@ -75,9 +74,9 @@ public class CartService {
     }
 
     public int deleteCart(String memberId, int page, int size) {
-        Optional<List<Cart>> memberCarts = cartRepository.findByMemberId(memberId, (page-1)*size, size);
+        List<Cart> memberCarts = cartRepository.findByMemberId(memberId, (page-1)*size, size);
 
-        if (!memberCarts.isEmpty() && !memberCarts.get().isEmpty()) {
+        if (!memberCarts.isEmpty()) {
             return cartRepository.deleteByMemberId(memberId);
         } else {
             return 0;
@@ -103,7 +102,7 @@ public class CartService {
             throw new IllegalArgumentException("Invalid memberId: " + memberId);
         }
 
-        List<Cart> carts = cartRepository.findByMemberId(memberId, (page-1)*size, size).orElse(Collections.emptyList());
+        List<Cart> carts = cartRepository.findByMemberId(memberId, (page-1)*size, size);
         // 장바구니가 비어있는지 확인
         if (carts.isEmpty()) { //해당 memberId 자체는 존재하지만 cart DB에 존재하지 않는 경우
             throw new IllegalArgumentException("해당하는 memberId: " + memberId + "를 갖는 cart가 존재하지 않습니다.");
