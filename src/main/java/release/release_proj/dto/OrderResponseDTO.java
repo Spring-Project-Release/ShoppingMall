@@ -2,7 +2,6 @@ package release.release_proj.dto;
 
 import com.sun.istack.NotNull;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
 import release.release_proj.domain.Order;
 
 import java.time.LocalDateTime;
@@ -18,7 +17,6 @@ public class OrderResponseDTO {
     private String sellerId;
     @NotNull
     private Long itemId;
-    @CreatedDate
     private LocalDateTime orderDate;
     @NotNull
     private int price;
