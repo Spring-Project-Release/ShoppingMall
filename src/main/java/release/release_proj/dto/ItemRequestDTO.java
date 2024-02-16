@@ -3,10 +3,7 @@ package release.release_proj.dto;
 import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
 import release.release_proj.domain.Item;
-
-import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -32,8 +29,6 @@ public class ItemRequestDTO {
     @NotNull
     private String sellerId;
     private String unit;
-    @CreatedDate
-    private LocalDateTime createdAt;
 
     public Item toEntity() {
         return Item.builder()
@@ -51,7 +46,6 @@ public class ItemRequestDTO {
                 .deliveryType(deliveryType)
                 .sellerId(sellerId)
                 .unit(unit)
-                .createdAt(createdAt != null ? createdAt : LocalDateTime.now())
                 .build();
     }
 
