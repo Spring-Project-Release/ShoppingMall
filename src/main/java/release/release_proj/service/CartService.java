@@ -8,7 +8,6 @@ import release.release_proj.domain.Cart;
 import release.release_proj.domain.Item;
 import release.release_proj.dto.CartRequestDTO;
 import release.release_proj.dto.CartResponseDTO;
-import release.release_proj.dto.ItemResponseDTO;
 import release.release_proj.dto.OrderRequestDTO;
 import release.release_proj.repository.CartRepository;
 import release.release_proj.repository.ItemRepository;
@@ -46,12 +45,10 @@ public class CartService {
 
     public void addCartItem(CartRequestDTO cartDTO) {
         try {
-            Item item = itemRepository.findOne(cartDTO.getItemId());
-            if (item == null) {
-                throw new IllegalArgumentException("해당 itemId를 가진 상품이 존재하지 않습니다.");
-            }
+            Optional<Item> item = itemRepository.findByItemId(cartDTO.getItemId());
+            Item existItem = item.orElseThrow(() -> new IllegalArgumentException("해당 itemId를 가진 상품이 존재하지 않습니다."));
 
-            if (cartDTO.getMemberId().equals(item.getSellerId())) {
+            if (cartDTO.getMemberId().equals(item.get().getSellerId())) {
                 throw new IllegalArgumentException("본인이 판매중인 상품을 장바구니에 담을 수 없습니다.");
             }
 
@@ -114,15 +111,13 @@ public class CartService {
         } else {
             for (Cart cart : carts) {
                 //order 기록 저장- 구매내역으로 무언가를 할 경우(user의 등급을 매길 경우 user에 paymentPrice 항목도 추가를 해야하나?)
-                Item item = itemRepository.findOne(cart.getItemId());
-                if (item == null) {
-                    throw new IllegalArgumentException("해당 itemId를 가진 상품이 존재하지 않습니다.");
-                }
+                Optional<Item> item = itemRepository.findByItemId(cart.getItemId());
+                Item existItem = item.orElseThrow(() -> new IllegalArgumentException("해당 itemId를 가진 상품이 존재하지 않습니다."));
 
                 OrderRequestDTO orderDTO = OrderRequestDTO.builder()
                         .buyerId(cart.getMemberId())
                         .itemId(cart.getItemId())
-                        .sellerId(item.getSellerId())
+                        .sellerId(existItem.getSellerId())
                         .count(cart.getAmount())
                         .price(cart.getAmount() * itemRepository.getPrice(cart.getItemId()))
                         .memo(memo != null ? memo : "") //controller에서 memo를 받아와서 order에 set해줌
@@ -148,16 +143,14 @@ public class CartService {
                     new IllegalArgumentException("해당하는 itemId: " + itemId + "와 memberId: " + memberId + "를 갖는 cart가 존재하지 않습니다.")
             );  //해당 itemId와 memberId 자체는 존재하지만 cart DB에 존재하지 않는 경우
 
-            Item item = itemRepository.findOne(cart.getItemId());
-            if (item == null) {
-                throw new IllegalArgumentException("해당 itemId를 가진 상품이 존재하지 않습니다.");
-            }
+            Optional<Item> item = itemRepository.findByItemId(cart.getItemId());
+            Item existItem = item.orElseThrow(() -> new IllegalArgumentException("해당 itemId를 가진 상품이 존재하지 않습니다."));
 
             // 주문 생성
             OrderRequestDTO orderDTO = OrderRequestDTO.builder()
                     .buyerId(cart.getMemberId())
                     .itemId(cart.getItemId())
-                    .sellerId(item.getSellerId())
+                    .sellerId(existItem.getSellerId())
                     .count(cart.getAmount())
                     .price(cart.getAmount() * itemRepository.getPrice(cart.getItemId()))
                     .memo(memo != null ? memo : "")
