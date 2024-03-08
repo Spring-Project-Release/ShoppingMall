@@ -271,7 +271,7 @@ public class ItemServiceIntegrationTest {
         assertThat(result).isGreaterThan(0);
     }
 
-    @Test
+    /*@Test
     public void 상품_재고량과_판매량_업데이트() throws Exception {
         //Given
         MemberVO member = new MemberVO();
@@ -307,7 +307,7 @@ public class ItemServiceIntegrationTest {
         assertThat(savedItemDTO2.getCount()).isEqualTo(1);
         assertThat(result1).isGreaterThan(0);
         assertThat(result2).isGreaterThan(0);
-    }
+    }*/
 
     @Test
     public void 상품_삭제() throws Exception {

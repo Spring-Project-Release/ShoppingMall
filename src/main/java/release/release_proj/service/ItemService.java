@@ -121,24 +121,4 @@ public class ItemService {
     public int updateIsSoldout(Long itemId) { //나중에 itemName을 인자로 사용할수도?
         return itemRepository.updateIsSoldout(itemId);
     }
-
-    public int updateStock(Long itemId, int decreasingStock) {
-        return itemRepository.updateStock(itemId, decreasingStock);
-    }
-
-    public int getStock(Long itemId) {
-        return itemRepository.getStock(itemId);
-    }
-
-    public int getPrice(Long itemId) {
-        return itemRepository.getPrice(itemId);
-    }
-
-    public int updateCount(Long itemId, int increasingCount){
-        return itemRepository.updateCount(itemId, increasingCount);
-    }
-
-    public int isItemIdExist(Long itemId) {
-        return itemRepository.isItemIdExist(itemId);
-    }
 }
