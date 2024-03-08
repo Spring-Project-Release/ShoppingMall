@@ -5,11 +5,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import release.release_proj.domain.Cart;
+import release.release_proj.domain.Item;
 import release.release_proj.dto.CartRequestDTO;
 import release.release_proj.dto.CartResponseDTO;
 import release.release_proj.dto.ItemResponseDTO;
 import release.release_proj.dto.OrderRequestDTO;
 import release.release_proj.repository.CartRepository;
+import release.release_proj.repository.ItemRepository;
 import release.release_proj.repository.MemberDAO;
 
 import java.util.List;
@@ -22,7 +24,7 @@ import java.util.stream.Collectors;
 public class CartService {
 
     private final CartRepository cartRepository;
-    private final ItemService itemService;
+    private final ItemRepository itemRepository;
     private final OrderService orderService;
     private final MemberDAO memberDAO;
 
@@ -44,8 +46,12 @@ public class CartService {
 
     public void addCartItem(CartRequestDTO cartDTO) {
         try {
-            ItemResponseDTO itemDTO = itemService.findOne(cartDTO.getItemId());
-            if (cartDTO.getMemberId().equals(itemDTO.getSellerId())) {
+            Item item = itemRepository.findOne(cartDTO.getItemId());
+            if (item == null) {
+                throw new IllegalArgumentException("해당 itemId를 가진 상품이 존재하지 않습니다.");
+            }
+
+            if (cartDTO.getMemberId().equals(item.getSellerId())) {
                 throw new IllegalArgumentException("본인이 판매중인 상품을 장바구니에 담을 수 없습니다.");
             }
 
@@ -108,14 +114,17 @@ public class CartService {
         } else {
             for (Cart cart : carts) {
                 //order 기록 저장- 구매내역으로 무언가를 할 경우(user의 등급을 매길 경우 user에 paymentPrice 항목도 추가를 해야하나?)
-                ItemResponseDTO itemDTO = itemService.findOne(cart.getItemId());
+                Item item = itemRepository.findOne(cart.getItemId());
+                if (item == null) {
+                    throw new IllegalArgumentException("해당 itemId를 가진 상품이 존재하지 않습니다.");
+                }
 
                 OrderRequestDTO orderDTO = OrderRequestDTO.builder()
                         .buyerId(cart.getMemberId())
                         .itemId(cart.getItemId())
-                        .sellerId(itemDTO.getSellerId())
+                        .sellerId(item.getSellerId())
                         .count(cart.getAmount())
-                        .price(cart.getAmount() * itemService.getPrice(cart.getItemId()))
+                        .price(cart.getAmount() * itemRepository.getPrice(cart.getItemId()))
                         .memo(memo != null ? memo : "") //controller에서 memo를 받아와서 order에 set해줌
                         .build();
 
@@ -131,7 +140,7 @@ public class CartService {
         }
 
         for (Long itemId : itemsId) {
-            if (itemService.isItemIdExist(itemId)==0){ //itemId 자체가 item db에 존재하지 않는 경우
+            if (itemRepository.isItemIdExist(itemId)==0){ //itemId 자체가 item db에 존재하지 않는 경우
                 throw new IllegalArgumentException("Invalid itemId: " + itemId);
             }
 
@@ -139,14 +148,18 @@ public class CartService {
                     new IllegalArgumentException("해당하는 itemId: " + itemId + "와 memberId: " + memberId + "를 갖는 cart가 존재하지 않습니다.")
             );  //해당 itemId와 memberId 자체는 존재하지만 cart DB에 존재하지 않는 경우
 
-            ItemResponseDTO itemDTO = itemService.findOne(cart.getItemId());
+            Item item = itemRepository.findOne(cart.getItemId());
+            if (item == null) {
+                throw new IllegalArgumentException("해당 itemId를 가진 상품이 존재하지 않습니다.");
+            }
+
             // 주문 생성
             OrderRequestDTO orderDTO = OrderRequestDTO.builder()
                     .buyerId(cart.getMemberId())
                     .itemId(cart.getItemId())
-                    .sellerId(itemDTO.getSellerId())
+                    .sellerId(item.getSellerId())
                     .count(cart.getAmount())
-                    .price(cart.getAmount() * itemService.getPrice(cart.getItemId()))
+                    .price(cart.getAmount() * itemRepository.getPrice(cart.getItemId()))
                     .memo(memo != null ? memo : "")
                     .build();
 
