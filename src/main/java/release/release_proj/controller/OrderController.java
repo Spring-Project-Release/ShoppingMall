@@ -15,6 +15,7 @@ import java.util.List;
 @Slf4j //log 사용
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:8080" }, allowCredentials = "true")
 @RequestMapping("/orders")
 public class OrderController {
 
