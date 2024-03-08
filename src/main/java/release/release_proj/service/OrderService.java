@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import release.release_proj.domain.Order;
 import release.release_proj.dto.OrderRequestDTO;
 import release.release_proj.dto.OrderResponseDTO;
+import release.release_proj.repository.ItemRepository;
 import release.release_proj.repository.MemberDAO;
 import release.release_proj.repository.OrderRepository;
 
@@ -19,12 +20,12 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final ItemService itemService;
+    private final ItemRepository itemRepository;
     private final MemberDAO memberDAO;
 
     public void save(OrderRequestDTO orderDTO) {
         validateMemberAndItemExistence(orderDTO.getBuyerId(), orderDTO.getItemId(), orderDTO.getSellerId());
-        int currentStock = itemService.getStock(orderDTO.getItemId());
+        int currentStock = itemRepository.getStock(orderDTO.getItemId());
 
         if (orderDTO.getBuyerId().equals(orderDTO.getSellerId())) {
             throw new IllegalArgumentException("본인이 판매중인 상품을 구매할 수 없습니다.");
@@ -34,11 +35,11 @@ public class OrderService {
         }
 
         orderRepository.save(orderDTO.toEntity());
-        itemService.updateStock(orderDTO.getItemId(), orderDTO.getCount()); //item 재고 감소
-        itemService.updateCount(orderDTO.getItemId(), orderDTO.getCount()); //item 판매개수 상승
+        itemRepository.updateStock(orderDTO.getItemId(), orderDTO.getCount()); //item 재고 감소
+        itemRepository.updateCount(orderDTO.getItemId(), orderDTO.getCount()); //item 판매개수 상승
 
         if (currentStock - orderDTO.getCount() == 0) { //재고가 0인 경우
-            itemService.updateIsSoldout(orderDTO.getItemId());
+            itemRepository.updateIsSoldout(orderDTO.getItemId());
         }
     };
 
@@ -50,7 +51,7 @@ public class OrderService {
         else if (memberDAO.isExistMemberId(sellerId)==0) {
             throw new IllegalArgumentException("결제 처리에 실패했습니다. 해당하는 sellerId가 존재하지 않습니다.");
         }
-        else if (itemService.isItemIdExist(itemId)==0) {
+        else if (itemRepository.isItemIdExist(itemId)==0) {
             throw new IllegalArgumentException("결제 처리에 실패했습니다. 해당하는 itemId가 존재하지 않습니다.");
         }
     }
@@ -106,12 +107,12 @@ public class OrderService {
             Long itemId = order.getItemId();
             int canceledQuantity = order.getCount();
 
-            if (itemService.getStock(itemId) == 0) {
-                itemService.updateIsSoldout(itemId);
+            if (itemRepository.getStock(itemId) == 0) {
+                itemRepository.updateIsSoldout(itemId);
             }
 
-            itemService.updateStock(itemId, -canceledQuantity);
-            itemService.updateCount(itemId, -canceledQuantity);
+            itemRepository.updateStock(itemId, -canceledQuantity);
+            itemRepository.updateCount(itemId, -canceledQuantity);
             orderRepository.cancel(orderId);
         } else {
             throw new IllegalStateException("해당 주문 ID: " + orderId + "가 존재하지 않습니다.");
