@@ -58,28 +58,28 @@ export default function DetailBar() {
         <div
           onClick={onMove}
           id={"mypage"}
-          className="text-sm text-slate-700 h-full w-2/12 flex flex-col justify-center items-center border-r border-slate-200"
+          className="text-sm cursor-pointer text-slate-700 h-full w-2/12 flex flex-col justify-center items-center border-r border-slate-200"
         >
           마이 페이지
         </div>
         <div
           onClick={onMove}
           id={"recent"}
-          className="text-sm text-slate-700 h-full w-2/12 flex flex-col justify-center items-center border-r border-slate-200"
+          className="text-sm cursor-pointer text-slate-700 h-full w-2/12 flex flex-col justify-center items-center border-r border-slate-200"
         >
           최근 본 상품
         </div>
         <div
           onClick={onMove}
           id={"cart"}
-          className="text-sm text-slate-700 h-full w-2/12 flex flex-col justify-center items-center border-r border-slate-200"
+          className="text-sm cursor-pointer text-slate-700 h-full w-2/12 flex flex-col justify-center items-center border-r border-slate-200"
         >
           장바구니
         </div>
         <div
           onClick={onMove}
           id={"cs"}
-          className="text-sm text-slate-700 h-full w-2/12 flex flex-col justify-center items-center border-r border-slate-200 border-none"
+          className="text-sm cursor-pointer text-slate-700 h-full w-2/12 flex flex-col justify-center items-center border-r border-slate-200 border-none"
         >
           고객센터
         </div>

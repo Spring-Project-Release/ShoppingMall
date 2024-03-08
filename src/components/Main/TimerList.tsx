@@ -34,7 +34,7 @@ export default function TimerList({ list, onMove }: IItemListProps) {
         <div className="flex flex-row justify-start gap-2 items-center">
           <div className="w-12 h-12 bg-lime-500 rounded-full relative">
             <div className="h-3 w-1 rounded-full bg-white top-3.5 left-[22px] absolute" />
-            <div className="flex flex-row h-1 w-8 rounded-full top-[22px] right-2 absolute rotate-infinite">
+            <div className="flex flex-row h-1 w-8 rounded-full top-[22px] right-2 absolute rotate-infinite delay">
               <div className="h-full w-1/2 bg-transparent" />
               <div className="h-full w-1/2 bg-white rounded-full" />
             </div>
@@ -55,20 +55,20 @@ export default function TimerList({ list, onMove }: IItemListProps) {
               <img
                 src={item.url}
                 onClick={() => onMove(item.itemNumber)}
-                className="w-full flex h-[240px] cursor-pointer transform transition-transform duration-300 ease-in-out hover:scale-110"
+                className=" w-full flex h-[240px] cursor-pointer transform transition-transform duration-300 ease-in-out hover:scale-110"
               />
               <span className="px-2 py-1 text-sm absolute top-2 left-2 text-white bg-lime-500 rounded-lg">
                 일일 특가
               </span>
             </div>
-            <div className="flex my-6 justify-center items-center gap-2 border border-slate-200 py-2">
+            <div className="hover:bg-lime-500 hover:text-white transition-color ease-in-out duration-300 hover:cursor-pointer flex my-6 justify-center items-center gap-2 border hover:border-lime-200 border-slate-200 py-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
                 stroke="currentColor"
-                className="w-6 h-6 transition-color ease-in-out duration-300 hover:cursor-pointer hover:text-green-400"
+                className="w-6 h-6"
               >
                 <path
                   strokeLinecap="round"

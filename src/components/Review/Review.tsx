@@ -1,3 +1,4 @@
+import ReviewAdd from "./ReviewAdd";
 import ReviewBox from "./ReviewBox";
 
 export default function Review() {
@@ -32,6 +33,8 @@ export default function Review() {
           reviewText={""}
           likes={0}
         />
+
+        <ReviewAdd />
       </div>
     </div>
   );
