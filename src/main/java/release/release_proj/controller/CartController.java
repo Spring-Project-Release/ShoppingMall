@@ -10,6 +10,7 @@ import release.release_proj.dto.CartRequestDTO;
 import release.release_proj.dto.CartResponseDTO;
 import release.release_proj.service.CartService;
 
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j //log 사용
@@ -23,12 +24,15 @@ public class CartController {
 
     @GetMapping("/user/{memberId}")
     public ResponseEntity<List<CartResponseDTO>> memberCartList(@PathVariable(name="memberId") String memberId, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
+        List<CartResponseDTO> cartDTOs;
         try {
-            List<CartResponseDTO> cartDTOs = cartService.readMemberCarts(memberId, page, size);
+            cartDTOs = cartService.readMemberCarts(memberId, page, size);
             return ResponseEntity.ok(cartDTOs);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
-            return ResponseEntity.notFound().build();
+            //return ResponseEntity.notFound().build();
+            cartDTOs = Collections.emptyList();
+            return ResponseEntity.ok(cartDTOs);
         }
     }
 
