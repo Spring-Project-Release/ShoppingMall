@@ -16,21 +16,38 @@ export default function CartBox({ item, isList, setIsList }: ICartBoxProps) {
   const onMinus = () => {
     if (1 < counter) {
       setCounter((current) => (current -= 1));
+      updateAmount(item.itemNumber, counter - 1);
     }
   };
 
   const onPlus = () => {
     setCounter((current) => (current += 1));
+    updateAmount(item.itemNumber, counter + 1);
+  };
+
+  const updateAmount = (itemId: number, newAmount: number) => {
+    setIsList((current: ICartListProps[]) =>
+      current.map((value) =>
+        value.itemId === itemId ? { ...value, amount: newAmount } : value
+      )
+    );
   };
 
   const onClicked = () => {
     setIsClicked((current) => !current);
     if (isClicked) {
       setIsList((current: ICartListProps[]) =>
-        current.filter((value) => value !== item.itemNumber)
+        current.filter((value) => value.itemId !== item.itemNumber)
       );
     } else {
-      setIsList((current: ICartListProps[]) => [...current, item.itemNumber]);
+      setIsList((current: ICartListProps[]) => [
+        ...current,
+        {
+          itemId: item.itemNumber,
+          amount: counter,
+          price: item.price,
+        },
+      ]);
     }
   };
 
@@ -69,9 +86,9 @@ export default function CartBox({ item, isList, setIsList }: ICartBoxProps) {
           style={{
             backgroundImage: `url(${item.url})`,
           }}
-          className="w-1/3 h-full bg-cover bg-center"
+          className="w-1/3 h-full bg-cover bg-center rounded-lg"
         ></div>
-        <div className="w-1/2 flex flex-col gap-4">
+        <div className="w-3/5 flex flex-col gap-4">
           <h3>{item.name}</h3>
 
           <div className="flex flex-row justify-between">

@@ -7,8 +7,9 @@ import Container from "../components/Container";
 import CartBox from "../components/Cart/CartBox";
 
 export interface ICartListProps {
-  itemId?: number;
-  amount?: number;
+  itemId: number;
+  amount: number;
+  price: number;
 }
 
 export interface ICartProps {
@@ -19,7 +20,7 @@ export interface ICartProps {
 export default function Cart() {
   const [address, setAddress] = useState<string>();
   const [isList, setIsList] = useState<ICartListProps[]>([]);
-
+  const [isTotal, setIsTotal] = useState<number>(0);
   const {
     register,
     handleSubmit,
@@ -48,6 +49,12 @@ export default function Cart() {
 
   useEffect(() => {
     setValue("list", JSON.stringify(isList));
+    const totalAmount = isList.reduce((accumulator, item) => {
+      return accumulator + item.amount * item.price;
+    }, 0);
+
+    // isTotal 업데이트
+    setIsTotal(totalAmount);
   }, [isList]);
 
   return (
@@ -116,7 +123,7 @@ export default function Cart() {
                 <div className="w-full flex flex-col gap-4 text-slate-700">
                   <div className="w-full flex flex-row justify-between items-center">
                     <span>상품 금액</span>
-                    <span>{12900} 원</span>
+                    <span>{isTotal} 원</span>
                   </div>
                   <div className="w-full flex flex-row justify-between items-center">
                     <span>상품 할인 금액</span>
@@ -128,7 +135,7 @@ export default function Cart() {
                   </div>
                   <div className="w-full flex flex-row justify-between items-center">
                     <span>결제예정금액</span>
-                    <span>{12900 - 3000} 원</span>
+                    <span>{isTotal - 3000} 원</span>
                   </div>
                 </div>
 

@@ -42,14 +42,14 @@ export default function Cs() {
               <div
                 onClick={onTab}
                 key={index}
-                className="flex flex-col justify-center items-center px-3 py-2 cursor-pointer opacity-30 transition-opacity duration-300 ease-in-out hover:opacity-100"
+                className="flex text-slate-700 flex-col justify-center items-center px-3 py-2 cursor-pointer opacity-30 transition-opacity duration-300 ease-in-out hover:opacity-100"
               >
                 <h4>{category}</h4>
               </div>
             ))}
           </div>
 
-          <div className="flex flex-col mt-3 border-t-2 border-black w-full">
+          <div className="flex flex-col mt-3 border-t-2 text-slate-700 border-lime-600 w-full">
             {isList &&
               isList
                 .filter((qna) => qna.type.includes(isFilter))

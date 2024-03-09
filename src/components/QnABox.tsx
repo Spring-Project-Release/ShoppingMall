@@ -16,11 +16,12 @@ export default function QnABox({ type, question, answer }: IQnAProps) {
 
   return (
     // BOX
-    <div className="flex flex-col">
+    <div className="flex flex-col text-xs">
       {/* QNA */}
       <div
         onClick={onClicked}
-        className="flex flex-row border-b border-gray-300 cursor-pointer"
+        className={`flex flex-row border-b border-gray-300 cursor-pointer
+        ${isClicked && "bg-lime-100"} transition-color duration-300`}
       >
         <div className="px-6 flex flex-col justify-center items-center w-1/3 font-bold">
           {type}
@@ -36,7 +37,9 @@ export default function QnABox({ type, question, answer }: IQnAProps) {
       <div
         className={`${
           !isClicked && "hidden"
-        } flex flex-row bg-gray-300 text-slate-700`}
+        } flex flex-row bg-lime-50 text-slate-700 ${
+          isClicked ? "opacity-100" : "opacity-0"
+        } transition-opacity duration-300`}
       >
         <div className="px-6 flex flex-col justify-center items-center w-1/3 font-bold">
           답 변
