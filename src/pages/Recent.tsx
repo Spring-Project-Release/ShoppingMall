@@ -46,7 +46,7 @@ export default function Recent() {
       <Hood title="최근 본 상품" />
 
       {/* BODY */}
-      <div className="px-16 py-6 flex flex-col">
+      <div className="px-32 py-6 flex flex-col">
         <span className="flex flex-row gap-2">
           <p className="text-2xl">최근 본</p>
           <h1 className="text-2xl font-bold">상품</h1>

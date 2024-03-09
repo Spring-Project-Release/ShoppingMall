@@ -33,8 +33,11 @@ export default function Review({
     <div className="flex flex-row justify-between px-4 py-6 border-t border-slate-300">
       <div className="flex flex-col justify-start items-start w-1/4">
         <div className="flex flex-row gap-1 w-full">
-          {isMemberData.grades.map((grade: string) => (
-            <div className="bg-lime-500 flex justify-center items-center rounded-md px-2 py-1 text-xs border border-lime-500">
+          {isMemberData.grades.map((grade: string, index) => (
+            <div
+              key={index}
+              className="bg-lime-500 flex justify-center items-center rounded-md px-2 py-1 text-xs border border-lime-500"
+            >
               <p className="text-white">{grade}</p>
             </div>
           ))}

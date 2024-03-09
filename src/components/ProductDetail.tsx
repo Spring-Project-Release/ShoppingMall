@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import { AiTwotoneHeart } from "react-icons/ai";
 import Review from "./Review/Review";
+import PurcharseBox from "./Detail/PurchaseBox";
 
 interface IProductProps {
   productId: string;
@@ -130,31 +131,13 @@ export default function ProductDetail({ productId }: IProductProps) {
 
           {/* PURCHASE BOX */}
           <div className="w-full h-auto border border-gray-300 px-6 py-3 flex flex-col gap-3 mt-12">
-            <p>[일일특가] 머스크멜론 1.3kg</p>
-
-            {/* PURCHASE BOX LINE */}
-            <div className="flex flex-row justify-between items-center">
-              {/* COUNT BOX */}
-              <div className="flex flex-row">
-                {/* COUNTERS */}
-                <div
-                  className="w-16 h-8 border-t border-b border-l border-gray-300 flex flex-col justify-center items-center cursor-pointer"
-                  onClick={onMinus}
-                >
-                  -
-                </div>
-                <div className="w-16 h-8 border-t border-b border-l border-gray-300 flex flex-col justify-center items-center">
-                  {counter}
-                </div>
-                <div
-                  className="w-16 h-8 border-t border-b border-l border-r border-gray-300 flex flex-col justify-center items-center cursor-pointer"
-                  onClick={onPlus}
-                >
-                  +
-                </div>
-              </div>
+            <div className="flex flex-row justify-between">
+              <p>[일일특가] 머스크멜론 1.3kg</p>
               <p>7900 원</p>
             </div>
+
+            {/* PURCHASE BOX LINE */}
+            <PurcharseBox onMinus={onMinus} onPlus={onPlus} counter={counter} />
           </div>
 
           {/* BUTTON BOX */}
@@ -191,11 +174,16 @@ export default function ProductDetail({ productId }: IProductProps) {
         {/* INFO NAV */}
         <div className="w-full h-12 border border-gray-300 bg-white flex flex-row justify-between items-center sticky top-[6vh] z-50">
           {/* NAV BUTTON */}
-          {["상품설명", "상세정보", "후 기", "문 의"].map((tag: string) => (
-            <div className="flex justify-center items-center border-r border-gray-300 w-1/4 h-full cursor-pointer last:border-none">
-              <h3>{tag}</h3>
-            </div>
-          ))}
+          {["상품설명", "상세정보", "후 기", "문 의"].map(
+            (tag: string, index) => (
+              <div
+                key={index}
+                className="flex justify-center items-center border-r border-gray-300 w-1/4 h-full cursor-pointer last:border-none"
+              >
+                <h3>{tag}</h3>
+              </div>
+            )
+          )}
         </div>
         <div className="bg-red-500 h-[100vh] w-full" />
 

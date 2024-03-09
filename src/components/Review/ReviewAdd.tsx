@@ -32,13 +32,22 @@ export default function ReviewAdd() {
   }, []);
 
   return (
-    <form onSubmit={handleSubmit(onValid)} className="w-full flex flex-col">
-      <input {...register("itemId")} hidden value={pathname} />
+    <form
+      onSubmit={handleSubmit(onValid)}
+      className="w-full gap-4 flex flex-col"
+    >
+      <input
+        {...register("itemId")}
+        hidden
+        value={Number(pathname.split("/")[2])}
+      />
       <textarea
         {...register("review")}
-        className="h-36 bg-slate-500"
-      ></textarea>
-      <button>작성</button>
+        className="resize-none h-36 bg-lime-100 text-slate-700 focus:outline-none"
+      />
+      <button className="bg-lime-400 py-4 rounded-lg text-white font-bold">
+        작 성
+      </button>
     </form>
   );
 }
