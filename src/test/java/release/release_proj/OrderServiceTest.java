@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
-public class OrderServiceIntegrationTest {
+public class OrderServiceTest {
 
     @PersistenceContext private EntityManager em;
 

@@ -1,32 +1,35 @@
 package release.release_proj.dto;
 
-import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import release.release_proj.domain.Item;
 
 @Data
 @Builder
+@AllArgsConstructor//
+@NoArgsConstructor//
 public class ItemRequestDTO {
 
     private Long itemId;
-    @NotNull
+    //@NotNull
     private String name;
-    @NotNull
+    //@NotNull
     private int price;
-    @NotNull
+    //@NotNull
     private int count;
-    @NotNull
+    //@NotNull
     private int stock;
     private String category;
     private String text;
-    @NotNull
+    //@NotNull
     private Boolean isSoldout;
     private String picture;
     private float discount;
     private String origin;
     private int deliveryType;
-    @NotNull
+    //@NotNull
     private String sellerId;
     private String unit;
 

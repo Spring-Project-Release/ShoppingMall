@@ -40,11 +40,17 @@ public class ItemService {
     }
 
     public void updateItem(ItemRequestDTO itemDTO){
-        itemRepository.updateItem(itemDTO.toEntity());
+        if (itemRepository.findByItemId(itemDTO.getItemId()).isPresent())
+            itemRepository.updateItem(itemDTO.toEntity());
+        else
+            throw new IllegalArgumentException("존재하지 않는 itemId입니다.");
     }
 
     public void deleteItem(Long itemId){
-        itemRepository.deleteByItemId(itemId);
+        if (itemRepository.findByItemId(itemId).isPresent())
+            itemRepository.deleteByItemId(itemId);
+        else
+            throw new IllegalArgumentException("존재하지 않는 itemId입니다.");
     }
 
     public ItemResponseDTO findOne(Long itemId) {

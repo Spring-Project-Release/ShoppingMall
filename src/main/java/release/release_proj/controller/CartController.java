@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j //log 사용
 @RestController
 @RequiredArgsConstructor //생성자 주입을 자동으로 해줌
-@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:8080" }, allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping("/carts")
 public class CartController {
 

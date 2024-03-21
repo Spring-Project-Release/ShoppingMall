@@ -104,7 +104,6 @@ public class JpaItemRepository implements ItemRepository {
     }
 
     @Override
-    @Transactional
     public void updateItem(Item item) {
         em.merge(item);
     }
